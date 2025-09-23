@@ -16,7 +16,6 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 
 ### Core Framework
 - **Next.js 15** - React framework with App Router
-![image]({https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white})
 - **React 19** - Latest React features and concurrent rendering
 - **TypeScript** - Type-safe development
 
@@ -167,6 +166,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Contact
 
-For questions or suggestions, please open an issue or contact [tom_carmichael@outlook.com](mailto:tom_carmichael@outlook.com).
-
-Find me on [LinkedIn](https://www.linkedin.com/in/tomcarmichael/)
+For questions or suggestions, please find me on [LinkedIn](https://www.linkedin.com/in/tomcarmichael/)
