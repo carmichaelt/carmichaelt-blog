@@ -1,11 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-
-// Types for better type safety
-type SortField = "date" | "title";
-type SortOrder = "asc" | "desc";
-type FilterField = "author" | "preview";
+import { Id } from "./_generated/dataModel";
 
 export const createPost = mutation({
   args: {
@@ -17,7 +13,8 @@ export const createPost = mutation({
     date: v.string(),
     preview: v.optional(v.boolean()),
     content: v.string(),
-    author: v.id("authors"),
+    richContent: v.optional(v.any()),
+    author: v.id("users"),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("posts", args);
@@ -38,7 +35,7 @@ export const getPosts = query({
     paginationOpts: paginationOptsValidator,
     
     // Filtering
-    author: v.optional(v.id("authors")),
+    author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
     
     // Additional filters
@@ -112,7 +109,7 @@ export const getPostsSimple = query({
     sortField: v.optional(v.union(v.literal("date"), v.literal("title"))),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     limit: v.optional(v.number()),
-    author: v.optional(v.id("authors")),
+    author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
@@ -174,7 +171,7 @@ export const getPostsSimple = query({
 export const getPostsCount = query({
   args: {
     search: v.optional(v.string()),
-    author: v.optional(v.id("authors")),
+    author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
@@ -218,14 +215,14 @@ export const getPostsCount = query({
 // Get posts by author with pagination
 export const getPostsByAuthor = query({
   args: {
-    authorId: v.id("authors"),
+    authorId: v.id("users"),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const { authorId, paginationOpts } = args;
     
     return await ctx.db.query("posts")
-      .withIndex("by_author", (q) => q.eq("author", authorId))
+      .withIndex("by_author", (q) => q.eq("author", authorId as Id<"users">))
       .order("desc")
       .paginate(paginationOpts);
   },

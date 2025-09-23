@@ -12,7 +12,6 @@ type SearchParams = {
   search?: string;
   sortField?: "date" | "title";
   sortOrder?: "asc" | "desc";
-  author?: string;
   preview?: string;
   dateFrom?: string;
   dateTo?: string;
@@ -30,7 +29,6 @@ export default async function Index({ searchParams }: Props) {
   const search = params.search || "";
   const sortField = (params.sortField === "title" ? "title" : "date") as "date" | "title";
   const sortOrder = (params.sortOrder === "asc" ? "asc" : "desc") as "asc" | "desc";
-  const author = params.author as any; // Will be validated in components
   const preview = params.preview === "false" ? false : params.preview === "true" ? true : undefined;
   const dateFrom = params.dateFrom || undefined;
   const dateTo = params.dateTo || undefined;
@@ -46,7 +44,6 @@ export default async function Index({ searchParams }: Props) {
           currentSearch={search}
           currentSortField={sortField}
           currentSortOrder={sortOrder}
-          currentAuthor={author}
           currentPreview={preview}
           currentDateFrom={dateFrom}
           currentDateTo={dateTo}
@@ -59,7 +56,6 @@ export default async function Index({ searchParams }: Props) {
             search={search}
             sortField={sortField}
             sortOrder={sortOrder}
-            author={author}
             preview={preview}
             dateFrom={dateFrom}
             dateTo={dateTo}
@@ -84,7 +80,6 @@ export default async function Index({ searchParams }: Props) {
             sortField={sortField}
             sortOrder={sortOrder}
             limit={limit}
-            author={author}
             preview={preview}
             dateFrom={dateFrom}
             dateTo={dateTo}

@@ -7,8 +7,7 @@ type Props = {
   search?: string;
   sortField?: "date" | "title";
   sortOrder?: "asc" | "desc";
-  limit?: number;
-  author?: Id<"authors">;
+  limit?: number; 
   preview?: boolean;
   dateFrom?: string;
   dateTo?: string;
@@ -19,7 +18,6 @@ export async function MoreStories({
   sortField = "date",
   sortOrder = "desc",
   limit = 10,
-  author,
   preview = false,
   dateFrom,
   dateTo,
@@ -30,7 +28,6 @@ export async function MoreStories({
     sortField,
     sortOrder,
     limit,
-    author,
     preview,
     dateFrom,
     dateTo,
@@ -39,16 +36,16 @@ export async function MoreStories({
   // Transform posts to include author data
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
-      const authorData = await fetchQuery(api.authors.getAuthorById, { 
-        id: post.author as Id<"authors"> 
+      const authorData = await fetchQuery(api.users.getUserById, { 
+        id: post.author as Id<"users"> 
       });
       return {
         ...post,
         author: {
           _id: post.author,
           name: authorData?.name ?? "",
-          avatar: authorData?.avatar ?? "",
-          picture: authorData?.avatar ?? ""
+          avatar: authorData?.avatarUrl ?? "",
+          picture: authorData?.avatarUrl ?? ""
         }
       };
     }) ?? []

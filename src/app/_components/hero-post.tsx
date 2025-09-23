@@ -10,7 +10,6 @@ type Props = {
   search?: string;
   sortField?: "date" | "title";
   sortOrder?: "asc" | "desc";
-  author?: Id<"authors">;
   preview?: boolean;
   dateFrom?: string;
   dateTo?: string;
@@ -20,7 +19,6 @@ export async function HeroPost({
   search,
   sortField = "date",
   sortOrder = "desc",
-  author,
   preview = false,
   dateFrom,
   dateTo,
@@ -31,7 +29,6 @@ export async function HeroPost({
     sortField,
     sortOrder,
     limit: 1,
-    author,
     preview,
     dateFrom,
     dateTo,
@@ -40,8 +37,8 @@ export async function HeroPost({
   // Transform posts to match Post interface
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
-      const authorData = await fetchQuery(api.authors.getAuthorById, { 
-        id: post.author as Id<"authors"> 
+      const authorData = await fetchQuery(api.users.getUserById, { 
+        id: post.author as Id<"users"> 
       });
       return {
         slug: post.slug,
@@ -50,7 +47,7 @@ export async function HeroPost({
         coverImage: post.coverImage,
         author: {
           name: authorData?.name ?? "",
-          picture: authorData?.avatar ?? ""
+          picture: authorData?.avatarUrl ?? ""
         },
         excerpt: post.excerpt,
         ogImage: {

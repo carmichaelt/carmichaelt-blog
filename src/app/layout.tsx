@@ -1,18 +1,20 @@
 import Footer from "@/app/_components/footer";
-import { ConvexClientProvider } from "@/app/_components/convex-client-provider";
-import { CMS_NAME, HOME_OG_IMAGE_URL } from "@/lib/constants";
+import ConvexClientProvider from "@/components/providers/convex-provider-with-clerk";
+import { ClerkProvider } from "@clerk/nextjs";
+import { HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 //import { Inter } from "next/font/google";
 import cn from "classnames";
 //import { ThemeSwitcher } from "./_components/theme-switcher";
 
 import "./globals.css";
+import Navbar from "./_components/navbar";
 
 //const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: `Next.js Blog Example with ${CMS_NAME}`,
-  description: `A statically generated blog example using Next.js and ${CMS_NAME}.`,
+  title: `Carmichaelt. Blog`,
+  description: `A Partially Pre-rendered blog using Next.js and Convex.`,
   openGraph: {
     images: [HOME_OG_IMAGE_URL],
   },
@@ -63,11 +65,14 @@ export default function RootLayout({
       >
         {/* <ThemeSwitcher /> */}
         <div className="min-h-screen">
+        <ClerkProvider>
           <ConvexClientProvider>
+          <Navbar />
             {children}
-          </ConvexClientProvider>
-        </div>
         <Footer />
+          </ConvexClientProvider>
+          </ClerkProvider>
+        </div>
       </body>
     </html>
   );

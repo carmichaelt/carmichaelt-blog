@@ -2,13 +2,15 @@ import Avatar from "@/app/_components/avatar";
 import CoverImage from "@/app/_components/cover-image";
 import DateFormatter from "@/app/_components/date-formatter";
 import { PostTitle } from "@/app/_components/post-title";
-import { type Author } from "@/interfaces/author";
 
 type Props = {
   title: string;
   coverImage: string;
   date: string;
-  author: Author;
+  author: {
+    name: string;
+    picture: string;
+  };
 };
 
 export function PostHeader({ title, coverImage, date, author }: Props) {

@@ -1,4 +1,5 @@
 import { type Author } from "./author";
+import { type RichTextDocument } from "./rich-text";
 
 export type Post = {
   slug: string;
@@ -11,5 +12,6 @@ export type Post = {
     url: string;
   };
   content: string;
+  richContent?: RichTextDocument; // Rich text content as JSON
   preview?: boolean;
 };

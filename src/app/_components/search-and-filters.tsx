@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Id } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +15,6 @@ type Props = {
   currentSearch: string;
   currentSortField: "date" | "title";
   currentSortOrder: "asc" | "desc";
-  currentAuthor?: string;
   currentPreview?: boolean;
   currentDateFrom?: string;
   currentDateTo?: string;
@@ -25,20 +25,17 @@ export function SearchAndFilters({
   currentSearch,
   currentSortField,
   currentSortOrder,
-  currentAuthor,
   currentPreview,
   currentDateFrom,
   currentDateTo,
   currentLimit,
 }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   
   const [search, setSearch] = useState(currentSearch);
   const [sortField, setSortField] = useState(currentSortField);
   const [sortOrder, setSortOrder] = useState(currentSortOrder);
-  const [author, setAuthor] = useState(currentAuthor || "");
   const [preview, setPreview] = useState(currentPreview);
   const [dateFrom, setDateFrom] = useState(currentDateFrom || "");
   const [dateTo, setDateTo] = useState(currentDateTo || "");
@@ -51,7 +48,6 @@ export function SearchAndFilters({
     if (search) params.set("search", search);
     if (sortField !== "date") params.set("sortField", sortField);
     if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
-    if (author) params.set("author", author);
     if (preview !== undefined) params.set("preview", preview.toString());
     if (dateFrom) params.set("dateFrom", dateFrom);
     if (dateTo) params.set("dateTo", dateTo);
@@ -66,7 +62,6 @@ export function SearchAndFilters({
     setSearch("");
     setSortField("date");
     setSortOrder("desc");
-    setAuthor("");
     setPreview(undefined);
     setDateFrom("");
     setDateTo("");
@@ -78,7 +73,7 @@ export function SearchAndFilters({
   };
 
   const hasActiveFilters = search || sortField !== "date" || sortOrder !== "desc" || 
-                          author || preview !== undefined || dateFrom || dateTo || limit !== "10";
+                          preview !== undefined || dateFrom || dateTo || limit !== "10";
 
   return (
     <Card className="mb-8">
@@ -111,7 +106,7 @@ export function SearchAndFilters({
         {/* Search Input */}
         <div className="flex gap-2">
           <div className="flex-1">
-            <Label htmlFor="search">Search Posts</Label>
+            {/* <Label htmlFor="search" className="mb-2">Search Posts</Label> */}
             <Input
               id="search"
               type="text"
@@ -139,7 +134,7 @@ export function SearchAndFilters({
             <span className="text-sm font-medium text-gray-600">Active filters:</span>
             {search && (
               <Badge variant="secondary">
-                Search: "{search}"
+                Search: &quot;{search}&quot;
                 <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setSearch("")} />
               </Badge>
             )}
@@ -153,12 +148,6 @@ export function SearchAndFilters({
               <Badge variant="secondary">
                 Order: {sortOrder}
                 <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setSortOrder("desc")} />
-              </Badge>
-            )}
-            {author && (
-              <Badge variant="secondary">
-                Author: {author}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setAuthor("")} />
               </Badge>
             )}
             {preview !== undefined && (
@@ -284,18 +273,6 @@ export function SearchAndFilters({
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-              />
-            </div>
-
-            {/* Author */}
-            <div>
-              <Label htmlFor="author">Author ID</Label>
-              <Input
-                id="author"
-                type="text"
-                placeholder="Author ID"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
 
