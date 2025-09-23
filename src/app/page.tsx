@@ -2,61 +2,94 @@ import Container from "@/app/_components/container";
 import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
 import { MoreStories } from "@/app/_components/more-stories";
-//import { getAllPosts } from "@/lib/api";
-//import Image from "next/image";
-//import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-//import { Author } from "@/interfaces/author";
-import { fetchQuery } from "convex/nextjs";
-import { Id } from "../../convex/_generated/dataModel";
+import { SearchAndFilters } from "./_components/search-and-filters";
+import { Suspense } from "react";
+import { HeroPostFallback } from "./_components/hero-post-fallback";
 
+export const experimental_ppr = true;
 
-export default async function Index() {
-    //const allPosts = getAllPosts();
-    
-    const postsData = await fetchQuery(api.posts.getPosts);
-  //const posts = useQuery(api.posts.getPosts);
+type SearchParams = {
+  search?: string;
+  sortField?: "date" | "title";
+  sortOrder?: "asc" | "desc";
+  author?: string;
+  preview?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  limit?: string;
+};
 
-  // Transform posts to match Post interface
-  const posts = await Promise.all(
-    postsData?.map(async (post) => {
-      const author = await fetchQuery(api.authors.getAuthorById, { id: post.author as Id<"authors"> });
-      return {
-        slug: post.slug,
-        title: post.title,
-        date: post.date,
-        coverImage: post.coverImage,
-        author: {
-          name: author?.name ?? "",
-          picture: author?.avatar ?? ""
-        },
-        excerpt: post.excerpt,
-        ogImage: {
-          url: post.ogImage
-        },
-        content: post.content,
-        preview: post.preview
-      };
-    }) ?? []
-  );
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
 
-  const heroPost = posts?.[0];
-  const morePosts = posts?.slice(1);
+export default async function Index({ searchParams }: Props) {
+  const params = await searchParams;
+  
+  // Parse and validate search parameters
+  const search = params.search || "";
+  const sortField = (params.sortField === "title" ? "title" : "date") as "date" | "title";
+  const sortOrder = (params.sortOrder === "asc" ? "asc" : "desc") as "asc" | "desc";
+  const author = params.author as any; // Will be validated in components
+  const preview = params.preview === "false" ? false : params.preview === "true" ? true : undefined;
+  const dateFrom = params.dateFrom || undefined;
+  const dateTo = params.dateTo || undefined;
+  const limit = params.limit ? parseInt(params.limit) : 10;
 
   return (
     <main>
       <Container>
         <Intro />
-        {heroPost && (
-        <HeroPost
-          title={heroPost?.title ?? ""}
-          coverImage={heroPost?.coverImage ?? ""}
-          date={heroPost?.date ?? ""}
-          author={heroPost?.author ?? { name: "", picture: "" }}
-        slug={heroPost?.slug ?? ""}
-          excerpt={heroPost?.excerpt ?? ""}
-        />) }
-        {morePosts?.length && morePosts.length > 0 && <MoreStories posts={morePosts} />}
+        
+        {/* Search and Filters UI */}
+        <SearchAndFilters 
+          currentSearch={search}
+          currentSortField={sortField}
+          currentSortOrder={sortOrder}
+          currentAuthor={author}
+          currentPreview={preview}
+          currentDateFrom={dateFrom}
+          currentDateTo={dateTo}
+          currentLimit={limit}
+        />
+        
+        {/* Hero Post */}
+        <Suspense fallback={<HeroPostFallback />}>
+          <HeroPost
+            search={search}
+            sortField={sortField}
+            sortOrder={sortOrder}
+            author={author}
+            preview={preview}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+          />
+        </Suspense>
+        
+        {/* More Stories */}
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 lg:gap-x-32 gap-y-20 md:gap-y-32 mb-32">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        }>
+          <MoreStories
+            search={search}
+            sortField={sortField}
+            sortOrder={sortOrder}
+            limit={limit}
+            author={author}
+            preview={preview}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+          />
+        </Suspense>
       </Container>
     </main>
   );

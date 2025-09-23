@@ -12,9 +12,15 @@ export default defineSchema({
     coverImage: v.string(),
     date: v.string(),
     preview: v.optional(v.boolean()),
-  }),
+  })
+    .index("by_date", ["date"])
+    .index("by_author", ["author"])
+    .index("by_slug", ["slug"])
+    .index("by_preview", ["preview"])
+    .index("by_date_preview", ["date", "preview"]),
   authors: defineTable({
     name: v.string(),
     avatar: v.string(),
-  }),
+  })
+    .index("by_name", ["name"]),
 });
