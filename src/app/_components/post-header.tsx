@@ -35,18 +35,18 @@ export function PostHeader({ title, coverImage, date, author }: Props) {
 
 
       {/* Title */}
-      <div className="mb-8">
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
         <PostTitle>{title}</PostTitle>
-      </div>
-
-      
-
       {/* Cover Image */}
       {coverImage && (
         <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
           <CoverImage title={title} src={coverImage} />
         </div>
       )}
+      </div>
+
+      
+
 
       {/* Separator */}
       <div className="border-t border-border mb-8"></div>

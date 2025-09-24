@@ -31,11 +31,6 @@ export default async function PostPage({ params }: PostPageProps) {
       <Suspense fallback={<PostShell post_title={post_title} />}>
         <PostContent post_title={post_title} />
       </Suspense>
-      <Suspense fallback={<PostShell post_title={post_title} />}>
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <PostFooter post_title={post_title} />
-          </div>
-          </Suspense>
     </article>
   );
 }
