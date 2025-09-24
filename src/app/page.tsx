@@ -1,10 +1,7 @@
 import Container from "@/app/_components/container";
-import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
-import { MoreStories } from "@/app/_components/more-stories";
 import { SearchAndFilters } from "./_components/search-and-filters";
-import { Suspense } from "react";
-import { HeroPostFallback } from "./_components/hero-post-fallback";
+import { DynamicHomeContent } from "./_components/dynamic-home-content";
 
 export const experimental_ppr = true;
 
@@ -37,6 +34,7 @@ export default async function Index({ searchParams }: Props) {
   return (
     <main>
       <Container>
+        {/* Static content that renders immediately */}
         <Intro />
         
         {/* Search and Filters UI */}
@@ -50,41 +48,8 @@ export default async function Index({ searchParams }: Props) {
           currentLimit={limit}
         />
         
-        {/* Hero Post */}
-        <Suspense fallback={<HeroPostFallback />}>
-          <HeroPost
-            search={search}
-            sortField={sortField}
-            sortOrder={sortOrder}
-            preview={preview}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-          />
-        </Suspense>
-        
-        {/* More Stories */}
-        <Suspense fallback={
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 lg:gap-x-32 gap-y-20 md:gap-y-32 mb-32">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
-                <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
-        }>
-          <MoreStories
-            search={search}
-            sortField={sortField}
-            sortOrder={sortOrder}
-            limit={limit}
-            preview={preview}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-          />
-        </Suspense>
+        {/* Dynamic content that streams in */}
+        <DynamicHomeContent searchParams={params} />
       </Container>
     </main>
   );

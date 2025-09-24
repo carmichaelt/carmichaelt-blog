@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { PostSkeleton } from "@/app/_components/post-skeleton";
 import { PostContent } from "./_components/page-content";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
+import type { Metadata } from "next";
 
 interface PostPageProps {
   params: Promise<{ post_title: string }>;
@@ -27,21 +30,62 @@ export default async function PostPage({ params }: PostPageProps) {
   );
 }
 
-// Generate static params for popular posts to enable static pre-rendering
+// Generate static params for recent posts to enable static pre-rendering
 export async function generateStaticParams() {
-  // This would typically fetch the most popular posts
-  // For now, we'll return an empty array to enable dynamic rendering
-  // In production, you might want to pre-render your most popular posts
-  
   try {
-    // You could fetch recent posts here and return their slugs
-    // const posts = await fetch('/api/popular-posts').then(res => res.json());
-    // return posts.map((post: Post) => ({ post_title: post.slug }));
+    // Fetch recent posts for static generation
+    const { fetchQuery } = await import("convex/nextjs");
+    const { api } = await import("../../../../convex/_generated/api");
     
-    return [];
+    const posts = await fetchQuery(api.posts.getAllPostSlugs, {});
+    
+    // Return the most recent 10 posts for static generation
+    return posts.slice(0, 10).map((post: { slug: string }) => ({ 
+      post_title: post.slug 
+    }));
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];
+  }
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { post_title } = await params;
+  
+  try {
+    const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
+    
+    if (!post) {
+      return {
+        title: "Post Not Found",
+        description: "The requested post could not be found.",
+      };
+    }
+
+    return {
+      title: post.title,
+      description: post.excerpt,
+      openGraph: {
+        title: post.title,
+        description: post.excerpt,
+        images: post.coverImage ? [post.coverImage] : [],
+        type: "article",
+        publishedTime: post.date,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: post.excerpt,
+        images: post.coverImage ? [post.coverImage] : [],
+      },
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Post",
+      description: "A blog post",
+    };
   }
 }
 
