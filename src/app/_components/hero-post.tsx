@@ -84,7 +84,7 @@ export async function HeroPost({
 
   return (
     <section>
-      <div className="mb-8 md:mb-16">
+      <div className="mb-8 md:mb-16 w-[500px]">
         <CoverImage 
           title={heroPost.title} 
           src={heroPost.coverImage} 

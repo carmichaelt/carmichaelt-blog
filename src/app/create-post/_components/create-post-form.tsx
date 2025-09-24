@@ -82,8 +82,8 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
         richContent,
         author: authorId as Id<"users">,
         date: new Date().toISOString(),
-        ogImage: data.ogImage || 'placeholder-img.png',
-        coverImage: data.coverImage || 'placeholder-img.png',
+        ogImage: data.ogImage || '/placeholder-img.png',
+        coverImage: data.coverImage || '/placeholder-img.png',
       };
 
       await createPost(postData);

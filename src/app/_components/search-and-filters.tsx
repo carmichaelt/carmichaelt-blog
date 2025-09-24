@@ -2,56 +2,39 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Id } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X, Search, Filter, SortAsc, SortDesc } from "lucide-react";
+import { useQueryState } from 'nuqs'
 
-type Props = {
-  currentSearch: string;
-  currentSortField: "date" | "title";
-  currentSortOrder: "asc" | "desc";
-  currentPreview?: boolean;
-  currentDateFrom?: string;
-  currentDateTo?: string;
-  currentLimit: number;
-};
 
-export function SearchAndFilters({
-  currentSearch,
-  currentSortField,
-  currentSortOrder,
-  currentPreview,
-  currentDateFrom,
-  currentDateTo,
-  currentLimit,
-}: Props) {
+
+export function SearchAndFilters() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   
-  const [search, setSearch] = useState(currentSearch);
-  const [sortField, setSortField] = useState(currentSortField);
-  const [sortOrder, setSortOrder] = useState(currentSortOrder);
-  const [preview, setPreview] = useState(currentPreview);
-  const [dateFrom, setDateFrom] = useState(currentDateFrom || "");
-  const [dateTo, setDateTo] = useState(currentDateTo || "");
-  const [limit, setLimit] = useState(currentLimit.toString());
+  const [search, setSearch] = useQueryState("search");
+  const [sortField, setSortField] = useQueryState("sortField");
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder");
+  const [preview, setPreview] = useQueryState("preview");
+  const [dateFrom, setDateFrom] = useQueryState("dateFrom");
+  const [dateTo, setDateTo] = useQueryState("dateTo");
+  const [limit, setLimit] = useQueryState("limit");
   const [showFilters, setShowFilters] = useState(false);
 
   const updateURL = () => {
     const params = new URLSearchParams();
     
     if (search) params.set("search", search);
-    if (sortField !== "date") params.set("sortField", sortField);
-    if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
-    if (preview !== undefined) params.set("preview", preview.toString());
-    if (dateFrom) params.set("dateFrom", dateFrom);
-    if (dateTo) params.set("dateTo", dateTo);
-    if (limit !== "10") params.set("limit", limit);
+    if (sortField !== "date") params.set("sortField", sortField || "");
+    if (sortOrder !== "desc") params.set("sortOrder", sortOrder || "");
+    if (preview !== null) params.set("preview", preview.toString());
+    if (dateFrom) params.set("dateFrom", dateFrom || "");
+    if (dateTo) params.set("dateTo", dateTo || "");
+    if (limit !== "10") params.set("limit", limit || "");
 
     startTransition(() => {
       router.push(`/?${params.toString()}`);
@@ -62,7 +45,7 @@ export function SearchAndFilters({
     setSearch("");
     setSortField("date");
     setSortOrder("desc");
-    setPreview(undefined);
+    setPreview(null);
     setDateFrom("");
     setDateTo("");
     setLimit("10");
@@ -76,115 +59,122 @@ export function SearchAndFilters({
                           preview !== undefined || dateFrom || dateTo || limit !== "10";
 
   return (
-    <Card className="mb-8">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
-            Search & Filters
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              {showFilters ? "Hide" : "Show"} Filters
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold flex items-center gap-2">
+          <Search className="h-4 w-4" />
+          Search & Filters
+        </h3>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className="h-7 px-2 text-xs"
+          >
+            <Filter className="h-3 w-3 mr-1" />
+            {showFilters ? "Hide" : "Show"}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="h-7 px-2 text-xs">
+              <X className="h-3 w-3 mr-1" />
+              Clear
             </Button>
-            {hasActiveFilters && (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                <X className="h-4 w-4 mr-2" />
-                Clear All
-              </Button>
-            )}
-          </div>
+          )}
         </div>
-      </CardHeader>
+      </div>
       
-      <CardContent className="space-y-4">
-        {/* Search Input */}
-        <div className="flex gap-2">
-          <div className="flex-1">
-            {/* <Label htmlFor="search" className="mb-2">Search Posts</Label> */}
+      {/* Content */}
+      <div className="space-y-3">
+        {/* Search Input - Styled like the image */}
+        <div className="space-y-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               id="search"
               type="text"
-              placeholder="Search by title, excerpt, or content..."
-              value={search}
+              placeholder="Search..."
+              value={search || ""}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   updateURL();
                 }
               }}
+              className="pl-10 pr-20 h-10 bg-muted/50 border-muted-foreground/20 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50"
             />
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              <kbd className="px-2 py-1 text-xs font-mono bg-muted border border-muted-foreground/20 rounded text-muted-foreground">
+                ⌘ K
+              </kbd>
+            </div>
           </div>
-          <div className="flex items-end">
-            <Button onClick={updateURL} disabled={isPending}>
-              <Search className="h-4 w-4 mr-2" />
-              Search
-            </Button>
-          </div>
+          <Button onClick={updateURL} disabled={isPending} className="w-full h-8 text-xs">
+            <Search className="h-3 w-3 mr-1" />
+            Search
+          </Button>
         </div>
 
         {/* Active Filters Display */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap gap-2">
-            <span className="text-sm font-medium text-gray-600">Active filters:</span>
-            {search && (
-              <Badge variant="secondary">
-                Search: &quot;{search}&quot;
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setSearch("")} />
-              </Badge>
-            )}
-            {sortField !== "date" && (
-              <Badge variant="secondary">
-                Sort: {sortField}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setSortField("date")} />
-              </Badge>
-            )}
-            {sortOrder !== "desc" && (
-              <Badge variant="secondary">
-                Order: {sortOrder}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setSortOrder("desc")} />
-              </Badge>
-            )}
-            {preview !== undefined && (
-              <Badge variant="secondary">
-                Preview: {preview ? "Yes" : "No"}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setPreview(undefined)} />
-              </Badge>
-            )}
-            {dateFrom && (
-              <Badge variant="secondary">
-                From: {dateFrom}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setDateFrom("")} />
-              </Badge>
-            )}
-            {dateTo && (
-              <Badge variant="secondary">
-                To: {dateTo}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setDateTo("")} />
-              </Badge>
-            )}
-            {limit !== "10" && (
-              <Badge variant="secondary">
-                Limit: {limit}
-                <X className="h-3 w-3 ml-1 cursor-pointer" onClick={() => setLimit("10")} />
-              </Badge>
-            )}
+          <div className="space-y-2">
+            <span className="text-xs font-medium text-muted-foreground">Active filters:</span>
+            <div className="flex flex-wrap gap-1">
+              {search && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  Search: &quot;{search}&quot;
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setSearch("")} />
+                </Badge>
+              )}
+              {sortField !== "date" && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  Sort: {sortField}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setSortField("date")} />
+                </Badge>
+              )}
+              {sortOrder !== "desc" && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  Order: {sortOrder}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setSortOrder("desc")} />
+                </Badge>
+              )}
+              {preview !== null && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  Preview: {preview ? "Yes" : "No"}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setPreview(null)} />
+                </Badge>
+              )}
+              {dateFrom && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  From: {dateFrom}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setDateFrom("")} />
+                </Badge>
+              )}
+              {dateTo && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  To: {dateTo}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setDateTo("")} />
+                </Badge>
+              )}
+              {limit !== "10" && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  Limit: {limit}
+                  <X className="h-2 w-2 ml-1 cursor-pointer" onClick={() => setLimit("10")} />
+                </Badge>
+              )}
+            </div>
           </div>
         )}
 
         {/* Advanced Filters */}
         {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t">
+          <div className="space-y-3 pt-3 border-t">
             {/* Sort Field */}
-            <div>
-              <Label htmlFor="sortField">Sort By</Label>
-              <Select value={sortField} onValueChange={(value: "date" | "title") => setSortField(value)}>
-                <SelectTrigger>
+            <div className="space-y-1">
+              <Label htmlFor="sortField" className="text-xs">Sort By</Label>
+              <Select value={sortField || ""} onValueChange={(value: "date" | "title") => setSortField(value)}>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -195,22 +185,22 @@ export function SearchAndFilters({
             </div>
 
             {/* Sort Order */}
-            <div>
-              <Label htmlFor="sortOrder">Sort Order</Label>
-              <Select value={sortOrder} onValueChange={(value: "asc" | "desc") => setSortOrder(value)}>
-                <SelectTrigger>
+            <div className="space-y-1">
+              <Label htmlFor="sortOrder" className="text-xs">Sort Order</Label>
+              <Select value={sortOrder || ""} onValueChange={(value: "asc" | "desc") => setSortOrder(value)}>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="desc">
                     <div className="flex items-center gap-2">
-                      <SortDesc className="h-4 w-4" />
+                      <SortDesc className="h-3 w-3" />
                       Descending
                     </div>
                   </SelectItem>
                   <SelectItem value="asc">
                     <div className="flex items-center gap-2">
-                      <SortAsc className="h-4 w-4" />
+                      <SortAsc className="h-3 w-3" />
                       Ascending
                     </div>
                   </SelectItem>
@@ -219,16 +209,16 @@ export function SearchAndFilters({
             </div>
 
             {/* Preview Status */}
-            <div>
-              <Label htmlFor="preview">Preview Status</Label>
+            <div className="space-y-1">
+              <Label htmlFor="preview" className="text-xs">Preview Status</Label>
               <Select 
-                value={preview === undefined ? "all" : preview.toString()} 
+                value={preview === null ? "all" : preview.toString()} 
                 onValueChange={(value) => {
-                  if (value === "all") setPreview(undefined);
-                  else setPreview(value === "true");
+                  if (value === "all") setPreview(null);
+                  else setPreview(value === "true" ? "true" : "false");
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -240,10 +230,10 @@ export function SearchAndFilters({
             </div>
 
             {/* Limit */}
-            <div>
-              <Label htmlFor="limit">Posts Per Page</Label>
-              <Select value={limit} onValueChange={setLimit}>
-                <SelectTrigger>
+            <div className="space-y-1">
+              <Label htmlFor="limit" className="text-xs">Posts Per Page</Label>
+              <Select value={limit || ""} onValueChange={setLimit}>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,35 +246,35 @@ export function SearchAndFilters({
             </div>
 
             {/* Date Range */}
-            <div>
-              <Label htmlFor="dateFrom">From Date</Label>
+            <div className="space-y-1">
+              <Label htmlFor="dateFrom" className="text-xs">From Date</Label>
               <Input
                 id="dateFrom"
                 type="date"
-                value={dateFrom}
+                value={dateFrom || ""}
                 onChange={(e) => setDateFrom(e.target.value)}
+                className="h-8 text-xs"
               />
             </div>
 
-            <div>
-              <Label htmlFor="dateTo">To Date</Label>
+            <div className="space-y-1">
+              <Label htmlFor="dateTo" className="text-xs">To Date</Label>
               <Input
                 id="dateTo"
                 type="date"
-                value={dateTo}
+                value={dateTo || ""}
                 onChange={(e) => setDateTo(e.target.value)}
+                className="h-8 text-xs"
               />
             </div>
 
             {/* Apply Filters Button */}
-            <div className="flex items-end">
-              <Button onClick={updateURL} disabled={isPending} className="w-full">
-                Apply Filters
-              </Button>
-            </div>
+            <Button onClick={updateURL} disabled={isPending} className="w-full h-8 text-xs">
+              Apply Filters
+            </Button>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

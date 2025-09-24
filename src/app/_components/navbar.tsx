@@ -1,30 +1,53 @@
 import Link from "next/link";
-//import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
+//import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { NavbarAuth } from "./navbar-auth";
+import { CreatePostButton } from "./create-post-btn";
+import { MessageCircle, PlusIcon } from "lucide-react";
+//import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // Server component for static navbar structure
 const Navbar = () => {
   return (
-    <>
-      <div className="flex justify-between items-center p-4">
-        <div>
-          <Link href="/">
-            {/* <Image src="/tc-logo.png" alt="logo" width={100} height={100} /> */}
-            <span className="flex items-center text-purple-500 hover:text-amber-600">
-            <h1 className="text-5xl md:text-xl font-bold text-black hover:text-black tracking-tighter leading-tight">
-              Carmichael
-            </h1>
-            <h1 className="text-5xl md:text-xl font-bold font-italic tracking-tighter leading-tight">
-              t.
-            </h1>
-            </span>
-          </Link>
+    <header className="bg-background sticky top-0 z-50 flex w-full items-center border-b">
+      <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
+        <div className="flex justify-between w-full gap-2">
+          <div className="flex items-center gap-2">
+            {/*<SidebarTrigger />*/}
+            <Link href="/">
+              <span className="flex items-center text-purple-500 hover:text-amber-600 transition-colors">
+                <h1 className="text-5xl md:text-xl font-bold text-black hover:text-black tracking-tighter leading-tight">
+                  Carmichael
+                </h1>
+                <h1 className="text-5xl md:text-xl font-bold font-italic tracking-tighter leading-tight">
+                  t.
+                </h1>
+              </span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* <CreatePostButton /> */}
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+              className="hidden sm:flex"
+            >
+              <Link
+                href="https://linkedin.com/in/tomcarmichael"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Feedback
+              </Link>
+            </Button>
+            <NavbarAuth />
+          </div>
         </div>
-        <NavbarAuth />
       </div>
-      <Separator />
-    </>
+    </header>
   );
 };
 

@@ -3,13 +3,17 @@ import ConvexClientProvider from "@/components/providers/convex-provider-with-cl
 import { ClerkProvider } from "@clerk/nextjs";
 import { HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
-//import { Inter } from "next/font/google";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import cn from "classnames";
-//import { ThemeSwitcher } from "./_components/theme-switcher";
-
 import "./globals.css";
 import Navbar from "./_components/navbar";
 import localFont from "next/font/local";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/layout/site-header";
+import { ControlsSidebar } from "@/components/layout/controls-sidebar";
 
 const junicode = localFont({
   src: '../../public/fonts/junicode/Junicode.ttf',
@@ -32,6 +36,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className={junicode.className}>
       <head>
@@ -71,15 +76,36 @@ export default function RootLayout({
         className={cn("dark:bg-slate-900 dark:text-slate-400")}
       >
         {/* <ThemeSwitcher /> */}
-        <div className="min-h-screen font-junicode">
         <ClerkProvider>
           <ConvexClientProvider>
-          <Navbar />
-            {children}
-        <Footer />
+            <NuqsAdapter>
+        <div className="font-junicode">
+        <div className="[--header-height:calc(--spacing(14))]">
+                <SidebarProvider className="flex flex-col">
+                <div className="sticky top-0 z-100">
+                  <Navbar />
+                </div>
+                <div className="flex flex-1">
+                  <ControlsSidebar />
+                  <SidebarInset>
+                    <SiteHeader />
+                    <div className="flex flex-1 flex-col">
+                      <div className="@container/main flex flex-1 flex-col gap-2">
+                        <div className="flex flex-col gap-4 md:gap-6">{children}</div>
+                      </div>
+                    </div>
+                  </SidebarInset>
+                  </div>
+                <Footer />
+                </SidebarProvider>
+              </div>
+        </div>
+                <Toaster position="top-right" />
+          </NuqsAdapter>
           </ConvexClientProvider>
           </ClerkProvider>
-        </div>
+          <Analytics />
+          <SpeedInsights />
       </body>
     </html>
   );
