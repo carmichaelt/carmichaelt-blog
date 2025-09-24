@@ -5,6 +5,8 @@ import DateFormatter from "@/app/_components/date-formatter";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
+import { PostBody } from "./post-body";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   search?: string;
@@ -54,6 +56,7 @@ export async function HeroPost({
           url: post.ogImage
         },
         content: post.content,
+        richContent: post.richContent,
         preview: post.preview
       };
     }) ?? []
@@ -83,8 +86,43 @@ export async function HeroPost({
   }
 
   return (
-    <section>
-      <div className="mb-8 md:mb-16 w-[500px]">
+    <section className="mb-8 md:mb-16">
+      <Card className="overflow-hidden">
+        <CardHeader className="space-y-6">
+          <div className="flex items-start gap-4">
+            <CoverImage 
+              title={heroPost.title} 
+              src={heroPost.coverImage} 
+              slug={heroPost.slug} 
+            />
+            <div className="flex-1 space-y-3">
+              <div className="flex items-start justify-between">
+                <CardTitle className="text-2xl md:text-3xl leading-tight font-bold">
+                  <Link href={`/posts/${heroPost.slug}`} className="hover:underline">
+                    {heroPost.title}
+                  </Link>
+                </CardTitle>
+                <div className="text-sm text-muted-foreground ml-4">
+                  <DateFormatter dateString={heroPost.date} />
+                </div>
+              </div>
+              <CardDescription className="text-base leading-relaxed text-muted-foreground">
+                {heroPost.excerpt}
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <PostBody content={heroPost.content} richContent={heroPost.richContent} />
+              <div className="flex items-center gap-2">
+                <Avatar 
+                  name={heroPost.author.name} 
+                  picture={heroPost.author.picture} 
+                />
+              </div>
+        </CardContent>
+      </Card>
+      {/*<div className="mb-8 md:mb-16 w-[500px]">
         <CoverImage 
           title={heroPost.title} 
           src={heroPost.coverImage} 
@@ -109,7 +147,7 @@ export async function HeroPost({
             picture={heroPost.author.picture} 
           />
         </div>
-      </div>
+      </div>*/}
     </section>
   );
 }

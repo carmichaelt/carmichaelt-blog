@@ -22,7 +22,7 @@ export function SiteHeader() {
 
   const adminNavItems = [
     {
-      name: 'Blog',
+      name: 'All Posts',
       href: `/`,
       icon: BookOpen,
     },

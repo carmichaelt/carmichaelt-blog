@@ -8,7 +8,7 @@ const DateFormatter = ({ dateString }: Props) => {
   const date = parseISO(dateString);
   return (
     <time dateTime={dateString} className="text-sm text-muted-foreground">
-      {format(date, "EEEE, MMMM do yyyy")}
+      {format(date, "do MMM yy")}
     </time>
   );
 };

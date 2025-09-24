@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { HeroPost } from "@/app/_components/hero-post";
+//import { HeroPost } from "@/app/_components/hero-post";
 import { MoreStories } from "@/app/_components/more-stories";
-import { HeroPostFallback } from "./hero-post-fallback";
+//import { HeroPostFallback } from "./hero-post-fallback";
 
 type SearchParams = {
   search?: string;
@@ -30,7 +30,7 @@ export function DynamicHomeContent({ searchParams }: Props) {
 
   return (
     <>
-      {/* Hero Post */}
+      {/* Hero Post 
       <Suspense fallback={<HeroPostFallback />}>
         <HeroPost
           search={search}
@@ -40,7 +40,7 @@ export function DynamicHomeContent({ searchParams }: Props) {
           dateFrom={dateFrom}
           dateTo={dateTo}
         />
-      </Suspense>
+      </Suspense>*/}
       
       {/* More Stories */}
       <Suspense fallback={
