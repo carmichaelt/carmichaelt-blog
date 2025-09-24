@@ -15,9 +15,31 @@ export const createPost = mutation({
     content: v.string(),
     richContent: v.optional(v.any()),
     author: v.id("users"),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("posts", args);
+    return await ctx.db.insert("posts", {
+      ...args,
+      views: 0, // Initialize views to 0
+    });
+  },
+});
+
+// Increment post views
+export const incrementPostViews = mutation({
+  args: {
+    postId: v.id("posts"),
+  },
+  handler: async (ctx, args) => {
+    const post = await ctx.db.get(args.postId);
+    if (!post) {
+      throw new Error("Post not found");
+    }
+    
+    const currentViews = post.views || 0;
+    return await ctx.db.patch(args.postId, {
+      views: currentViews + 1,
+    });
   },
 });
 
@@ -28,7 +50,7 @@ export const getPosts = query({
     search: v.optional(v.string()),
     
     // Sorting
-    sortField: v.optional(v.union(v.literal("date"), v.literal("title"))),
+    sortField: v.optional(v.union(v.literal("date"), v.literal("title"), v.literal("views"))),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     
     // Pagination
@@ -37,6 +59,7 @@ export const getPosts = query({
     // Filtering
     author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
+    tags: v.optional(v.array(v.string())), // Filter by tags
     
     // Additional filters
     dateFrom: v.optional(v.string()),
@@ -50,6 +73,7 @@ export const getPosts = query({
       paginationOpts,
       author,
       preview,
+      tags,
       dateFrom,
       dateTo,
     } = args;
@@ -66,6 +90,8 @@ export const getPosts = query({
       query = ctx.db.query("posts").withIndex("by_author", (q) => q.eq("author", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
+    } else if (sortField === "views") {
+      query = ctx.db.query("posts").withIndex("by_views");
     } else {
       query = ctx.db.query("posts");
     }
@@ -82,6 +108,18 @@ export const getPosts = query({
       );
     }
 
+    // Apply tag filters
+    if (tags && tags.length > 0) {
+      query = query.filter((q) => {
+        // Check if any of the provided tags exist in the post's tags
+        return q.or(
+          ...tags.map(tag => 
+            q.eq(q.field("tags"), tag)
+          )
+        );
+      });
+    }
+
     // Apply date range filters
     if (dateFrom) {
       query = query.filter((q) => q.gte(q.field("date"), dateFrom));
@@ -95,6 +133,8 @@ export const getPosts = query({
       query = query.order(sortOrder);
     } else if (sortField === "title") {
       query = query.order(sortOrder);
+    } else if (sortField === "views") {
+      query = query.order(sortOrder);
     }
 
     // Apply pagination
@@ -106,11 +146,12 @@ export const getPosts = query({
 export const getPostsSimple = query({
   args: {
     search: v.optional(v.string()),
-    sortField: v.optional(v.union(v.literal("date"), v.literal("title"))),
+    sortField: v.optional(v.union(v.literal("date"), v.literal("title"), v.literal("views"))),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     limit: v.optional(v.number()),
     author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
+    tags: v.optional(v.array(v.string())), // Filter by tags
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
   },
@@ -122,6 +163,7 @@ export const getPostsSimple = query({
       limit = 10,
       author,
       preview,
+      tags,
       dateFrom,
       dateTo,
     } = args;
@@ -137,6 +179,8 @@ export const getPostsSimple = query({
       query = ctx.db.query("posts").withIndex("by_author", (q) => q.eq("author", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
+    } else if (sortField === "views") {
+      query = ctx.db.query("posts").withIndex("by_views");
     } else {
       query = ctx.db.query("posts");
     }
@@ -149,6 +193,18 @@ export const getPostsSimple = query({
           q.eq(q.field("excerpt"), search),
         )
       );
+    }
+
+    // Apply tag filters
+    if (tags && tags.length > 0) {
+      query = query.filter((q) => {
+        // Check if any of the provided tags exist in the post's tags
+        return q.or(
+          ...tags.map(tag => 
+            q.eq(q.field("tags"), tag)
+          )
+        );
+      });
     }
 
     // Apply date range filters
@@ -173,11 +229,12 @@ export const getPostsCount = query({
     search: v.optional(v.string()),
     author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
+    tags: v.optional(v.array(v.string())), // Filter by tags
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { search, author, preview, dateFrom, dateTo } = args;
+    const { search, author, preview, tags, dateFrom, dateTo } = args;
 
     let query = ctx.db.query("posts");
 
@@ -197,6 +254,17 @@ export const getPostsCount = query({
 
     if (preview !== undefined) {
       query = query.filter((q) => q.eq(q.field("preview"), preview));
+    }
+
+    if (tags && tags.length > 0) {
+      query = query.filter((q) => {
+        // Check if any of the provided tags exist in the post's tags
+        return q.or(
+          ...tags.map(tag => 
+            q.eq(q.field("tags"), tag)
+          )
+        );
+      });
     }
 
     if (dateFrom) {
@@ -288,5 +356,60 @@ export const searchPosts = query({
     );
 
     return filteredPosts.slice(0, limit);
+  },
+});
+
+// Get all unique tags from posts
+export const getAllTags = query({
+  args: {},
+  handler: async (ctx) => {
+    const posts = await ctx.db.query("posts").collect();
+    const allTags = new Set<string>();
+    
+    posts.forEach(post => {
+      if (post.tags) {
+        post.tags.forEach(tag => allTags.add(tag));
+      }
+    });
+    
+    return Array.from(allTags).sort();
+  },
+});
+
+// Get popular posts (sorted by views)
+export const getPopularPosts = query({
+  args: {
+    limit: v.optional(v.number()),
+    preview: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const { limit = 10, preview = false } = args;
+    
+    return await ctx.db.query("posts")
+      .withIndex("by_preview", (q) => q.eq("preview", preview))
+      .order("desc")
+      .collect()
+      .then(posts => 
+        posts
+          .filter(post => (post.views || 0) > 0)
+          .sort((a, b) => (b.views || 0) - (a.views || 0))
+          .slice(0, limit)
+      );
+  },
+});
+
+// Get posts by tag
+export const getPostsByTag = query({
+  args: {
+    tag: v.string(),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    const { tag, paginationOpts } = args;
+    
+    return await ctx.db.query("posts")
+      .filter((q) => q.eq(q.field("tags"), tag))
+      .order("desc")
+      .paginate(paginationOpts);
   },
 });

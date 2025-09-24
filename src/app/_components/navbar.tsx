@@ -14,16 +14,18 @@ const Navbar = () => {
         <div className="flex justify-between w-full gap-2">
           <div className="flex items-center gap-2">
             {/*<SidebarTrigger />*/}
-            <Link href="/">
               <span className="flex items-center text-purple-500 hover:text-amber-600 transition-colors">
+            <Link href="/">
                 <h1 className="text-5xl md:text-xl font-bold text-black hover:text-black tracking-tighter leading-tight">
                   Carmichael
                 </h1>
+            </Link>
+            <Link href="/sign-in">
                 <h1 className="text-5xl md:text-xl font-bold font-italic tracking-tighter leading-tight">
                   t.
                 </h1>
-              </span>
             </Link>
+              </span>
           </div>
 
           <div className="flex items-center gap-3">

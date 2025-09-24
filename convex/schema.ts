@@ -13,12 +13,16 @@ export default defineSchema({
     coverImage: v.string(),
     date: v.string(),
     preview: v.optional(v.boolean()),
+    tags: v.optional(v.array(v.string())), // Array of tag strings
+    views: v.optional(v.number()), // View count for popularity tracking
   })
     .index("by_date", ["date"])
     .index("by_author", ["author"])
     .index("by_slug", ["slug"])
     .index("by_preview", ["preview"])
-    .index("by_date_preview", ["date", "preview"]),
+    .index("by_date_preview", ["date", "preview"])
+    .index("by_views", ["views"])
+    .index("by_tags", ["tags"]),
   
   
     users: defineTable({

@@ -4,6 +4,7 @@ import { PostContent } from "./_components/page-content";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import type { Metadata } from "next";
+import { PostFooter } from "@/app/_components/post-footer";
 
 interface PostPageProps {
   params: Promise<{ post_title: string }>;
@@ -12,8 +13,10 @@ interface PostPageProps {
 // Static shell component that renders immediately
 function PostShell({ post_title }: { post_title: string }) {
   return (
-    <article className="min-h-screen">
-      <PostSkeleton />
+    <article className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PostSkeleton />
+      </div>
     </article>
   );
 }
@@ -24,9 +27,16 @@ export default async function PostPage({ params }: PostPageProps) {
   const { post_title } = await params;
 
   return (
-    <Suspense fallback={<PostShell post_title={post_title} />}>
-      <PostContent post_title={post_title} />
-    </Suspense>
+    <article className="min-h-screen bg-background">
+      <Suspense fallback={<PostShell post_title={post_title} />}>
+        <PostContent post_title={post_title} />
+      </Suspense>
+      <Suspense fallback={<PostShell post_title={post_title} />}>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <PostFooter post_title={post_title} />
+          </div>
+          </Suspense>
+    </article>
   );
 }
 

@@ -32,7 +32,7 @@ export function RichTextRenderer({ content, className }: RichTextRendererProps) 
 
   return (
     <div 
-      className={`prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto max-w-none ${className || ''}`}
+      className={`prose prose-lg prose-gray dark:prose-invert mx-auto max-w-none ${className || ''}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

@@ -29,9 +29,9 @@ export function NavbarAuth() {
       </Authenticated>
       <Unauthenticated>
         <>
-        <Button variant="outline" size="sm" asChild>
+        {/*<Button variant="outline" size="sm" asChild>
           <SignInButton mode="modal" />
-        </Button>
+        </Button>*/}
         </>
       </Unauthenticated>
     </>

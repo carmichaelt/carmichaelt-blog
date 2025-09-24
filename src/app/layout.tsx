@@ -78,23 +78,13 @@ export default function RootLayout({
             <NuqsAdapter>
               <div className="font-junicode">
                 <div className="[--header-height:calc(--spacing(14))]">
-                  <SidebarProvider className="flex flex-col">
-                    <div className="sticky top-0 z-100">
-                      <Navbar />
-                    </div>
-                    <div className="flex flex-1">
-                      <ControlsSidebar />
-                      <SidebarInset>
-                        <SiteHeader />
-                        <div className="flex flex-1 flex-col">
-                          <div className="@container/main flex flex-1 flex-col gap-2 p-4">
-                              {children}
-                          </div>
-                        </div>
-                      </SidebarInset>
-                    </div>
-                    <div className="bottom-0 z-100">
-                      <Footer />
+                <SidebarProvider className="flex flex-col">
+                  <div className="sticky top-0 z-100">
+                    <Navbar />
+                  </div>
+                  {children}
+                  <div className="bottom-0 z-100">
+                    <Footer />
                     </div>
                   </SidebarProvider>
                 </div>

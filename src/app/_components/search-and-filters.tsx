@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { X, Search, Filter, SortAsc, SortDesc } from "lucide-react";
 import { useQueryState } from "nuqs";
 
@@ -41,7 +40,7 @@ export function SearchAndFilters() {
     if (limit !== "10") params.set("limit", limit || "");
 
     startTransition(() => {
-      router.push(`/?${params.toString()}`);
+      router.push(`/posts/?${params.toString()}`);
     });
   };
 
@@ -55,7 +54,7 @@ export function SearchAndFilters() {
     setLimit("10");
 
     startTransition(() => {
-      router.push("/");
+      router.push("/posts/");
     });
   };
 
@@ -166,24 +165,7 @@ export function SearchAndFilters() {
                   </div>
                 </div>
               )}
-              {sortOrder !== "" && sortOrder !== undefined && sortOrder !== null && (
-                <div className="flex flex-row">
-                  <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Order:
-                    </span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      &quot;{sortOrder}&quot;
-                    </span>
-                  </div>
-                  <div
-                    className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
-                    onClick={() => setSortOrder("desc")}
-                  >
-                    <X className="h-3 w-3 cursor-pointer text-red-500" />
-                  </div>
-                </div>
-              )}
+              
               {preview !== null && preview !== "" && preview !== undefined && (
                 <div className="flex flex-row">
                   <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
