@@ -243,6 +243,19 @@ export const getRecentPosts = query({
   },
 });
 
+// Get all post slugs for static generation
+export const getAllPostSlugs = query({
+  args: {},
+  handler: async (ctx) => {
+    const posts = await ctx.db.query("posts")
+      .withIndex("by_preview", (q) => q.eq("preview", false))
+      .order("desc")
+      .collect();
+    
+    return posts.map(post => ({ slug: post.slug }));
+  },
+});
+
 // Get post by slug (optimized with index)
 export const getPostBySlug = query({
   args: {
