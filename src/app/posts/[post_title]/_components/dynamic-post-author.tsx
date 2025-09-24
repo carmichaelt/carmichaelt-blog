@@ -3,7 +3,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { Avatar } from "@/app/_components/avatar";
+import Avatar from "@/app/_components/avatar";
 
 // Dynamic component for author information that streams in
 export function DynamicPostAuthor({ authorId }: { authorId: Id<"users"> }) {

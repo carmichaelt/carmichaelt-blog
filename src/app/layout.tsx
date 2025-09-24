@@ -9,6 +9,13 @@ import cn from "classnames";
 
 import "./globals.css";
 import Navbar from "./_components/navbar";
+import localFont from "next/font/local";
+
+const junicode = localFont({
+  src: '../../public/fonts/junicode/Junicode.ttf',
+  display: 'swap',
+  variable: '--font-junicode',
+})
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={junicode.className}>
       <head>
         <link
           rel="apple-touch-icon"
@@ -64,7 +71,7 @@ export default function RootLayout({
         className={cn("dark:bg-slate-900 dark:text-slate-400")}
       >
         {/* <ThemeSwitcher /> */}
-        <div className="min-h-screen">
+        <div className="min-h-screen font-junicode">
         <ClerkProvider>
           <ConvexClientProvider>
           <Navbar />
