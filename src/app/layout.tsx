@@ -3,10 +3,10 @@ import ConvexClientProvider from "@/components/providers/convex-provider-with-cl
 import { ClerkProvider } from "@clerk/nextjs";
 import { HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { Toaster } from 'sonner';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import cn from "classnames";
 import "./globals.css";
 import Navbar from "./_components/navbar";
@@ -16,10 +16,10 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { ControlsSidebar } from "@/components/layout/controls-sidebar";
 
 const junicode = localFont({
-  src: '../../public/fonts/junicode/Junicode.ttf',
-  display: 'swap',
-  variable: '--font-junicode',
-})
+  src: "../../public/fonts/junicode/Junicode.ttf",
+  display: "swap",
+  variable: "--font-junicode",
+});
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +36,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en" className={junicode.className}>
       <head>
@@ -72,40 +71,40 @@ export default function RootLayout({
         <meta name="theme-color" content="#000" />
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       </head>
-      <body
-        className={cn("dark:bg-slate-900 dark:text-slate-400")}
-      >
+      <body className={cn("dark:bg-slate-900 dark:text-slate-400")}>
         {/* <ThemeSwitcher /> */}
         <ClerkProvider>
           <ConvexClientProvider>
             <NuqsAdapter>
-        <div className="font-junicode">
-        <div className="[--header-height:calc(--spacing(14))]">
-                <SidebarProvider className="flex flex-col">
-                <div className="sticky top-0 z-100">
-                  <Navbar />
-                </div>
-                <div className="flex flex-1">
-                  <ControlsSidebar />
-                  <SidebarInset>
-                    <SiteHeader />
-                    <div className="flex flex-1 flex-col">
-                      <div className="@container/main flex flex-1 flex-col gap-2">
-                        <div className="flex flex-col gap-4 md:gap-6">{children}</div>
-                      </div>
+              <div className="font-junicode">
+                <div className="[--header-height:calc(--spacing(14))]">
+                  <SidebarProvider className="flex flex-col">
+                    <div className="sticky top-0 z-100">
+                      <Navbar />
                     </div>
-                  </SidebarInset>
-                  </div>
-                <Footer />
-                </SidebarProvider>
+                    <div className="flex flex-1">
+                      <ControlsSidebar />
+                      <SidebarInset>
+                        <SiteHeader />
+                        <div className="flex flex-1 flex-col">
+                          <div className="@container/main flex flex-1 flex-col gap-2 p-4">
+                              {children}
+                          </div>
+                        </div>
+                      </SidebarInset>
+                    </div>
+                    <div className="bottom-0 z-100">
+                      <Footer />
+                    </div>
+                  </SidebarProvider>
+                </div>
               </div>
-        </div>
-                <Toaster position="top-right" />
-          </NuqsAdapter>
+              <Toaster position="top-right" />
+            </NuqsAdapter>
           </ConvexClientProvider>
-          </ClerkProvider>
-          <Analytics />
-          <SpeedInsights />
+        </ClerkProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

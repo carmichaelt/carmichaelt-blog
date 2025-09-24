@@ -12,6 +12,7 @@ import { DynamicPostAuthor } from "./dynamic-post-author";
 // Dynamic content component that streams in
 export function PostContent({ post_title }: { post_title: string }) {
     const post = useQuery(api.posts.getPostBySlug, { slug: post_title });
+    const author = useQuery(api.users.getUserById, { id: post?.author as Id<"users"> });
   
     if (post === undefined) {
       // Still loading
@@ -23,26 +24,24 @@ export function PostContent({ post_title }: { post_title: string }) {
       notFound();
     }
   
-    // Use fallback author data for immediate rendering
-    const fallbackAuthor = {
+    // Use author data if available, otherwise fallback
+    const authorData = author ? {
+      name: author.name ?? "Unknown Author",
+      picture: author.avatarUrl ?? ""
+    } : {
       name: "Loading...",
       picture: ""
     };
   
-    return (
-      <>
-        <PostHeader
-          title={post.title}
-          coverImage={post.coverImage}
-          date={post.date}
-          author={fallbackAuthor}
-        />
-        <PostBody content={post.content} richContent={post.richContent} />
-        
-        {/* Stream in author information */}
-        <div className="mt-8">
-          <DynamicPostAuthor authorId={post.author as Id<"users">} />
-        </div>
-      </>
-    );
+  return (
+    <>
+      <PostHeader
+        title={post.title}
+        coverImage={post.coverImage}
+        date={post.date}
+        author={authorData}
+      />
+      <PostBody content={post.content} richContent={post.richContent} />
+    </>
+  );
   }

@@ -7,18 +7,10 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   BookOpen,
-  BookTextIcon,
   Building,
-  MessageSquare,
-  BarChart3,
-  UserCheck,
-  FileText,
-  Users,
-  BarChart,
-  Settings,
-  User,
   FilePlus,
 } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export function SiteHeader() {
   const [titleState, setTitleState] = useState('Carmichaelt. Blog');
@@ -67,11 +59,23 @@ export function SiteHeader() {
       setCurrentIcon(Building);
     }
   }, [pathname]);
-
+  
+  const isMac = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mac');
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SidebarTrigger className="-ml-1" />
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {isMac ? (
+                <kbd className="rounded bg-black px-1.5 py-0.5 text-xs font-mono font-semibold">⌘ + B</kbd>
+              ) : (
+                <kbd className="rounded bg-black px-1.5 py-0.5 text-xs font-mono font-semibold">Ctrl + B</kbd>
+              )}
+          </TooltipContent>
+        </Tooltip>
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         {React.createElement(currentIcon, { className: 'h-4 w-4' })}
         <h1 className="text-base font-medium">{titleState}</h1>

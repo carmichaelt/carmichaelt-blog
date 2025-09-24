@@ -12,7 +12,7 @@ interface PostPageProps {
 // Static shell component that renders immediately
 function PostShell({ post_title }: { post_title: string }) {
   return (
-    <article className="mb-32">
+    <article className="min-h-screen">
       <PostSkeleton />
     </article>
   );

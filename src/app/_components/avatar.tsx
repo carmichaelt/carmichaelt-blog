@@ -17,7 +17,10 @@ type Props = {
             {name}
           </TooltipContent>
         </Tooltip>
-        <div className="text-xl font-bold">{name}</div>
+        <div className="flex flex-col">
+        <span className="font-medium text-sm">{name ?? "Unknown Author"}</span>
+        <span className="text-xs text-muted-foreground">@{name?.toLowerCase().replace(/\s+/g, '') ?? "unknown"}</span>
+      </div>
       </div>
     );
   };
