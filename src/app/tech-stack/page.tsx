@@ -8,7 +8,7 @@ export default async function TechStack() {
     <>
       <div className="flex flex-1 mt-16 mb-16">
         <Container>
-          <div className="flex min-w-[400px] max-w-[1200px] mx-auto">
+          <div className="flex w-full max-w-7xl mx-auto">
             <div className="space-y-8 w-full">
               <div className="text-center">
                 <h1 className="text-3xl font-bold tracking-tight">Tech Stack</h1>

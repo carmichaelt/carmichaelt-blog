@@ -11,7 +11,7 @@ export default async function Projects() {
     <>
       <div className="flex flex-1 mt-16">
         <Container>
-          <div className="flex min-w-[400px] max-w-[800px] mx-auto flex-col">
+          <div className="flex w-full max-w-6xl mx-auto flex-col">
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
               <Link
                 href="/"

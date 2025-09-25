@@ -68,28 +68,30 @@ export function SearchAndFilters() {
     limit !== "10";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
-            className="h-7 px-2 text-xs"
+            className="h-8 sm:h-7 px-2 sm:px-3 text-xs sm:text-sm"
           >
-            <Filter className="h-3 w-3 mr-1" />
-            {showFilters ? "Hide" : "Show"}
+            <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span className="hidden sm:inline">{showFilters ? "Hide" : "Show"}</span>
+            <span className="sm:hidden">{showFilters ? "Hide Filters" : "Filters"}</span>
           </Button>
           {hasActiveFilters && (
             <Button
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="h-7 px-2 text-xs"
+              className="h-8 sm:h-7 px-2 sm:px-3 text-xs sm:text-sm"
             >
-              <X className="h-3 w-3 mr-1" />
-              Clear
+              <X className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+              <span className="hidden sm:inline">Clear</span>
+              <span className="sm:hidden">Clear All</span>
             </Button>
           )}
         </div>
@@ -104,7 +106,7 @@ export function SearchAndFilters() {
             <Input
               id="search"
               type="text"
-              placeholder="Search..."
+              placeholder="Search posts..."
               value={search || ""}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
@@ -112,9 +114,9 @@ export function SearchAndFilters() {
                   updateURL();
                 }
               }}
-              className="pl-10 pr-20 h-10 bg-gray-200 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50"
+              className="pl-10 pr-16 sm:pr-20 h-10 sm:h-10 bg-gray-200 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm sm:text-base"
             />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 hidden sm:block">
               <kbd className="px-2 py-1 text-xs font-mono bg-muted border border-muted-foreground/20 rounded text-muted-foreground">
                 ⌘ K
               </kbd>
@@ -125,10 +127,10 @@ export function SearchAndFilters() {
         {/* Active Filters Display */}
         {hasActiveFilters && (
           <div className="space-y-2">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-xs sm:text-sm font-medium text-muted-foreground">
               Active filters:
             </span>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 sm:gap-2">
               {search && search !== "" && (
                 <div className="flex flex-row">
                   <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
@@ -244,128 +246,134 @@ export function SearchAndFilters() {
 
         {/* Advanced Filters */}
         {showFilters && (
-          <div className="space-y-3 pt-3 border-t">
-            {/* Sort Field */}
-            <div className="space-y-1">
-              <Label htmlFor="sortField" className="text-xs">
-                Sort By
-              </Label>
-              <Select
-                value={sortField || ""}
-                onValueChange={(value: "date" | "title") => setSortField(value)}
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="date">Date</SelectItem>
-                  <SelectItem value="title">Title</SelectItem>
-                </SelectContent>
-              </Select>
+          <div className="space-y-4 pt-3 border-t">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Sort Field */}
+              <div className="space-y-1">
+                <Label htmlFor="sortField" className="text-xs sm:text-sm">
+                  Sort By
+                </Label>
+                <Select
+                  value={sortField || ""}
+                  onValueChange={(value: "date" | "title") => setSortField(value)}
+                >
+                  <SelectTrigger className="h-9 sm:h-8 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="date">Date</SelectItem>
+                    <SelectItem value="title">Title</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sort Order */}
+              <div className="space-y-1">
+                <Label htmlFor="sortOrder" className="text-xs sm:text-sm">
+                  Sort Order
+                </Label>
+                <Select
+                  value={sortOrder || ""}
+                  onValueChange={(value: "asc" | "desc") => setSortOrder(value)}
+                >
+                  <SelectTrigger className="h-9 sm:h-8 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="desc">
+                      <div className="flex items-center gap-2">
+                        <SortDesc className="h-3 w-3" />
+                        Descending
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="asc">
+                      <div className="flex items-center gap-2">
+                        <SortAsc className="h-3 w-3" />
+                        Ascending
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* Sort Order */}
-            <div className="space-y-1">
-              <Label htmlFor="sortOrder" className="text-xs">
-                Sort Order
-              </Label>
-              <Select
-                value={sortOrder || ""}
-                onValueChange={(value: "asc" | "desc") => setSortOrder(value)}
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="desc">
-                    <div className="flex items-center gap-2">
-                      <SortDesc className="h-3 w-3" />
-                      Descending
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="asc">
-                    <div className="flex items-center gap-2">
-                      <SortAsc className="h-3 w-3" />
-                      Ascending
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Preview Status */}
+              <div className="space-y-1">
+                <Label htmlFor="preview" className="text-xs sm:text-sm">
+                  Preview Status
+                </Label>
+                <Select
+                  value={preview === null ? "all" : preview.toString()}
+                  onValueChange={(value) => {
+                    if (value === "all") setPreview(null);
+                    else setPreview(value === "true" ? "true" : "false");
+                  }}
+                >
+                  <SelectTrigger className="h-9 sm:h-8 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Posts</SelectItem>
+                    <SelectItem value="false">Published Only</SelectItem>
+                    <SelectItem value="true">Preview Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Limit */}
+              <div className="space-y-1">
+                <Label htmlFor="limit" className="text-xs sm:text-sm">
+                  Posts Per Page
+                </Label>
+                <Select value={limit || ""} onValueChange={setLimit}>
+                  <SelectTrigger className="h-9 sm:h-8 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* Preview Status */}
-            <div className="space-y-1">
-              <Label htmlFor="preview" className="text-xs">
-                Preview Status
-              </Label>
-              <Select
-                value={preview === null ? "all" : preview.toString()}
-                onValueChange={(value) => {
-                  if (value === "all") setPreview(null);
-                  else setPreview(value === "true" ? "true" : "false");
-                }}
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Posts</SelectItem>
-                  <SelectItem value="false">Published Only</SelectItem>
-                  <SelectItem value="true">Preview Only</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Date Range */}
+              <div className="space-y-1">
+                <Label htmlFor="dateFrom" className="text-xs sm:text-sm">
+                  From Date
+                </Label>
+                <Input
+                  id="dateFrom"
+                  type="date"
+                  value={dateFrom || ""}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="h-9 sm:h-8 text-xs sm:text-sm"
+                />
+              </div>
 
-            {/* Limit */}
-            <div className="space-y-1">
-              <Label htmlFor="limit" className="text-xs">
-                Posts Per Page
-              </Label>
-              <Select value={limit || ""} onValueChange={setLimit}>
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Date Range */}
-            <div className="space-y-1">
-              <Label htmlFor="dateFrom" className="text-xs">
-                From Date
-              </Label>
-              <Input
-                id="dateFrom"
-                type="date"
-                value={dateFrom || ""}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="h-8 text-xs"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <Label htmlFor="dateTo" className="text-xs">
-                To Date
-              </Label>
-              <Input
-                id="dateTo"
-                type="date"
-                value={dateTo || ""}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="h-8 text-xs"
-              />
+              <div className="space-y-1">
+                <Label htmlFor="dateTo" className="text-xs sm:text-sm">
+                  To Date
+                </Label>
+                <Input
+                  id="dateTo"
+                  type="date"
+                  value={dateTo || ""}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="h-9 sm:h-8 text-xs sm:text-sm"
+                />
+              </div>
             </div>
 
             {/* Apply Filters Button */}
             <Button
               onClick={updateURL}
               disabled={isPending}
-              className="w-full h-8 text-xs"
+              className="w-full h-9 sm:h-8 text-xs sm:text-sm"
             >
               Apply Filters
             </Button>

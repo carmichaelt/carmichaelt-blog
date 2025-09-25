@@ -8,7 +8,7 @@ export default async function Index() {
     <>
       <div className="flex flex-1 mt-16">
         <Container>
-          <div className="flex min-w-[400px] max-w-[600px] mx-auto">
+          <div className="flex w-full max-w-4xl mx-auto">
             <AboutHomeContent />
           </div>
         </Container>

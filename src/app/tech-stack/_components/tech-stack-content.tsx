@@ -84,7 +84,7 @@ export function TechStackContent() {
             </span>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 sm:gap-3">
             {items
               .sort((a, b) => {
                 // Sort by size (xlarge first) then alphabetically
@@ -106,7 +106,7 @@ export function TechStackContent() {
       ))}
 
       {/* Category Legend */}
-      <div className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         {Object.entries(categoryColors).map(([category, colorClass]) => (
           <div key={category} className="flex items-center space-x-2">
             <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${colorClass}`}></div>
@@ -118,7 +118,7 @@ export function TechStackContent() {
       </div>
 
       {/* Stats */}
-      <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-center">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
           <div className="text-2xl font-bold text-gray-900 dark:text-white">
             {techStack.length}

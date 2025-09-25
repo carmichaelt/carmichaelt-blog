@@ -23,10 +23,10 @@ const categoryColors = {
 };
 
 const sizeClasses = {
-  small: 'text-sm px-3 py-1',
-  medium: 'text-base px-4 py-2',
-  large: 'text-lg px-5 py-3',
-  xlarge: 'text-xl px-6 py-4',
+  small: 'text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5',
+  medium: 'text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2',
+  large: 'text-base sm:text-lg px-4 sm:px-5 py-2 sm:py-3',
+  xlarge: 'text-lg sm:text-xl px-5 sm:px-6 py-2.5 sm:py-4',
 };
 
 export function TechItem({ tech, className = "" }: TechItemProps) {
@@ -61,11 +61,11 @@ export function TechItem({ tech, className = "" }: TechItemProps) {
       <div className={`absolute inset-0 bg-gradient-to-r ${categoryColors[tech.category]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
       
       {/* Content */}
-      <div className="relative flex items-center space-x-2">
-        <span className="text-lg group-hover:scale-110 transition-transform duration-300">
+      <div className="relative flex items-center space-x-1 sm:space-x-2">
+        <span className="text-sm sm:text-lg group-hover:scale-110 transition-transform duration-300">
           {tech.icon}
         </span>
-        <span className="font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
+        <span className="font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300 truncate">
           {tech.name}
         </span>
       </div>
