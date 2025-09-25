@@ -24,22 +24,24 @@ export function PostPreview({
   slug,
 }: Props) {
   return (
-    <div className="border border-gray-100 rounded-none p-12 hover:bg-purple-50 hover:border-purple-300 hover:shadow-lg transition-shadow duration-200 hover:text-purple-500">
-      <div className="mb-5 flex justify-between mb-20">
-        <div className="flex">
-        <CoverImage slug={slug} title={title} src={coverImage} />
+    <div className="border border-gray-100 rounded-lg sm:rounded-none p-4 sm:p-6 lg:p-12 hover:bg-purple-50 hover:border-purple-300 hover:shadow-lg transition-shadow duration-200 hover:text-purple-500">
+      <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-12 sm:mb-20">
+        <div className="flex-1">
+          <CoverImage slug={slug} title={title} src={coverImage} />
         </div>
-        <div>
-        <DateFormatter dateString={date} />
+        <div className="flex justify-end sm:justify-start">
+          <DateFormatter dateString={date} />
         </div>
       </div>
-      <h1 className="text-3xl font-bold mb-3 leading-snug text-center">
-        <Link href={`/posts/${slug}`}>
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 leading-snug text-center sm:text-left">
+        <Link href={`/posts/${slug}`} className="hover:text-purple-600 transition-colors">
           {title}
         </Link>
       </h1>
-      <p className="text-lg leading-relaxed mb-4 text-black">{excerpt}</p>
-      <Avatar name={author.name} picture={author.picture} />
+      <p className="text-sm sm:text-base lg:text-lg leading-relaxed mb-4 text-black text-center sm:text-left">{excerpt}</p>
+      <div className="flex justify-center sm:justify-start">
+        <Avatar name={author.name} picture={author.picture} />
+      </div>
     </div>
   );
 }

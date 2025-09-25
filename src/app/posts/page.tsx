@@ -31,7 +31,7 @@ export default async function Index({ searchParams }: Props) {
     <>
       <div className="flex-1 mt-16">
         <Container>
-          <div className="space-y-8 flex flex-col">
+          <div className="space-y-6 sm:space-y-8 flex flex-col">
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
               <Link
                 href="/"
