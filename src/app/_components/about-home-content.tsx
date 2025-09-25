@@ -19,7 +19,7 @@ export function AboutHomeContent() {
         </p>
         
         <p>
-          You can read <Link href="/posts" className="font-bold text-purple-500 hover:text-purple-600 transition-colors">my ramblings</Link> or browse <Link href="https://github.com/carmichaelt" className="font-bold text-purple-500 hover:text-purple-600 transition-colors">my code.</Link>
+          You can read <Link href="/posts" className="font-bold text-purple-500 hover:text-purple-600 transition-colors">my ramblings</Link> or browse <Link href="https://github.com/carmichaelt" className="font-bold text-purple-500 hover:text-purple-600 transition-colors">my code</Link>.
           If you&apos;re interested in how I build my projects, you can check out <Link href="/tech-stack" className="font-bold text-purple-500 hover:text-purple-600 transition-colors">my tech stack</Link>. 
         </p>
         
