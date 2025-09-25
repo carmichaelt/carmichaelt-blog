@@ -40,6 +40,8 @@ export function PostContent({ post_title }: { post_title: string }) {
         coverImage={post.coverImage}
         date={post.date}
         author={authorData}
+        postId={post._id}
+        postSlug={post.slug}
       />
       <PostBody content={post.content} richContent={post.richContent} />
     </>

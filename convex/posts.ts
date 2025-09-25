@@ -413,3 +413,40 @@ export const getPostsByTag = query({
       .paginate(paginationOpts);
   },
 });
+
+// Update post mutation
+export const updatePost = mutation({
+  args: {
+    postId: v.id("posts"),
+    title: v.string(),
+    slug: v.string(),
+    excerpt: v.string(),
+    ogImage: v.string(),
+    coverImage: v.string(),
+    preview: v.optional(v.boolean()),
+    content: v.string(),
+    richContent: v.optional(v.any()),
+    tags: v.optional(v.array(v.string())),
+  },
+  handler: async (ctx, args) => {
+    const { postId, ...updateData } = args;
+    
+    // Check if post exists
+    const post = await ctx.db.get(postId);
+    if (!post) {
+      throw new Error("Post not found");
+    }
+    
+    return await ctx.db.patch(postId, updateData);
+  },
+});
+
+// Get post by ID (for editing)
+export const getPostById = query({
+  args: {
+    postId: v.id("posts"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.postId);
+  },
+});
