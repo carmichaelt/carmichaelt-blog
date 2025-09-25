@@ -114,7 +114,7 @@ export const getPosts = query({
         // Check if any of the provided tags exist in the post's tags
         return q.or(
           ...tags.map(tag => 
-            q.eq(q.field("tags"), tag)
+            q.eq(q.field("tags"), [tag])
           )
         );
       });
@@ -201,7 +201,7 @@ export const getPostsSimple = query({
         // Check if any of the provided tags exist in the post's tags
         return q.or(
           ...tags.map(tag => 
-            q.eq(q.field("tags"), tag)
+            q.eq(q.field("tags"), [tag])
           )
         );
       });
@@ -261,7 +261,7 @@ export const getPostsCount = query({
         // Check if any of the provided tags exist in the post's tags
         return q.or(
           ...tags.map(tag => 
-            q.eq(q.field("tags"), tag)
+            q.eq(q.field("tags"), [tag])
           )
         );
       });
@@ -408,7 +408,7 @@ export const getPostsByTag = query({
     const { tag, paginationOpts } = args;
     
     return await ctx.db.query("posts")
-      .filter((q) => q.eq(q.field("tags"), tag))
+      .filter((q) => q.eq(q.field("tags"), [tag]))
       .order("desc")
       .paginate(paginationOpts);
   },
