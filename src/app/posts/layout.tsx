@@ -1,8 +1,3 @@
-import Footer from "@/app/_components/footer";
-import Navbar from "@/app/_components/navbar";
-import { ControlsSidebar } from "@/components/layout/controls-sidebar";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { type Metadata } from "next";
 
 interface PostLayoutProps {

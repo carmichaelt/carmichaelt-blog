@@ -67,6 +67,14 @@ export const getUserByTokenIdentifier = query({
   },
 });
 
+export const getUserByClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db.query("users").filter((q) => q.eq(q.field("tokenIdentifier"), args.clerkId)).unique();
+  },
+});
+
+
 
 
 export const current = query({

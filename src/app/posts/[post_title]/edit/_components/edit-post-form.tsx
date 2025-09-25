@@ -43,13 +43,12 @@ interface EditPostFormProps {
     coverImage: string;
     preview?: boolean;
     content: string;
-    richContent?: any;
+    richContent?: RichTextDocument;
     tags?: string[];
   };
-  authorId: string;
 }
 
-export function EditPostForm({ post, authorId }: EditPostFormProps) {
+export function EditPostForm({ post }: EditPostFormProps) {
   const [richContent, setRichContent] = useState<RichTextDocument | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -60,7 +59,6 @@ export function EditPostForm({ post, authorId }: EditPostFormProps) {
     handleSubmit,
     formState: { errors },
     setValue,
-    reset,
   } = useForm<EditPostFormData>({
     resolver: zodResolver(editPostSchema),
     defaultValues: {

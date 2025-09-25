@@ -1,24 +1,20 @@
-import Avatar from "@/app/_components/avatar";
+
 import CoverImage from "@/app/_components/cover-image";
 import DateFormatter from "@/app/_components/date-formatter";
 import { PostTitle } from "@/app/_components/post-title";
 import Link from "next/link";
-import { ArrowLeft, Edit } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { EditPostButton } from "./edit-post-button";
 
 type Props = {
   title: string;
   coverImage: string;
   date: string;
-  author: {
-    name: string;
-    picture: string;
-  };
   postId?: string;
   postSlug?: string;
 };
 
-export function PostHeader({ title, coverImage, date, author, postId, postSlug }: Props) {
+export function PostHeader({ title, coverImage, date, postId, postSlug }: Props) {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back to Blog Link and Edit Button */}

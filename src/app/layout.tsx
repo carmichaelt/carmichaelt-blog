@@ -11,9 +11,7 @@ import cn from "classnames";
 import "./globals.css";
 import Navbar from "./_components/navbar";
 import localFont from "next/font/local";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { SiteHeader } from "@/components/layout/site-header";
-import { ControlsSidebar } from "@/components/layout/controls-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const junicode = localFont({
   src: "../../public/fonts/junicode/Junicode.ttf",

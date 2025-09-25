@@ -2,8 +2,7 @@ import Link from "next/link";
 //import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { NavbarAuth } from "./navbar-auth";
-import { CreatePostButton } from "./create-post-btn";
-import { MessageCircle, PlusIcon } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 //import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // Server component for static navbar structure
@@ -29,7 +28,6 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* <CreatePostButton /> */}
             <Button
               variant="outline"
               size="sm"

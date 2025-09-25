@@ -1,22 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, Github, Edit } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { EditProjectButton } from "./edit-project-button";
-
-interface Project {
-  _id: string;
-  name: string;
-  url: string;
-  github: string;
-  problem: string;
-  status: "active" | "completed" | "archived";
-  description?: string;
-  technologies?: string[];
-  author: string;
-}
+import { useUser } from "@clerk/nextjs";
 
 const statusColors = {
   active: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
@@ -25,7 +14,12 @@ const statusColors = {
 };
 
 export function ProjectsTable() {
+  const { user, isLoaded } = useUser();
   const projects = useQuery(api.projects.getAllProjects);
+  
+  if (!isLoaded) {
+    return null;
+  }
 
   if (projects === undefined) {
     return (
@@ -45,7 +39,7 @@ export function ProjectsTable() {
   if (projects.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600">No projects found. Create your first project!</p>
+        <p className="text-gray-600">No projects found, I must be busy or working on the database!</p>
       </div>
     );
   }
@@ -59,7 +53,9 @@ export function ProjectsTable() {
             <th className="text-left py-4 px-2 font-semibold text-gray-900 dark:text-gray-100">Problem Solved</th>
             <th className="text-left py-4 px-2 font-semibold text-gray-900 dark:text-gray-100">Status</th>
             <th className="text-left py-4 px-2 font-semibold text-gray-900 dark:text-gray-100">Links</th>
+            {user && (
             <th className="text-left py-4 px-2 font-semibold text-gray-900 dark:text-gray-100">Actions</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -86,30 +82,36 @@ export function ProjectsTable() {
                 </span>
               </td>
               <td className="py-4 px-2">
-                <div className="flex space-x-3">
+                <div className="flex flex-col space-x-3">
+                  {project.url && (
                   <Link
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+                    className="inline-flex items-center text-gray-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
                   >
                     <ExternalLink className="h-4 w-4 mr-1" />
-                    Live
-                  </Link>
+                      Live
+                    </Link>
+                  )}
+                  {project.github && (
                   <Link
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+                    className="inline-flex items-center text-gray-600 hover:text-purple-500 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
                   >
-                    <Github className="h-4 w-4 mr-1" />
-                    Code
-                  </Link>
+                      <Github className="h-4 w-4 mr-1" />
+                      Code
+                    </Link>
+                  )}
                 </div>
               </td>
+              {user && (
               <td className="py-4 px-2">
                 <EditProjectButton projectId={project._id} />
               </td>
+              )}
             </tr>
           ))}
         </tbody>

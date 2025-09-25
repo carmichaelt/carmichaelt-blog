@@ -1,13 +1,12 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-import { Id } from "./_generated/dataModel";
 
 export const createProject = mutation({
   args: {
     name: v.string(),
-    url: v.string(),
-    github: v.string(),
+    url: v.optional(v.string()),
+    github: v.optional(v.string()),
     problem: v.string(),
     status: v.union(v.literal("active"), v.literal("completed"), v.literal("archived")),
     author: v.id("users"),
@@ -16,7 +15,14 @@ export const createProject = mutation({
   },
   handler: async (ctx, args) => {
     const now = new Date().toISOString();
-    
+
+    if (!args.url) {
+      args.url = '';
+    }
+    if (!args.github) {
+      args.github = '';
+    }
+
     return await ctx.db.insert("projects", {
       ...args,
       createdAt: now,
@@ -29,8 +35,8 @@ export const updateProject = mutation({
   args: {
     projectId: v.id("projects"),
     name: v.string(),
-    url: v.string(),
-    github: v.string(),
+    url: v.optional(v.string()),
+    github: v.optional(v.string()),
     problem: v.string(),
     status: v.union(v.literal("active"), v.literal("completed"), v.literal("archived")),
     description: v.optional(v.string()),
@@ -38,7 +44,14 @@ export const updateProject = mutation({
   },
   handler: async (ctx, args) => {
     const { projectId, ...updateData } = args;
-    
+
+    if (!args.url) {
+      args.url = '';
+    }
+    if (!args.github) {
+      args.github = '';
+    }
+
     // Check if project exists
     const project = await ctx.db.get(projectId);
     if (!project) {
@@ -76,14 +89,14 @@ export const getProjects = query({
   handler: async (ctx, args) => {
     const { paginationOpts, status, author } = args;
     
-    let query = ctx.db.query("projects");
+    let query;
     
     if (status) {
-      query = query.withIndex("by_status", (q) => q.eq("status", status));
+      query = ctx.db.query("projects").withIndex("by_status", (q) => q.eq("status", status));
     } else if (author) {
-      query = query.withIndex("by_author", (q) => q.eq("author", author));
+      query = ctx.db.query("projects").withIndex("by_author", (q) => q.eq("author", author));
     } else {
-      query = query.withIndex("by_created_at");
+      query = ctx.db.query("projects").withIndex("by_created_at");
     }
     
     return await query.order("desc").paginate(paginationOpts);

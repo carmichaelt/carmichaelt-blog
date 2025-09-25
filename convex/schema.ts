@@ -43,8 +43,8 @@ export default defineSchema({
 
     projects: defineTable({
       name: v.string(),
-      url: v.string(),
-      github: v.string(),
+      url: v.optional(v.string()),
+      github: v.optional(v.string()),
       problem: v.string(),
       status: v.union(v.literal("active"), v.literal("completed"), v.literal("archived")),
       author: v.id("users"),

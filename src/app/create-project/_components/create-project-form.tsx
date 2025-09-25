@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { type Id } from '../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,8 @@ import { Loader2 } from 'lucide-react';
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required').max(100, 'Name must be less than 100 characters'),
-  url: z.string().url('Must be a valid URL'),
-  github: z.string().url('Must be a valid GitHub URL'),
+  url: z.url('Must be a valid URL').optional().or(z.literal('')),
+  github: z.url('Must be a valid GitHub URL').optional().or(z.literal('')),
   problem: z.string().min(1, 'Problem description is required').max(500, 'Description must be less than 500 characters'),
   status: z.enum(['active', 'completed', 'archived']),
   description: z.string().optional(),
@@ -37,6 +37,7 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const createProject = useMutation(api.projects.createProject);
+  const author: Id<"users"> = useQuery(api.users.getUserByClerkId, { clerkId: authorId })?._id as Id<"users">;
 
   const {
     register,
@@ -59,7 +60,7 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
     try {
       const projectData = {
         ...data,
-        author: authorId as Id<"users">,
+        author: author,
         technologies: technologiesValue ? technologiesValue.split(',').map(t => t.trim()).filter(t => t) : [],
       };
 

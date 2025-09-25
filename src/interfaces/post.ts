@@ -1,4 +1,4 @@
-import { type Author } from "./author";
+import { Id } from "../../convex/_generated/dataModel";
 import { type RichTextDocument } from "./rich-text";
 
 export type Post = {
@@ -6,7 +6,7 @@ export type Post = {
   title: string;
   date: string;
   coverImage: string;
-  author: Author;
+  author: Id<"users">;
   excerpt: string;
   ogImage: {
     url: string;

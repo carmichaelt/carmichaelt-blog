@@ -14,7 +14,8 @@ interface EditProjectContentProps {
 export function EditProjectContent({ projectId }: EditProjectContentProps) {
   const { user, isLoaded } = useUser();
   const project = useQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
-  
+  const author = useQuery(api.users.getUserByClerkId, { clerkId: user?.id as string });
+
   if (!isLoaded) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -58,7 +59,7 @@ export function EditProjectContent({ projectId }: EditProjectContentProps) {
   }
 
   // Check if user is the author of the project
-  if (project.author !== user.id) {
+  if (author?._id !== project.author) {
     notFound();
   }
 
@@ -71,7 +72,7 @@ export function EditProjectContent({ projectId }: EditProjectContentProps) {
         </p>
       </div>
       
-      <EditProjectForm project={project} authorId={user.id} />
+      <EditProjectForm project={project} />
     </div>
   );
 }

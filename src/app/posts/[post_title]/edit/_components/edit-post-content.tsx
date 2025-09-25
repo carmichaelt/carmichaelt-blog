@@ -2,7 +2,6 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../convex/_generated/dataModel";
 import { notFound } from "next/navigation";
 import { EditPostForm } from "./edit-post-form";
 import { useUser } from '@clerk/nextjs';
@@ -71,7 +70,7 @@ export function EditPostContent({ post_title }: EditPostContentProps) {
         </p>
       </div>
       
-      <EditPostForm post={post} authorId={user.id} />
+      <EditPostForm post={post} />
     </div>
   );
 }

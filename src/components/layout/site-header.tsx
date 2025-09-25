@@ -58,7 +58,7 @@ export function SiteHeader() {
       setTitleState('Carmichaelt. Blog');
       setCurrentIcon(Building);
     }
-  }, [pathname]);
+  }, [pathname, allRoutes]);
   
   const isMac = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mac');
   return (

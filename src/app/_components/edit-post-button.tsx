@@ -26,7 +26,7 @@ export function EditPostButton({ postId, postSlug }: EditPostButtonProps) {
   }
 
   // Only show edit button if user is the author
-  if (post.author !== user.id) {
+  if (post?.author !== user.id) {
     return null;
   }
 

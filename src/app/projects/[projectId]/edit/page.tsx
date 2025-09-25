@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
-import { notFound } from "next/navigation";
 import { EditProjectContent } from "./_components/edit-project-content";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface EditProjectPageProps {
   params: Promise<{ projectId: string }>;
 }
 
 // Static shell component that renders immediately
-function EditProjectShell({ projectId }: { projectId: string }) {
+function EditProjectShell() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -32,7 +32,7 @@ export default async function EditProjectPage({ params }: EditProjectPageProps) 
 
   return (
     <div className="min-h-screen bg-background">
-      <Suspense fallback={<EditProjectShell projectId={projectId} />}>
+      <Suspense fallback={<EditProjectShell />}>
         <EditProjectContent projectId={projectId} />
       </Suspense>
     </div>
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: EditProjectPageProps) {
   const { projectId } = await params;
   
   try {
-    const project = await fetchQuery(api.projects.getProjectById, { projectId: projectId as any });
+    const project = await fetchQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
     
     if (!project) {
       return {

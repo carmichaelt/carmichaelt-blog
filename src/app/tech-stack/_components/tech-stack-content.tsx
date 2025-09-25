@@ -76,12 +76,7 @@ const categoryColors = {
   design: 'from-indigo-500 to-blue-500',
 };
 
-const sizeClasses = {
-  small: 'text-sm px-3 py-1',
-  medium: 'text-base px-4 py-2',
-  large: 'text-lg px-5 py-3',
-  xlarge: 'text-xl px-6 py-4',
-};
+
 
 export function TechStackContent() {
   return (

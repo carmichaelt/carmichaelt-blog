@@ -15,6 +15,7 @@ interface EditProjectButtonProps {
 export function EditProjectButton({ projectId }: EditProjectButtonProps) {
   const { user, isLoaded } = useUser();
   const project = useQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
+  const author = useQuery(api.users.getUserByClerkId, { clerkId: user?.id as string });
 
   if (!isLoaded || !user) {
     return null;
@@ -25,7 +26,7 @@ export function EditProjectButton({ projectId }: EditProjectButtonProps) {
   }
 
   // Only show edit button if user is the author
-  if (project.author !== user.id) {
+  if (author?._id !== project?.author) {
     return null;
   }
 

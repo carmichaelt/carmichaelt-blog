@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,8 +19,8 @@ import { Loader2 } from 'lucide-react';
 
 const editProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required').max(100, 'Name must be less than 100 characters'),
-  url: z.string().url('Must be a valid URL'),
-  github: z.string().url('Must be a valid GitHub URL'),
+  url: z.url('Must be a valid URL').optional().or(z.literal('')),
+  github: z.url('Must be a valid GitHub URL').optional().or(z.literal('')),
   problem: z.string().min(1, 'Problem description is required').max(500, 'Description must be less than 500 characters'),
   status: z.enum(['active', 'completed', 'archived']),
   description: z.string().optional(),
@@ -33,17 +33,16 @@ interface EditProjectFormProps {
   project: {
     _id: Id<"projects">;
     name: string;
-    url: string;
-    github: string;
+    url?: string;
+    github?: string;
     problem: string;
     status: 'active' | 'completed' | 'archived';
     description?: string;
     technologies?: string[];
   };
-  authorId: string;
 }
 
-export function EditProjectForm({ project, authorId }: EditProjectFormProps) {
+export function EditProjectForm({ project }: EditProjectFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const updateProject = useMutation(api.projects.updateProject);
@@ -54,13 +53,12 @@ export function EditProjectForm({ project, authorId }: EditProjectFormProps) {
     formState: { errors },
     setValue,
     watch,
-    reset,
   } = useForm<EditProjectFormData>({
     resolver: zodResolver(editProjectSchema),
     defaultValues: {
       name: project.name,
-      url: project.url,
-      github: project.github,
+      url: project.url || '',
+      github: project.github || '',
       problem: project.problem,
       status: project.status,
       description: project.description || '',
