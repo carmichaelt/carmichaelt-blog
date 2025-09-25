@@ -15,7 +15,8 @@ export function AboutHomeContent() {
         I also spend my own time building <Link href="/projects" className="font-bold text-purple-500">my projects</Link> using technologies and concepts that interest me, like this website and blog.    
         <br />
         <br />
-        You can read <Link href="/posts" className="font-bold text-purple-500">my ramblings</Link> or browse <Link href="https://github.com/carmichaelt" className="font-bold text-purple-500">my code.</Link> 
+        You can read <Link href="/posts" className="font-bold text-purple-500">my ramblings</Link> or browse <Link href="https://github.com/carmichaelt" className="font-bold text-purple-500">my code.</Link>
+        If you&apos;re interested in how I build my projects, you can check out <Link href="/tech-stack" className="font-bold text-purple-500">my tech stack</Link>.
         <br />
         If you want to chat over coffee, you can message me on <Link href="https://linkedin.com/in/tomcarmichael" className="font-bold text-purple-500">my LinkedIn</Link>.
       </p>
