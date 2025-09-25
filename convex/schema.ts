@@ -40,4 +40,20 @@ export default defineSchema({
       socialLinks: v.optional(v.array(v.string())),
       role: v.optional(v.string()),
     }).index("by_token", ["tokenIdentifier"]),
+
+    projects: defineTable({
+      name: v.string(),
+      url: v.string(),
+      github: v.string(),
+      problem: v.string(),
+      status: v.union(v.literal("active"), v.literal("completed"), v.literal("archived")),
+      author: v.id("users"),
+      description: v.optional(v.string()),
+      technologies: v.optional(v.array(v.string())),
+      createdAt: v.string(),
+      updatedAt: v.string(),
+    })
+      .index("by_author", ["author"])
+      .index("by_status", ["status"])
+      .index("by_created_at", ["createdAt"]),
 });

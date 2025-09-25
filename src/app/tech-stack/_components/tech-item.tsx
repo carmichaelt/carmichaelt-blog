@@ -1,0 +1,75 @@
+"use client";
+
+import Link from "next/link";
+
+interface TechItemProps {
+  tech: {
+    name: string;
+    icon: string;
+    url: string;
+    category: 'frontend' | 'backend' | 'database' | 'tools' | 'deployment' | 'design';
+    size: 'small' | 'medium' | 'large' | 'xlarge';
+  };
+  style?: React.CSSProperties;
+}
+
+const categoryColors = {
+  frontend: 'from-blue-500 to-cyan-500',
+  backend: 'from-green-500 to-emerald-500',
+  database: 'from-purple-500 to-violet-500',
+  tools: 'from-orange-500 to-amber-500',
+  deployment: 'from-pink-500 to-rose-500',
+  design: 'from-indigo-500 to-blue-500',
+};
+
+const sizeClasses = {
+  small: 'text-sm px-3 py-1',
+  medium: 'text-base px-4 py-2',
+  large: 'text-lg px-5 py-3',
+  xlarge: 'text-xl px-6 py-4',
+};
+
+export function TechItem({ tech, style }: TechItemProps) {
+  return (
+    <Link
+      href={tech.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`
+        inline-block
+        ${sizeClasses[tech.size]}
+        bg-white dark:bg-gray-800
+        rounded-full
+        shadow-lg
+        hover:shadow-xl
+        transition-all
+        duration-300
+        hover:scale-110
+        hover:-translate-y-1
+        border
+        border-gray-200
+        dark:border-gray-700
+        group
+        relative
+        overflow-hidden
+      `}
+      style={style}
+    >
+      {/* Gradient background based on category */}
+      <div className={`absolute inset-0 bg-gradient-to-r ${categoryColors[tech.category]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+      
+      {/* Content */}
+      <div className="relative flex items-center space-x-2">
+        <span className="text-lg group-hover:scale-110 transition-transform duration-300">
+          {tech.icon}
+        </span>
+        <span className="font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
+          {tech.name}
+        </span>
+      </div>
+      
+      {/* Hover effect indicator */}
+      <div className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-gray-300 dark:group-hover:border-gray-600 transition-colors duration-300"></div>
+    </Link>
+  );
+}
