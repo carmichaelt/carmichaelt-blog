@@ -6,7 +6,7 @@ export const experimental_ppr = true;
 export default async function TechStack() {
   return (
     <>
-      <div className="flex flex-1 mt-16">
+      <div className="flex flex-1 mt-16 mb-16">
         <Container>
           <div className="flex min-w-[400px] max-w-[1200px] mx-auto">
             <div className="space-y-8 w-full">

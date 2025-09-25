@@ -10,7 +10,7 @@ interface TechItemProps {
     category: 'frontend' | 'backend' | 'database' | 'tools' | 'deployment' | 'design';
     size: 'small' | 'medium' | 'large' | 'xlarge';
   };
-  style?: React.CSSProperties;
+  className?: string;
 }
 
 const categoryColors = {
@@ -29,14 +29,16 @@ const sizeClasses = {
   xlarge: 'text-xl px-6 py-4',
 };
 
-export function TechItem({ tech, style }: TechItemProps) {
+export function TechItem({ tech, className = "" }: TechItemProps) {
   return (
     <Link
       href={tech.url}
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        inline-block
+        inline-flex
+        items-center
+        justify-center
         ${sizeClasses[tech.size]}
         bg-white dark:bg-gray-800
         rounded-full
@@ -44,7 +46,7 @@ export function TechItem({ tech, style }: TechItemProps) {
         hover:shadow-xl
         transition-all
         duration-300
-        hover:scale-110
+        hover:scale-105
         hover:-translate-y-1
         border
         border-gray-200
@@ -52,8 +54,8 @@ export function TechItem({ tech, style }: TechItemProps) {
         group
         relative
         overflow-hidden
+        ${className}
       `}
-      style={style}
     >
       {/* Gradient background based on category */}
       <div className={`absolute inset-0 bg-gradient-to-r ${categoryColors[tech.category]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>

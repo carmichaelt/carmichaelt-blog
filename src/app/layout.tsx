@@ -82,7 +82,9 @@ export default function RootLayout({
                   </div>
                   {children}
                   <div className="bottom-0 z-100">
+                    {/*
                     <Footer />
+                    */}
                     </div>
                   </SidebarProvider>
                 </div>
