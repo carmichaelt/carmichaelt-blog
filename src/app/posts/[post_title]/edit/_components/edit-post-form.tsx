@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { type RichTextDocument } from '@/interfaces/rich-text';
+import { logger } from '@/lib/logger';
 
 const editPostSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
@@ -133,7 +134,10 @@ export function EditPostForm({ post }: EditPostFormProps) {
       toast.success('Post updated successfully!');
       router.push(`/posts/${data.slug}`);
     } catch (error) {
-      console.error('Error updating post:', error);
+      logger.error('Error updating post', error as Error, { 
+        postId: post._id,
+        postData: { title: data.title, slug: data.slug }
+      });
       toast.error('Failed to update post. Please try again.');
     } finally {
       setIsSubmitting(false);

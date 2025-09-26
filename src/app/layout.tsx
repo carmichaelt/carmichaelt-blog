@@ -68,6 +68,7 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#000" />
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </head>
       <body className={cn("dark:bg-slate-900 dark:text-slate-400")}>
         {/* <ThemeSwitcher /> */}

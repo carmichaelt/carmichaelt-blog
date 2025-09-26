@@ -28,7 +28,7 @@ http.route({
         break;
       }
       default:
-        console.log("Ignored Clerk webhook event", event.type);
+        console.debug("Ignored Clerk webhook event", { eventType: event.type });
     }
 
     return new Response(null, { status: 200 });
@@ -46,7 +46,7 @@ async function validateRequest(req: Request): Promise<WebhookEvent | null> {
   try {
     return wh.verify(payloadString, svixHeaders) as unknown as WebhookEvent;
   } catch (error) {
-    console.error("Error verifying webhook event", error);
+    console.error("Error verifying webhook event", { error: error instanceof Error ? error.message : 'Unknown error' });
     return null;
   }
 }

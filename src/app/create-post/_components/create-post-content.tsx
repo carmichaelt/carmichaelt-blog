@@ -6,6 +6,7 @@ import { CreatePostForm } from './create-post-form';
 import { useUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 // Client component for dynamic content
 export function CreatePostContent() {
@@ -24,9 +25,9 @@ export function CreatePostContent() {
     redirect('/');
   }
 
-  console.log("user", user);
+  logger.debug("User data loaded", { userId: user.id, email: user.emailAddresses[0]?.emailAddress });
   const currentUser = users?.find((user) => user.tokenIdentifier === user?.tokenIdentifier);
-  console.log("currentUser", currentUser);
+  logger.debug("Current user found", { currentUserId: currentUser?._id, tokenIdentifier: currentUser?.tokenIdentifier });
 
   if (!currentUser) {
     return (

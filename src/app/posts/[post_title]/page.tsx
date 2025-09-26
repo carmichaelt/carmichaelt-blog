@@ -4,6 +4,7 @@ import { PostContent } from "./_components/page-content";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import type { Metadata } from "next";
+import { logger } from '@/lib/logger';
 
 interface PostPageProps {
   params: Promise<{ post_title: string }>;
@@ -48,7 +49,7 @@ export async function generateStaticParams() {
       post_title: post.slug 
     }));
   } catch (error) {
-    console.error('Error generating static params:', error);
+    logger.error('Error generating static params', error as Error);
     return [];
   }
 }
@@ -85,7 +86,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    logger.error("Error generating metadata", error as Error, { post_title });
     return {
       title: "Post",
       description: "A blog post",
