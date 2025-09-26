@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 const editProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required').max(100, 'Name must be less than 100 characters'),
@@ -83,7 +84,10 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
       toast.success('Project updated successfully!');
       router.push('/projects');
     } catch (error) {
-      console.error('Error updating project:', error);
+      logger.error('Error updating project', error as Error, { 
+        projectId: project._id,
+        projectData: { name: data.name, status: data.status }
+      });
       toast.error('Failed to update project. Please try again.');
     } finally {
       setIsSubmitting(false);

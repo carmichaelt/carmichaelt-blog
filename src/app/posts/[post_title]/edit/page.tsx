@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { EditPostContent } from "./_components/edit-post-content";
+import { logger } from '@/lib/logger';
 
 interface EditPostPageProps {
   params: Promise<{ post_title: string }>;
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: EditPostPageProps) {
       description: `Edit post: ${post.title}`,
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    logger.error("Error generating metadata", error as Error, { post_title });
     return {
       title: "Edit Post",
       description: "Edit a blog post",

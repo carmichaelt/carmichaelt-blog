@@ -3,6 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { EditProjectContent } from "./_components/edit-project-content";
 import { Id } from "../../../../../convex/_generated/dataModel";
+import { logger } from '@/lib/logger';
 
 interface EditProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -58,7 +59,7 @@ export async function generateMetadata({ params }: EditProjectPageProps) {
       description: `Edit project: ${project.name}`,
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    logger.error("Error generating metadata", error as Error, { projectId });
     return {
       title: "Edit Project",
       description: "Edit a project",
