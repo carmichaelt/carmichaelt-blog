@@ -3,7 +3,6 @@ import { mutation, query } from "./_generated/server";
 import { internalMutation, QueryCtx } from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 import { Validator } from "convex/values";
-import { convexLogger as logger } from "./convex-logger";
 
 export const store = mutation({
   args: {},
@@ -120,9 +119,9 @@ export const deleteFromClerk = internalMutation({
 
     if (user !== null) {
       await ctx.db.delete(user._id);
-      logger.info("User deleted from Clerk webhook", { clerkUserId, userId: user._id });
-    } else {
-      logger.warn("Can't delete user, there is none for Clerk user ID", { clerkUserId });
+      console.info("User deleted from Clerk webhook", { clerkUserId, userId: user._id });
+    } else {  
+      console.warn("Can't delete user, there is none for Clerk user ID", { clerkUserId });
     }
   },
 });

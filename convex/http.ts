@@ -3,7 +3,6 @@ import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { WebhookEvent } from "@clerk/backend";
 import { Webhook } from "svix";
-import { convexLogger as logger } from "./convex-logger";
 
 const http = httpRouter();
 
@@ -29,7 +28,7 @@ http.route({
         break;
       }
       default:
-        logger.debug("Ignored Clerk webhook event", { eventType: event.type });
+        console.debug("Ignored Clerk webhook event", { eventType: event.type });
     }
 
     return new Response(null, { status: 200 });
@@ -47,7 +46,7 @@ async function validateRequest(req: Request): Promise<WebhookEvent | null> {
   try {
     return wh.verify(payloadString, svixHeaders) as unknown as WebhookEvent;
   } catch (error) {
-    logger.error("Error verifying webhook event", { error: error instanceof Error ? error.message : 'Unknown error' });
+    console.error("Error verifying webhook event", { error: error instanceof Error ? error.message : 'Unknown error' });
     return null;
   }
 }
