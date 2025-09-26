@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl the entire site
+# Block access to admin/private areas if they exist
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow access to important content
+Allow: /posts/
+Allow: /projects/
+Allow: /tech-stack/
+
+# Sitemap locations
+Sitemap: https://carmichaelt-blog.vercel.app/sitemap.xml
+
+# Crawl delay (optional - helps prevent overloading your server)
+Crawl-delay: 1
