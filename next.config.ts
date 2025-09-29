@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.clerk.dev https://*.clerk.com https://clerk.carmichaelt.com",
               "img-src 'self' data: blob: https: http:",
               "font-src 'self' https://fonts.gstatic.com https://*.clerk.dev https://*.clerk.com https://clerk.carmichaelt.com",
-              "connect-src 'self' https://*.clerk.dev https://*.clerk.com https://clerk.carmichaelt.com https://*.convex.dev https://*.vercel-insights.com wss://*.convex.dev",
+              "connect-src 'self' https://*.clerk.dev https://*.clerk.com https://clerk.carmichaelt.com https://*.convex.dev https://*.convex.cloud https://*.vercel-insights.com wss://*.convex.dev wss://*.convex.cloud",
               "frame-src 'self' https://*.clerk.dev https://*.clerk.com https://clerk.carmichaelt.com",
               "object-src 'none'",
               "base-uri 'self'",
