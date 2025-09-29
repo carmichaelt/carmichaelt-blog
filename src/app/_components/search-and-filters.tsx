@@ -15,7 +15,12 @@ import {
 import { X, Search, Filter, SortAsc, SortDesc } from "lucide-react";
 import { useQueryState } from "nuqs";
 
-export function SearchAndFilters() {
+interface SearchAndFiltersProps {
+  showFilters: boolean;
+  onToggleFilters: () => void;
+}
+
+export function SearchAndFilters({ showFilters, onToggleFilters }: SearchAndFiltersProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -26,7 +31,6 @@ export function SearchAndFilters() {
   const [dateFrom, setDateFrom] = useQueryState("dateFrom");
   const [dateTo, setDateTo] = useQueryState("dateTo");
   const [limit, setLimit] = useQueryState("limit");
-  const [showFilters, setShowFilters] = useState(false);
 
   const updateURL = () => {
     const params = new URLSearchParams();
@@ -72,16 +76,6 @@ export function SearchAndFilters() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 sm:gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
-            className="h-8 sm:h-7 px-2 sm:px-3 text-xs sm:text-sm"
-          >
-            <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-            <span className="hidden sm:inline">{showFilters ? "Hide" : "Show"}</span>
-            <span className="sm:hidden">{showFilters ? "Hide Filters" : "Filters"}</span>
-          </Button>
           {hasActiveFilters && (
             <Button
               variant="ghost"
