@@ -50,10 +50,8 @@ export default defineSchema({
       author: v.id("users"),
       description: v.optional(v.string()),
       technologies: v.optional(v.array(v.string())),
-      createdAt: v.string(),
       updatedAt: v.string(),
     })
       .index("by_author", ["author"])
       .index("by_status", ["status"])
-      .index("by_created_at", ["createdAt"]),
 });

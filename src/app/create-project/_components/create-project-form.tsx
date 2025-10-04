@@ -30,14 +30,13 @@ const createProjectSchema = z.object({
 type CreateProjectFormData = z.infer<typeof createProjectSchema>;
 
 interface CreateProjectFormProps {
-  authorId: string;
+  authorId: Id<"users">;
 }
 
 export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const createProject = useMutation(api.projects.createProject);
-  const author: Id<"users"> = useQuery(api.users.getUserByClerkId, { clerkId: authorId })?._id as Id<"users">;
 
   const {
     register,
@@ -49,6 +48,12 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
       status: 'active',
+      name: '',
+      url: '',
+      github: '',
+      problem: '',
+      description: '',
+      technologies: '',
     },
   });
 
@@ -60,12 +65,11 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
     try {
       const projectData = {
         ...data,
-        author: author,
+        authorId: authorId,
         technologies: technologiesValue ? technologiesValue.split(',').map(t => t.trim()).filter(t => t) : [],
       };
-
       await createProject(projectData);
-      
+
       toast.success('Project created successfully!');
       router.push('/projects');
     } catch (error) {
@@ -99,7 +103,7 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
           {/* URLs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="url">Project URL *</Label>
+              <Label htmlFor="url">Project URL</Label>
               <Input
                 id="url"
                 {...register('url')}
@@ -111,7 +115,7 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="github">GitHub URL *</Label>
+              <Label htmlFor="github">GitHub URL</Label>
               <Input
                 id="github"
                 {...register('github')}
@@ -125,7 +129,7 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
 
           {/* Problem Description */}
           <div className="space-y-2">
-            <Label htmlFor="problem">Problem Solved *</Label>
+            <Label htmlFor="problem">Problem Solved</Label>
             <Textarea
               id="problem"
               {...register('problem')}
