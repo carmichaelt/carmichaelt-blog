@@ -65,6 +65,15 @@ export const getProjects = query({
   },
 });
 
+export const getProjectById = query({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.projectId);
+  },
+});
+
 export const getProjectsByAuthor = query({
   args: {
     authorId: v.id("users"),
@@ -86,5 +95,21 @@ export const getAllProjects = query({
     return await ctx.db.query("projects")
       .order("desc")
       .collect();
+  },
+});
+
+export const updateProject = mutation({
+  args: {
+    projectId: v.id("projects"),
+    name: v.optional(v.string()),
+    url: v.optional(v.string()),
+    github: v.optional(v.string()),
+    problem: v.optional(v.string()),
+    status: v.optional(v.union(v.literal("active"), v.literal("completed"), v.literal("archived"))),
+    description: v.optional(v.string()),
+    technologies: v.optional(v.array(v.string())),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.patch(args.projectId, args);
   },
 });
