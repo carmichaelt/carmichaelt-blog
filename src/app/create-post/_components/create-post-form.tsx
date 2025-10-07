@@ -29,6 +29,7 @@ const createPostSchema = z.object({
   ogImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   coverImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   preview: z.boolean(),
+  authorId: z.string(),
 });
 
 type CreatePostFormData = z.infer<typeof createPostSchema>;
@@ -54,6 +55,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
       preview: false,
       ogImage: '',
       coverImage: '',
+      authorId: authorId as Id<"users">,
     },
   });
 

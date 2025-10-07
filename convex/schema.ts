@@ -12,6 +12,7 @@ export default defineSchema({
     ogImage: v.string(),
     coverImage: v.string(),
     date: v.string(),
+    updatedAt: v.optional(v.string()), // Last update timestamp
     preview: v.optional(v.boolean()),
     tags: v.optional(v.array(v.string())), // Array of tag strings
     views: v.optional(v.number()), // View count for popularity tracking

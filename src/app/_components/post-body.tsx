@@ -1,3 +1,5 @@
+"use client";
+
 import { RichTextRenderer } from "./rich-text-renderer";
 import { type RichTextDocument } from "@/interfaces/rich-text";
 

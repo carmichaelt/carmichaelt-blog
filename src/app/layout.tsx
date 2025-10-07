@@ -1,4 +1,4 @@
-import Footer from "@/app/_components/footer";
+//import Footer from "@/app/_components/footer";
 import ConvexClientProvider from "@/components/providers/convex-provider-with-clerk";
 import { ClerkProvider } from "@clerk/nextjs";
 import { HOME_OG_IMAGE_URL } from "@/lib/constants";
@@ -9,7 +9,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import cn from "classnames";
 import "./globals.css";
-import Navbar from "./_components/navbar";
+import { Navbar } from "./_components/navbar";
 import localFont from "next/font/local";
 import { SidebarProvider } from "@/components/ui/sidebar";
 

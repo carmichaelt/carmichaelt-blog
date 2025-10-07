@@ -14,7 +14,6 @@ interface EditProjectContentProps {
 export function EditProjectContent({ projectId }: EditProjectContentProps) {
   const { user, isLoaded } = useUser();
   const project = useQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
-  const author = useQuery(api.users.getUserByClerkId, { clerkId: user?.id as string });
 
   if (!isLoaded) {
     return (
@@ -30,10 +29,6 @@ export function EditProjectContent({ projectId }: EditProjectContentProps) {
         </div>
       </div>
     );
-  }
-
-  if (!user) {
-    notFound();
   }
 
   if (project === undefined) {
@@ -59,8 +54,12 @@ export function EditProjectContent({ projectId }: EditProjectContentProps) {
   }
 
   // Check if user is the author of the project
-  if (author?._id !== project.author) {
-    notFound();
+  if (!user) {
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">You are not an authorised user</h1>
+      </div>
+    </div>
   }
 
   return (

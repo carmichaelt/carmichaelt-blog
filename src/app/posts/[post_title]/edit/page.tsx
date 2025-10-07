@@ -3,6 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { EditPostContent } from "./_components/edit-post-content";
 import { logger } from '@/lib/logger';
+import { auth } from "@clerk/nextjs/server";
 
 interface EditPostPageProps {
   params: Promise<{ post_title: string }>;
@@ -28,15 +29,40 @@ function EditPostShell() {
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
-  const { post_title } = await params;
+  const { userId } = await auth();
+  if (!userId) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h1>
+          <p className="text-gray-600">Please sign in to edit a post.</p>
+        </div>
+      </div>
+    );
+  }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Suspense fallback={<EditPostShell />}>
-        <EditPostContent post_title={post_title} />
-      </Suspense>
-    </div>
-  );
+  try {
+    const { post_title } = await params;
+    const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
+
+    return (
+      <div className="min-h-screen bg-background">
+        <Suspense fallback={<EditPostShell />}>
+          <EditPostContent initialPost={post} />
+        </Suspense>
+      </div>
+    );
+  } catch (error) {
+    logger.error("Error loading edit post page", error as Error, { params });
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Post</h1>
+          <p className="text-gray-600">There was an error loading the post for editing.</p>
+        </div>
+      </div>
+    );
+  }
 }
 
 // Generate metadata for SEO

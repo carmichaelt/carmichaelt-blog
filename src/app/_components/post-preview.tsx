@@ -24,6 +24,7 @@ export function PostPreview({
   slug,
 }: Props) {
   return (
+    <Link href={`/posts/${slug}`}>
     <div className="border border-gray-100 rounded-lg sm:rounded-none p-4 sm:p-6 lg:p-12 hover:bg-purple-50 hover:border-purple-300 hover:shadow-lg transition-shadow duration-200 hover:text-purple-500">
       <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-12 sm:mb-20">
         <div className="flex-1">
@@ -38,10 +39,11 @@ export function PostPreview({
           {title}
         </Link>
       </h1>
-      <p className="text-sm sm:text-base lg:text-lg leading-relaxed mb-4 text-black text-center sm:text-left">{excerpt}</p>
+      <p className="text-sm sm:text-base lg:text-lg  mb-4 text-black text-center sm:text-left">{excerpt}</p>
       <div className="flex justify-center sm:justify-start">
         <Avatar name={author.name} picture={author.picture} />
       </div>
     </div>
+    </Link>
   );
 }

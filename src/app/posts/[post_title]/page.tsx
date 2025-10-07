@@ -5,6 +5,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import type { Metadata } from "next";
 import { logger } from '@/lib/logger';
+import { notFound } from "next/navigation";
 
 interface PostPageProps {
   params: Promise<{ post_title: string }>;
@@ -25,11 +26,16 @@ function PostShell() {
 
 export default async function PostPage({ params }: PostPageProps) {
   const { post_title } = await params;
+  const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
+
+  if (!post) {
+    notFound();
+  }
 
   return (
     <article className="min-h-screen bg-background">
       <Suspense fallback={<PostShell />}>
-        <PostContent post_title={post_title} />
+        <PostContent post={post} />
       </Suspense>
     </article>
   );

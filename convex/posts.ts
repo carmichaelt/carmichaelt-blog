@@ -43,6 +43,13 @@ export const incrementPostViews = mutation({
   },
 });
 
+export const getAllPosts = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("posts").order("desc").collect();
+  },
+});
+
 // Comprehensive posts query with search, sorting, pagination, and filtering
 export const getPosts = query({
   args: {
@@ -330,9 +337,20 @@ export const getPostBySlug = query({
     slug: v.string(),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.query("posts")
-      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
-      .first();
+    try {
+      const post = await ctx.db.query("posts")
+        .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+        .first();
+      
+      if (!post) {
+        throw new Error(`Post with slug "${args.slug}" not found`);
+      }
+      
+      return post;
+    } catch (error) {
+      console.error("Error fetching post by slug:", error);
+      throw new Error("Failed to fetch post");
+    }
   },
 });
 
@@ -414,7 +432,7 @@ export const getPostsByTag = query({
   },
 });
 
-// Update post mutation
+// Update post mutation with better validation and error handling
 export const updatePost = mutation({
   args: {
     postId: v.id("posts"),
@@ -429,15 +447,38 @@ export const updatePost = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    const { postId, ...updateData } = args;
+    const { postId, slug, ...updateData } = args;
     
-    // Check if post exists
-    const post = await ctx.db.get(postId);
-    if (!post) {
-      throw new Error("Post not found");
+    try {
+      // Check if post exists
+      const post = await ctx.db.get(postId);
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      
+      // Check if slug is being changed and if new slug already exists
+      if (post.slug !== slug) {
+        const existingPost = await ctx.db.query("posts")
+          .withIndex("by_slug", (q) => q.eq("slug", slug))
+          .first();
+        
+        if (existingPost && existingPost._id !== postId) {
+          throw new Error("A post with this slug already exists");
+        }
+      }
+      
+      // Update the post with timestamp
+      const updatedPost = await ctx.db.patch(postId, {
+        ...updateData,
+        slug,
+        updatedAt: new Date().toISOString(),
+      });
+      
+      return updatedPost;
+    } catch (error) {
+      console.error("Error updating post:", error);
+      throw error;
     }
-    
-    return await ctx.db.patch(postId, updateData);
   },
 });
 

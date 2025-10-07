@@ -25,6 +25,8 @@ const createProjectSchema = z.object({
   status: z.enum(['active', 'completed', 'archived']),
   description: z.string().optional(),
   technologies: z.string().optional(),
+  authorId: z.string(),
+  updatedAt: z.string(),
 });
 
 type CreateProjectFormData = z.infer<typeof createProjectSchema>;
@@ -54,6 +56,8 @@ export function CreateProjectForm({ authorId }: CreateProjectFormProps) {
       problem: '',
       description: '',
       technologies: '',
+      authorId: authorId as Id<"users">,
+      updatedAt: new Date().toISOString(),
     },
   });
 

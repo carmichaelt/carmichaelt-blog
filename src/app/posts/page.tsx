@@ -3,6 +3,8 @@ import { DynamicHomeContent } from "@/app/_components/dynamic-home-content";
 import { SearchAndFilters } from "../_components/search-and-filters";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const experimental_ppr = true;
 
@@ -41,11 +43,11 @@ export default async function Index({ searchParams }: Props) {
                 Back to Home
               </Link>
             </div>
+            <Filters />
             {/* Static content that renders immediately */}
             {/* <Intro /> */}
 
             {/* Dynamic content that streams in */}
-            <Filters />
             <DynamicHomeContent searchParams={params} />
           </div>
         </Container>

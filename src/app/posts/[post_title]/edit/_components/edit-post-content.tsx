@@ -1,38 +1,22 @@
 "use client";
 
+import { notFound } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
-import { notFound } from "next/navigation";
 import { EditPostForm } from "./edit-post-form";
-import { useUser } from '@clerk/nextjs';
+import { Doc } from "../../../../../../convex/_generated/dataModel";
+import { useParams } from "next/navigation";
 
 interface EditPostContentProps {
-  post_title: string;
+  initialPost: Doc<"posts"> | null;
 }
 
-export function EditPostContent({ post_title }: EditPostContentProps) {
-  const { user, isLoaded } = useUser();
-  const post = useQuery(api.posts.getPostBySlug, { slug: post_title });
+export function EditPostContent({ initialPost }: EditPostContentProps) {
+  const params = useParams();
+  const postSlug = params?.post_title as string;
   
-  if (!isLoaded) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-          <div className="space-y-4">
-            <div className="h-10 bg-gray-200 rounded"></div>
-            <div className="h-10 bg-gray-200 rounded"></div>
-            <div className="h-20 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    notFound();
-  }
+  // Use real-time query for live updates
+  const post = useQuery(api.posts.getPostBySlug, { slug: postSlug });
 
   if (post === undefined) {
     // Still loading
@@ -53,11 +37,6 @@ export function EditPostContent({ post_title }: EditPostContentProps) {
 
   if (post === null) {
     // Post not found
-    notFound();
-  }
-
-  // Check if user is the author of the post
-  if (post.author !== user.id) {
     notFound();
   }
 

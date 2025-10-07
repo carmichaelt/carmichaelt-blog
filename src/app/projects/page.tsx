@@ -3,10 +3,20 @@ import { ProjectsTable } from "@/app/_components/projects-table";
 import { CreateProjectButton } from "@/app/_components/create-project-button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { api } from "../../../convex/_generated/api";
+import { preloadQuery } from "convex/nextjs";
 
 export const experimental_ppr = true;
 
+export async function generateMetadata() {
+  return {
+    title: "Projects",
+    description: "A collection of projects I've built using technologies and concepts that interest me.",
+  };
+}
+
 export default async function Projects() {
+  const projects = await preloadQuery(api.projects.getAllProjects);
   return (
     <>
       <div className="flex flex-1 mt-16">
@@ -34,7 +44,7 @@ export default async function Projects() {
                 problem or explores new ideas in web development, AI, and
                 technology.
               </p>
-              <ProjectsTable />
+              <ProjectsTable preloadedProjects={projects} />
             </div>
           </div>
         </Container>

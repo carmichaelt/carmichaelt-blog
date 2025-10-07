@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ExternalLink, Github } from "lucide-react";
-import { useQuery } from "convex/react";
+import { Preloaded, usePreloadedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { EditProjectButton } from "./edit-project-button";
 import { useUser } from "@clerk/nextjs";
@@ -13,9 +13,13 @@ const statusColors = {
   archived: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
 };
 
-export function ProjectsTable() {
+interface ProjectsTableProps {
+  preloadedProjects: Preloaded<typeof api.projects.getAllProjects>;
+}
+
+export function ProjectsTable({ preloadedProjects }: ProjectsTableProps) {
   const { user, isLoaded } = useUser();
-  const projects = useQuery(api.projects.getAllProjects);
+  const projects = usePreloadedQuery(preloadedProjects);
   
   if (!isLoaded) {
     return null;

@@ -12,6 +12,7 @@ export const createProject = mutation({
     authorId: v.id("users"),
     description: v.optional(v.string()),
     technologies: v.optional(v.array(v.string())),
+    updatedAt: v.string(),
   },
   handler: async (ctx, args) => {
     const now = new Date().toISOString();
@@ -25,7 +26,7 @@ export const createProject = mutation({
       author: args.authorId,
       description: args.description,
       technologies: args.technologies,
-      updatedAt: now,
+      updatedAt: args.updatedAt,
     });
   }
 });
@@ -64,6 +65,7 @@ export const getProjects = query({
     return await query?.order("desc").paginate(paginationOpts);
   },
 });
+
 
 export const getProjectById = query({
   args: {

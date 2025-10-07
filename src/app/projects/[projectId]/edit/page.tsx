@@ -28,6 +28,11 @@ function EditProjectShell() {
   );
 }
 
+export async function generateStaticParams() {
+  const projects = await fetchQuery(api.projects.getAllProjects);
+  return projects.map((project) => ({ projectId: project._id }));
+}
+
 export default async function EditProjectPage({ params }: EditProjectPageProps) {
   const { projectId } = await params;
 
