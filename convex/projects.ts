@@ -8,7 +8,11 @@ export const createProject = mutation({
     url: v.optional(v.string()),
     github: v.optional(v.string()),
     problem: v.optional(v.string()),
-    status: v.union(v.literal("active"), v.literal("completed"), v.literal("archived")),
+    status: v.union(
+      v.literal("active"),
+      v.literal("completed"),
+      v.literal("archived"),
+    ),
     authorId: v.id("users"),
     description: v.optional(v.string()),
     technologies: v.optional(v.array(v.string())),
@@ -28,7 +32,7 @@ export const createProject = mutation({
       technologies: args.technologies,
       updatedAt: args.updatedAt,
     });
-  }
+  },
 });
 export const deleteProject = mutation({
   args: {
@@ -40,7 +44,7 @@ export const deleteProject = mutation({
     if (!project) {
       throw new Error("Project not found");
     }
-    
+
     return await ctx.db.delete(args.projectId);
   },
 });
@@ -48,24 +52,33 @@ export const deleteProject = mutation({
 export const getProjects = query({
   args: {
     paginationOpts: paginationOptsValidator,
-    status: v.optional(v.union(v.literal("active"), v.literal("completed"), v.literal("archived"))),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("completed"),
+        v.literal("archived"),
+      ),
+    ),
     author: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
     const { paginationOpts, status, author } = args;
-    
+
     let query;
-    
+
     if (status) {
-      query = ctx.db.query("projects").withIndex("by_status", (q) => q.eq("status", status));
+      query = ctx.db
+        .query("projects")
+        .withIndex("by_status", (q) => q.eq("status", status));
     } else if (author) {
-      query = ctx.db.query("projects").withIndex("by_author", (q) => q.eq("author", author));
+      query = ctx.db
+        .query("projects")
+        .withIndex("by_author", (q) => q.eq("author", author));
     }
-    
+
     return await query?.order("desc").paginate(paginationOpts);
   },
 });
-
 
 export const getProjectById = query({
   args: {
@@ -83,8 +96,9 @@ export const getProjectsByAuthor = query({
   },
   handler: async (ctx, args) => {
     const { authorId, paginationOpts } = args;
-    
-    return await ctx.db.query("projects")
+
+    return await ctx.db
+      .query("projects")
       .withIndex("by_author", (q) => q.eq("author", authorId))
       .order("desc")
       .paginate(paginationOpts);
@@ -94,9 +108,7 @@ export const getProjectsByAuthor = query({
 export const getAllProjects = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("projects")
-      .order("desc")
-      .collect();
+    return await ctx.db.query("projects").order("desc").collect();
   },
 });
 
@@ -107,7 +119,13 @@ export const updateProject = mutation({
     url: v.optional(v.string()),
     github: v.optional(v.string()),
     problem: v.optional(v.string()),
-    status: v.optional(v.union(v.literal("active"), v.literal("completed"), v.literal("archived"))),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("completed"),
+        v.literal("archived"),
+      ),
+    ),
     description: v.optional(v.string()),
     technologies: v.optional(v.array(v.string())),
   },

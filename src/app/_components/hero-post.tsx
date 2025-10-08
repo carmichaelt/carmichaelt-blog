@@ -6,7 +6,13 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import { PostBody } from "./post-body";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type Props = {
   search?: string;
@@ -35,12 +41,12 @@ export async function HeroPost({
     dateFrom,
     dateTo,
   });
-  
+
   // Transform posts to match Post interface
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
-      const authorData = await fetchQuery(api.users.getUserById, { 
-        id: post.author as Id<"users"> 
+      const authorData = await fetchQuery(api.users.getUserById, {
+        id: post.author as Id<"users">,
       });
       return {
         slug: post.slug,
@@ -49,21 +55,21 @@ export async function HeroPost({
         coverImage: post.coverImage,
         author: {
           name: authorData?.name ?? "",
-          picture: authorData?.avatarUrl ?? ""
+          picture: authorData?.avatarUrl ?? "",
         },
         excerpt: post.excerpt,
         ogImage: {
-          url: post.ogImage
+          url: post.ogImage,
         },
         content: post.content,
         richContent: post.richContent,
-        preview: post.preview
+        preview: post.preview,
       };
-    }) ?? []
+    }) ?? [],
   );
 
   const heroPost = transformedPosts?.[0];
-  
+
   if (!heroPost) {
     return (
       <section>
@@ -90,15 +96,18 @@ export async function HeroPost({
       <Card className="overflow-hidden">
         <CardHeader className="space-y-6">
           <div className="flex items-start gap-4">
-            <CoverImage 
-              title={heroPost.title} 
-              src={heroPost.coverImage} 
-              slug={heroPost.slug} 
+            <CoverImage
+              title={heroPost.title}
+              src={heroPost.coverImage}
+              slug={heroPost.slug}
             />
             <div className="flex-1 space-y-3">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-2xl md:text-3xl leading-tight font-bold">
-                  <Link href={`/posts/${heroPost.slug}`} className="hover:underline">
+                  <Link
+                    href={`/posts/${heroPost.slug}`}
+                    className="hover:underline"
+                  >
                     {heroPost.title}
                   </Link>
                 </CardTitle>
@@ -113,13 +122,16 @@ export async function HeroPost({
           </div>
         </CardHeader>
         <CardContent>
-          <PostBody content={heroPost.content} richContent={heroPost.richContent} />
-              <div className="flex items-center gap-2">
-                <Avatar 
-                  name={heroPost.author.name} 
-                  picture={heroPost.author.picture} 
-                />
-              </div>
+          <PostBody
+            content={heroPost.content}
+            richContent={heroPost.richContent}
+          />
+          <div className="flex items-center gap-2">
+            <Avatar
+              name={heroPost.author.name}
+              picture={heroPost.author.picture}
+            />
+          </div>
         </CardContent>
       </Card>
       {/*<div className="mb-8 md:mb-16 w-[500px]">

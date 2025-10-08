@@ -3,7 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { EditProjectContent } from "./_components/edit-project-content";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 interface EditProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -33,7 +33,9 @@ export async function generateStaticParams() {
   return projects.map((project) => ({ projectId: project._id }));
 }
 
-export default async function EditProjectPage({ params }: EditProjectPageProps) {
+export default async function EditProjectPage({
+  params,
+}: EditProjectPageProps) {
   const { projectId } = await params;
 
   return (
@@ -48,10 +50,12 @@ export default async function EditProjectPage({ params }: EditProjectPageProps) 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: EditProjectPageProps) {
   const { projectId } = await params;
-  
+
   try {
-    const project = await fetchQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
-    
+    const project = await fetchQuery(api.projects.getProjectById, {
+      projectId: projectId as Id<"projects">,
+    });
+
     if (!project) {
       return {
         title: "Project Not Found",
@@ -73,4 +77,4 @@ export async function generateMetadata({ params }: EditProjectPageProps) {
 }
 
 // Enable dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

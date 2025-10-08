@@ -5,11 +5,10 @@ interface PostLayoutProps {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  
   // For now, we'll use basic metadata
   // In a production app, you might want to fetch post data here
   // or use a different approach for metadata generation
-  
+
   return {
     title: `Carmichaelt Blog`,
     description: "Read the latest post on Carmichaelt Blog",
@@ -42,9 +41,11 @@ export default async function PostLayout({ children }: PostLayoutProps) {
     </div>
     
 </div>;*/
-  return (<div className="flex flex-1 flex-col">
-  <div className="@container/main flex flex-1 flex-col gap-2 p-4">
-      {children}
-  </div>
-</div>);
+  return (
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2 p-4">
+        {children}
+      </div>
+    </div>
+  );
 }

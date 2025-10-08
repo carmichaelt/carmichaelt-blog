@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 const envSchema = z.object({
   CONVEX_DEPLOYMENT: z.string(),
@@ -6,6 +6,6 @@ const envSchema = z.object({
   CLERK_JWT_ISSUER_DOMAIN: z.url(),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
   CLERK_SECRET_KEY: z.string(),
-})
+});
 
-export const env = envSchema.parse(process.env)
+export const env = envSchema.parse(process.env);

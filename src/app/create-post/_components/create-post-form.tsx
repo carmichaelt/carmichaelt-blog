@@ -1,33 +1,47 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import { type Id } from '../../../../convex/_generated/dataModel';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RichTextEditor } from './rich-text-editor';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import { type RichTextDocument } from '@/interfaces/rich-text';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { type Id } from "../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RichTextEditor } from "./rich-text-editor";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { type RichTextDocument } from "@/interfaces/rich-text";
 
 const createPostSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  slug: z.string()
-    .min(1, 'Slug is required')
-    .max(100, 'Slug must be less than 100 characters')
-    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
-  excerpt: z.string().min(1, 'Excerpt is required').max(300, 'Excerpt must be less than 300 characters'),
-  ogImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  coverImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(100, "Title must be less than 100 characters"),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .max(100, "Slug must be less than 100 characters")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "Slug can only contain lowercase letters, numbers, and hyphens",
+    ),
+  excerpt: z
+    .string()
+    .min(1, "Excerpt is required")
+    .max(300, "Excerpt must be less than 300 characters"),
+  ogImage: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  coverImage: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal("")),
   preview: z.boolean(),
   authorId: z.string(),
 });
@@ -53,8 +67,8 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
     resolver: zodResolver(createPostSchema),
     defaultValues: {
       preview: false,
-      ogImage: '',
-      coverImage: '',
+      ogImage: "",
+      coverImage: "",
       authorId: authorId as Id<"users">,
     },
   });
@@ -63,15 +77,15 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
       .trim();
   };
 
   const onSubmit = async (data: CreatePostFormData) => {
     if (!richContent) {
-      toast.error('Please add some content to your post');
+      toast.error("Please add some content to your post");
       return;
     }
 
@@ -84,17 +98,17 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
         richContent,
         author: authorId as Id<"users">,
         date: new Date().toISOString(),
-        ogImage: data.ogImage || 'https://picsum.photos/200/300',
-        coverImage: data.coverImage || 'https://picsum.photos/200/300',
+        ogImage: data.ogImage || "https://picsum.photos/200/300",
+        coverImage: data.coverImage || "https://picsum.photos/200/300",
       };
 
       await createPost(postData);
-      
-      toast.success('Post created successfully!');
-      router.push('/');
+
+      toast.success("Post created successfully!");
+      router.push("/");
     } catch (error) {
-      console.error('Error creating post:', error);
-      toast.error('Failed to create post. Please try again.');
+      console.error("Error creating post:", error);
+      toast.error("Failed to create post. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -112,12 +126,12 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
             <Label htmlFor="title">Title *</Label>
             <Input
               id="title"
-              {...register('title')}
+              {...register("title")}
               placeholder="Enter post title"
               onChange={(e) => {
                 const title = e.target.value;
                 const slug = generateSlug(title);
-                setValue('slug', slug);
+                setValue("slug", slug);
               }}
             />
             {errors.title && (
@@ -130,7 +144,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
             <Label htmlFor="slug">Slug *</Label>
             <Input
               id="slug"
-              {...register('slug')}
+              {...register("slug")}
               placeholder="post-url-slug"
             />
             {errors.slug && (
@@ -143,7 +157,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
             <Label htmlFor="excerpt">Excerpt *</Label>
             <Textarea
               id="excerpt"
-              {...register('excerpt')}
+              {...register("excerpt")}
               placeholder="Brief description of your post"
               rows={3}
             />
@@ -158,11 +172,13 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
               <Label htmlFor="coverImage">Cover Image URL</Label>
               <Input
                 id="coverImage"
-                {...register('coverImage')}
+                {...register("coverImage")}
                 placeholder="https://example.com/image.jpg"
               />
               {errors.coverImage && (
-                <p className="text-sm text-red-600">{errors.coverImage.message}</p>
+                <p className="text-sm text-red-600">
+                  {errors.coverImage.message}
+                </p>
               )}
             </div>
 
@@ -170,7 +186,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
               <Label htmlFor="ogImage">OG Image URL</Label>
               <Input
                 id="ogImage"
-                {...register('ogImage')}
+                {...register("ogImage")}
                 placeholder="https://example.com/og-image.jpg"
               />
               {errors.ogImage && (
@@ -181,10 +197,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
 
           {/* Preview Toggle */}
           <div className="flex items-center space-x-2">
-            <Switch
-              id="preview"
-              {...register('preview')}
-            />
+            <Switch id="preview" {...register("preview")} />
             <Label htmlFor="preview">Save as draft (preview)</Label>
           </div>
 
@@ -214,7 +227,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
                   Creating...
                 </>
               ) : (
-                'Create Post'
+                "Create Post"
               )}
             </Button>
           </div>

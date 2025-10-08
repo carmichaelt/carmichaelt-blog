@@ -1,15 +1,14 @@
 "use client";
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Edit } from 'lucide-react';
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
 
 interface EditPostButtonProps {
   postSlug: string;
 }
 
 export function EditPostButton({ postSlug }: EditPostButtonProps) {
-
   return (
     <Link href={`/posts/${postSlug}/edit`}>
       <Button variant="outline" size="sm">

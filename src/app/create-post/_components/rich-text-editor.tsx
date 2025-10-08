@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import { type RichTextDocument } from '@/interfaces/rich-text';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Bold, 
-  Italic, 
-  List, 
-  ListOrdered, 
-  Quote, 
-  Undo, 
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import { type RichTextDocument } from "@/interfaces/rich-text";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Quote,
+  Undo,
   Redo,
   Link as LinkIcon,
   Image as ImageIcon,
   Heading1,
   Heading2,
-  Heading3
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+  Heading3,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
   content?: RichTextDocument;
@@ -31,11 +31,11 @@ interface RichTextEditorProps {
   className?: string;
 }
 
-export function RichTextEditor({ 
-  content, 
-  onChange, 
+export function RichTextEditor({
+  content,
+  onChange,
   placeholder = "Start writing your post...",
-  className 
+  className,
 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -51,13 +51,13 @@ export function RichTextEditor({
       }),
       Image.configure({
         HTMLAttributes: {
-          class: 'max-w-full h-auto rounded-lg',
+          class: "max-w-full h-auto rounded-lg",
         },
       }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-600 underline',
+          class: "text-blue-600 underline",
         },
       }),
       Placeholder.configure({
@@ -65,13 +65,14 @@ export function RichTextEditor({
       }),
     ],
     immediatelyRender: false,
-    content: content || '',
+    content: content || "",
     onUpdate: ({ editor }) => {
       onChange?.(editor.getJSON());
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[400px] p-4',
+        class:
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[400px] p-4",
       },
     },
   });
@@ -81,21 +82,21 @@ export function RichTextEditor({
   }
 
   const addImage = () => {
-    const url = window.prompt('Enter image URL:');
+    const url = window.prompt("Enter image URL:");
     if (url) {
       editor.chain().focus().setImage({ src: url }).run();
     }
   };
 
   const addLink = () => {
-    const url = window.prompt('Enter URL:');
+    const url = window.prompt("Enter URL:");
     if (url) {
       editor.chain().focus().setLink({ href: url }).run();
     }
   };
 
   return (
-    <div className={cn('border rounded-lg', className)}>
+    <div className={cn("border rounded-lg", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b bg-gray-50">
         <Button
@@ -103,20 +104,20 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('bold') && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("bold") && "bg-gray-200",
           )}
         >
           <Bold className="h-4 w-4" />
         </Button>
-        
+
         <Button
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('italic') && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("italic") && "bg-gray-200",
           )}
         >
           <Italic className="h-4 w-4" />
@@ -127,10 +128,12 @@ export function RichTextEditor({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('heading', { level: 1 }) && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("heading", { level: 1 }) && "bg-gray-200",
           )}
         >
           <Heading1 className="h-4 w-4" />
@@ -139,10 +142,12 @@ export function RichTextEditor({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('heading', { level: 2 }) && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("heading", { level: 2 }) && "bg-gray-200",
           )}
         >
           <Heading2 className="h-4 w-4" />
@@ -151,10 +156,12 @@ export function RichTextEditor({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('heading', { level: 3 }) && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("heading", { level: 3 }) && "bg-gray-200",
           )}
         >
           <Heading3 className="h-4 w-4" />
@@ -167,8 +174,8 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('bulletList') && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("bulletList") && "bg-gray-200",
           )}
         >
           <List className="h-4 w-4" />
@@ -179,8 +186,8 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('orderedList') && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("orderedList") && "bg-gray-200",
           )}
         >
           <ListOrdered className="h-4 w-4" />
@@ -191,8 +198,8 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('blockquote') && 'bg-gray-200'
+            "h-8 w-8 p-0",
+            editor.isActive("blockquote") && "bg-gray-200",
           )}
         >
           <Quote className="h-4 w-4" />

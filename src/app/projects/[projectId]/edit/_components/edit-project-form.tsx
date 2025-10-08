@@ -1,29 +1,41 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../../../convex/_generated/api';
-import { type Id } from '../../../../../../convex/_generated/dataModel';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import { logger } from '@/lib/logger';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../convex/_generated/api";
+import { type Id } from "../../../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 const editProjectSchema = z.object({
-  name: z.string().min(1, 'Project name is required').max(100, 'Name must be less than 100 characters'),
-  url: z.url('Must be a valid URL').optional().or(z.literal('')),
-  github: z.url('Must be a valid GitHub URL').optional().or(z.literal('')),
-  problem: z.string().min(1, 'Problem description is required').max(500, 'Description must be less than 500 characters'),
-  status: z.enum(['active', 'completed', 'archived']),
+  name: z
+    .string()
+    .min(1, "Project name is required")
+    .max(100, "Name must be less than 100 characters"),
+  url: z.url("Must be a valid URL").optional().or(z.literal("")),
+  github: z.url("Must be a valid GitHub URL").optional().or(z.literal("")),
+  problem: z
+    .string()
+    .min(1, "Problem description is required")
+    .max(500, "Description must be less than 500 characters"),
+  status: z.enum(["active", "completed", "archived"]),
   description: z.string().optional(),
   technologies: z.string().optional(),
 });
@@ -37,7 +49,7 @@ interface EditProjectFormProps {
     url?: string;
     github?: string;
     problem: string;
-    status: 'active' | 'completed' | 'archived';
+    status: "active" | "completed" | "archived";
     description?: string;
     technologies?: string[];
   };
@@ -58,16 +70,16 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     resolver: zodResolver(editProjectSchema),
     defaultValues: {
       name: project.name,
-      url: project.url || '',
-      github: project.github || '',
+      url: project.url || "",
+      github: project.github || "",
       problem: project.problem,
       status: project.status,
-      description: project.description || '',
-      technologies: project.technologies?.join(', ') || '',
+      description: project.description || "",
+      technologies: project.technologies?.join(", ") || "",
     },
   });
 
-  const technologiesValue = watch('technologies');
+  const technologiesValue = watch("technologies");
 
   const onSubmit = async (data: EditProjectFormData) => {
     setIsSubmitting(true);
@@ -76,19 +88,24 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
       const projectData = {
         projectId: project._id,
         ...data,
-        technologies: technologiesValue ? technologiesValue.split(',').map(t => t.trim()).filter(t => t) : [],
+        technologies: technologiesValue
+          ? technologiesValue
+              .split(",")
+              .map((t) => t.trim())
+              .filter((t) => t)
+          : [],
       };
 
       await updateProject(projectData);
-      
-      toast.success('Project updated successfully!');
-      router.push('/projects');
+
+      toast.success("Project updated successfully!");
+      router.push("/projects");
     } catch (error) {
-      logger.error('Error updating project', error as Error, { 
+      logger.error("Error updating project", error as Error, {
         projectId: project._id,
-        projectData: { name: data.name, status: data.status }
+        projectData: { name: data.name, status: data.status },
       });
-      toast.error('Failed to update project. Please try again.');
+      toast.error("Failed to update project. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -106,7 +123,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
             <Label htmlFor="name">Project Name *</Label>
             <Input
               id="name"
-              {...register('name')}
+              {...register("name")}
               placeholder="Enter project name"
             />
             {errors.name && (
@@ -120,7 +137,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
               <Label htmlFor="url">Project URL *</Label>
               <Input
                 id="url"
-                {...register('url')}
+                {...register("url")}
                 placeholder="https://example.com"
               />
               {errors.url && (
@@ -132,7 +149,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
               <Label htmlFor="github">GitHub URL *</Label>
               <Input
                 id="github"
-                {...register('github')}
+                {...register("github")}
                 placeholder="https://github.com/username/repo"
               />
               {errors.github && (
@@ -146,7 +163,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
             <Label htmlFor="problem">Problem Solved *</Label>
             <Textarea
               id="problem"
-              {...register('problem')}
+              {...register("problem")}
               placeholder="Describe what problem this project solves"
               rows={3}
             />
@@ -160,7 +177,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
             <Label htmlFor="description">Additional Description</Label>
             <Textarea
               id="description"
-              {...register('description')}
+              {...register("description")}
               placeholder="Optional additional details about the project"
               rows={3}
             />
@@ -171,16 +188,23 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
             <Label htmlFor="technologies">Technologies Used</Label>
             <Input
               id="technologies"
-              {...register('technologies')}
+              {...register("technologies")}
               placeholder="React, TypeScript, Node.js (comma-separated)"
             />
-            <p className="text-sm text-gray-500">Separate technologies with commas</p>
+            <p className="text-sm text-gray-500">
+              Separate technologies with commas
+            </p>
           </div>
 
           {/* Status */}
           <div className="space-y-2">
             <Label htmlFor="status">Status *</Label>
-            <Select onValueChange={(value) => setValue('status', value as 'active' | 'completed' | 'archived')} defaultValue={project.status}>
+            <Select
+              onValueChange={(value) =>
+                setValue("status", value as "active" | "completed" | "archived")
+              }
+              defaultValue={project.status}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select project status" />
               </SelectTrigger>
@@ -211,7 +235,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
                   Updating...
                 </>
               ) : (
-                'Update Project'
+                "Update Project"
               )}
             </Button>
           </div>

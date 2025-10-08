@@ -7,13 +7,13 @@ type Props = {
   search?: string;
   sortField?: "date" | "title";
   sortOrder?: "asc" | "desc";
-  limit?: number; 
+  limit?: number;
   preview?: boolean;
   dateFrom?: string;
   dateTo?: string;
 };
 
-export async function MoreStories({ 
+export async function MoreStories({
   search,
   sortField = "date",
   sortOrder = "desc",
@@ -36,8 +36,8 @@ export async function MoreStories({
   // Transform posts to include author data
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
-      const authorData = await fetchQuery(api.users.getUserById, { 
-        id: post.author as Id<"users"> 
+      const authorData = await fetchQuery(api.users.getUserById, {
+        id: post.author as Id<"users">,
       });
       return {
         ...post,
@@ -45,10 +45,10 @@ export async function MoreStories({
           _id: post.author,
           name: authorData?.name ?? "",
           avatar: authorData?.avatarUrl ?? "",
-          picture: authorData?.avatarUrl ?? ""
-        }
+          picture: authorData?.avatarUrl ?? "",
+        },
       };
-    }) ?? []
+    }) ?? [],
   );
 
   if (!transformedPosts || transformedPosts.length === 0) {
@@ -58,7 +58,9 @@ export async function MoreStories({
           Posts
         </h2>
         <div className="text-center py-12">
-          <p className="text-lg text-gray-600">No posts found matching your criteria.</p>
+          <p className="text-lg text-gray-600">
+            No posts found matching your criteria.
+          </p>
         </div>
       </section>
     );

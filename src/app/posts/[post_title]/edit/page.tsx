@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { EditPostContent } from "./_components/edit-post-content";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import { auth } from "@clerk/nextjs/server";
 
 interface EditPostPageProps {
@@ -34,7 +34,9 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Authentication Required
+          </h1>
           <p className="text-gray-600">Please sign in to edit a post.</p>
         </div>
       </div>
@@ -43,7 +45,9 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 
   try {
     const { post_title } = await params;
-    const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
+    const post = await fetchQuery(api.posts.getPostBySlug, {
+      slug: post_title,
+    });
 
     return (
       <div className="min-h-screen bg-background">
@@ -57,8 +61,12 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Post</h1>
-          <p className="text-gray-600">There was an error loading the post for editing.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Error Loading Post
+          </h1>
+          <p className="text-gray-600">
+            There was an error loading the post for editing.
+          </p>
         </div>
       </div>
     );
@@ -68,10 +76,12 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: EditPostPageProps) {
   const { post_title } = await params;
-  
+
   try {
-    const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
-    
+    const post = await fetchQuery(api.posts.getPostBySlug, {
+      slug: post_title,
+    });
+
     if (!post) {
       return {
         title: "Post Not Found",
@@ -93,4 +103,4 @@ export async function generateMetadata({ params }: EditPostPageProps) {
 }
 
 // Enable dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

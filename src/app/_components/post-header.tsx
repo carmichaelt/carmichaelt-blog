@@ -19,8 +19,8 @@ export function PostHeader({ title, coverImage, date, postSlug }: Props) {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back to Blog Link and Edit Button */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
-        <Link 
-          href="/posts" 
+        <Link
+          href="/posts"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -28,26 +28,22 @@ export function PostHeader({ title, coverImage, date, postSlug }: Props) {
         </Link>
         {postSlug && <EditPostButton postSlug={postSlug} />}
       </div>
-      
+
       {/* Date */}
       <div className="mb-6">
         <DateFormatter dateString={date} />
       </div>
 
-
       {/* Title */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
         <PostTitle>{title}</PostTitle>
-      {/* Cover Image */}
-      {coverImage && (
-        <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
-          <CoverImage title={title} src={coverImage} />
-        </div>
-      )}
+        {/* Cover Image */}
+        {coverImage && (
+          <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
+            <CoverImage title={title} src={coverImage} />
+          </div>
+        )}
       </div>
-
-      
-
 
       {/* Separator */}
       <div className="border-t border-border mb-8"></div>

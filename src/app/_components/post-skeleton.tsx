@@ -36,7 +36,7 @@ export function PostSkeleton() {
             </div>
           </div>
         </div>
-        
+
         {/* Date skeleton */}
         <div className="mb-6">
           <Skeleton className="h-6 w-32" />

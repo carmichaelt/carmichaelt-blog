@@ -11,7 +11,8 @@ export const experimental_ppr = true;
 export async function generateMetadata() {
   return {
     title: "Projects",
-    description: "A collection of projects I've built using technologies and concepts that interest me.",
+    description:
+      "A collection of projects I've built using technologies and concepts that interest me.",
   };
 }
 

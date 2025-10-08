@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -14,7 +14,7 @@ interface ErrorProps {
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
-    logger.error('Post page error', error as Error);
+    logger.error("Post page error", error as Error);
   }, [error]);
 
   return (
@@ -34,13 +34,13 @@ export default function Error({ error, reset }: ErrorProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-4">
           <Button onClick={reset} className="w-full">
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
           </Button>
-          
+
           <Button variant="outline" asChild className="w-full">
             <Link href="/">
               <Home className="w-4 h-4 mr-2" />
@@ -48,7 +48,7 @@ export default function Error({ error, reset }: ErrorProps) {
             </Link>
           </Button>
         </div>
-        
+
         <div className="mt-8 text-sm text-slate-500 dark:text-slate-500">
           <p>If the problem persists, please contact support.</p>
         </div>

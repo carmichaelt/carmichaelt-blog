@@ -46,7 +46,9 @@ async function validateRequest(req: Request): Promise<WebhookEvent | null> {
   try {
     return wh.verify(payloadString, svixHeaders) as unknown as WebhookEvent;
   } catch (error) {
-    console.error("Error verifying webhook event", { error: error instanceof Error ? error.message : 'Unknown error' });
+    console.error("Error verifying webhook event", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
     return null;
   }
 }

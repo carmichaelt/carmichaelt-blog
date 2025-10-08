@@ -4,7 +4,7 @@ import { PostContent } from "./_components/page-content";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import type { Metadata } from "next";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import { notFound } from "next/navigation";
 
 interface PostPageProps {
@@ -21,8 +21,6 @@ function PostShell() {
     </article>
   );
 }
-
-
 
 export default async function PostPage({ params }: PostPageProps) {
   const { post_title } = await params;
@@ -47,26 +45,30 @@ export async function generateStaticParams() {
     // Fetch recent posts for static generation
     const { fetchQuery } = await import("convex/nextjs");
     const { api } = await import("../../../../convex/_generated/api");
-    
+
     const posts = await fetchQuery(api.posts.getAllPostSlugs, {});
-    
+
     // Return the most recent 10 posts for static generation
-    return posts.slice(0, 10).map((post: { slug: string }) => ({ 
-      post_title: post.slug 
+    return posts.slice(0, 10).map((post: { slug: string }) => ({
+      post_title: post.slug,
     }));
   } catch (error) {
-    logger.error('Error generating static params', error as Error);
+    logger.error("Error generating static params", error as Error);
     return [];
   }
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PostPageProps): Promise<Metadata> {
   const { post_title } = await params;
-  
+
   try {
-    const post = await fetchQuery(api.posts.getPostBySlug, { slug: post_title });
-    
+    const post = await fetchQuery(api.posts.getPostBySlug, {
+      slug: post_title,
+    });
+
     if (!post) {
       return {
         title: "Post Not Found",
@@ -101,4 +103,4 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 }
 
 // Enable dynamic rendering for all other posts
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

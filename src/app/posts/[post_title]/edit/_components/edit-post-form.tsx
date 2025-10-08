@@ -1,43 +1,56 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../../../convex/_generated/api';
-import { type Id } from '../../../../../../convex/_generated/dataModel';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RichTextEditor } from '@/app/create-post/_components/rich-text-editor';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { Loader2, Save, AlertTriangle } from 'lucide-react';
-import { type RichTextDocument } from '@/interfaces/rich-text';
-import { logger } from '@/lib/logger';
-import { Doc } from '../../../../../../convex/_generated/dataModel';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useState, useEffect, useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../convex/_generated/api";
+import { type Id } from "../../../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RichTextEditor } from "@/app/create-post/_components/rich-text-editor";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Loader2, Save, AlertTriangle } from "lucide-react";
+import { type RichTextDocument } from "@/interfaces/rich-text";
+import { logger } from "@/lib/logger";
+import { Doc } from "../../../../../../convex/_generated/dataModel";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const editPostSchema = z.object({
   postId: z.string(),
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  slug: z.string()
-    .min(1, 'Slug is required')
-    .max(100, 'Slug must be less than 100 characters')
-    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
-  excerpt: z.string().min(1, 'Excerpt is required').max(300, 'Excerpt must be less than 300 characters'),
-  ogImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  coverImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(100, "Title must be less than 100 characters"),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .max(100, "Slug must be less than 100 characters")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "Slug can only contain lowercase letters, numbers, and hyphens",
+    ),
+  excerpt: z
+    .string()
+    .min(1, "Excerpt is required")
+    .max(300, "Excerpt must be less than 300 characters"),
+  ogImage: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  coverImage: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal("")),
   preview: z.boolean(),
   content: z.string(),
   richContent: z.any().optional(),
   tags: z.array(z.string()).optional(),
 });
-
 
 type EditPostFormData = z.infer<typeof editPostSchema>;
 
@@ -65,8 +78,8 @@ export function EditPostForm({ post }: EditPostFormProps) {
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
-      ogImage: post.ogImage || '',
-      coverImage: post.coverImage || '',
+      ogImage: post.ogImage || "",
+      coverImage: post.coverImage || "",
       preview: post.preview || false,
       content: post.content,
       richContent: post.richContent,
@@ -89,13 +102,13 @@ export function EditPostForm({ post }: EditPostFormProps) {
       } catch {
         // If parsing fails, create a basic rich text document
         setRichContent({
-          type: 'doc',
+          type: "doc",
           content: [
             {
-              type: 'paragraph',
+              type: "paragraph",
               content: [
                 {
-                  type: 'text',
+                  type: "text",
                   text: post.content,
                 },
               ],
@@ -108,7 +121,10 @@ export function EditPostForm({ post }: EditPostFormProps) {
 
   // Track unsaved changes
   useEffect(() => {
-    const hasChanges = isDirty || (richContent && JSON.stringify(richContent) !== JSON.stringify(post.richContent));
+    const hasChanges =
+      isDirty ||
+      (richContent &&
+        JSON.stringify(richContent) !== JSON.stringify(post.richContent));
     setHasUnsavedChanges(!!hasChanges);
   }, [isDirty, richContent, post.richContent]);
 
@@ -117,27 +133,27 @@ export function EditPostForm({ post }: EditPostFormProps) {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = '';
+        e.returnValue = "";
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
       .trim();
   };
 
   const onSubmit = async (data: EditPostFormData) => {
     if (!richContent) {
-      toast.error('Please add some content to your post');
+      toast.error("Please add some content to your post");
       return;
     }
 
@@ -147,31 +163,34 @@ export function EditPostForm({ post }: EditPostFormProps) {
       const postData = {
         ...data,
         content: JSON.stringify(richContent), // Fallback for backward compatibility
-        coverImage: data.coverImage || 'https://picsum.photos/200/300',
-        ogImage: data.ogImage || 'https://picsum.photos/200/300',
+        coverImage: data.coverImage || "https://picsum.photos/200/300",
+        ogImage: data.ogImage || "https://picsum.photos/200/300",
         postId: post._id as Id<"posts">,
       };
 
       // Optimistic update - show success immediately
       setHasUnsavedChanges(false);
       setLastSaved(new Date());
-      
+
       await updatePost(postData);
-      
-      toast.success('Post updated successfully!');
-      
+
+      toast.success("Post updated successfully!");
+
       // Navigate to the updated post
       router.push(`/posts/${data.slug}`);
     } catch (error) {
       // Revert optimistic update on error
       setHasUnsavedChanges(true);
-      
-      logger.error('Error updating post', error as Error, { 
+
+      logger.error("Error updating post", error as Error, {
         postId: post._id,
-        postData: { title: data.title, slug: data.slug }
+        postData: { title: data.title, slug: data.slug },
       });
-      
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update post. Please try again.';
+
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update post. Please try again.";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -181,14 +200,14 @@ export function EditPostForm({ post }: EditPostFormProps) {
   // Auto-save functionality (optional)
   const handleAutoSave = useCallback(async () => {
     if (!richContent || isSubmitting) return;
-    
+
     try {
       const currentValues = watchedValues;
       const postData = {
         ...currentValues,
         content: JSON.stringify(richContent),
-        coverImage: currentValues.coverImage || 'https://picsum.photos/200/300',
-        ogImage: currentValues.ogImage || 'https://picsum.photos/200/300',
+        coverImage: currentValues.coverImage || "https://picsum.photos/200/300",
+        ogImage: currentValues.ogImage || "https://picsum.photos/200/300",
         postId: post._id as Id<"posts">,
       };
 
@@ -196,7 +215,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
       setLastSaved(new Date());
       setHasUnsavedChanges(false);
     } catch (error) {
-      console.error('Auto-save failed:', error);
+      console.error("Auto-save failed:", error);
     }
   }, [richContent, watchedValues, isSubmitting, updatePost, post._id]);
 
@@ -225,12 +244,12 @@ export function EditPostForm({ post }: EditPostFormProps) {
             <Label htmlFor="title">Title *</Label>
             <Input
               id="title"
-              {...register('title')}
+              {...register("title")}
               placeholder="Enter post title"
               onChange={(e) => {
                 const title = e.target.value;
                 const slug = generateSlug(title);
-                setValue('slug', slug);
+                setValue("slug", slug);
               }}
             />
             {errors.title && (
@@ -243,7 +262,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
             <Label htmlFor="slug">Slug *</Label>
             <Input
               id="slug"
-              {...register('slug')}
+              {...register("slug")}
               placeholder="post-url-slug"
             />
             {errors.slug && (
@@ -256,7 +275,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
             <Label htmlFor="excerpt">Excerpt *</Label>
             <Textarea
               id="excerpt"
-              {...register('excerpt')}
+              {...register("excerpt")}
               placeholder="Brief description of your post"
               rows={3}
             />
@@ -271,11 +290,13 @@ export function EditPostForm({ post }: EditPostFormProps) {
               <Label htmlFor="coverImage">Cover Image URL</Label>
               <Input
                 id="coverImage"
-                {...register('coverImage')}
+                {...register("coverImage")}
                 placeholder="https://example.com/image.jpg"
               />
               {errors.coverImage && (
-                <p className="text-sm text-red-600">{errors.coverImage.message}</p>
+                <p className="text-sm text-red-600">
+                  {errors.coverImage.message}
+                </p>
               )}
             </div>
 
@@ -283,7 +304,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
               <Label htmlFor="ogImage">OG Image URL</Label>
               <Input
                 id="ogImage"
-                {...register('ogImage')}
+                {...register("ogImage")}
                 placeholder="https://example.com/og-image.jpg"
               />
               {errors.ogImage && (
@@ -294,10 +315,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
 
           {/* Preview Toggle */}
           <div className="flex items-center space-x-2">
-            <Switch
-              id="preview"
-              {...register('preview')}
-            />
+            <Switch id="preview" {...register("preview")} />
             <Label htmlFor="preview">Save as draft (preview)</Label>
           </div>
 
@@ -332,7 +350,10 @@ export function EditPostForm({ post }: EditPostFormProps) {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting || !hasUnsavedChanges}>
+              <Button
+                type="submit"
+                disabled={isSubmitting || !hasUnsavedChanges}
+              >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,4 +1,4 @@
-import Container from '@/app/_components/container';
+import Container from "@/app/_components/container";
 
 export default function CreatePostLayout({
   children,
@@ -7,9 +7,7 @@ export default function CreatePostLayout({
 }) {
   return (
     <Container>
-      <div className="py-8">
-        {children}
-      </div>
+      <div className="py-8">{children}</div>
     </Container>
   );
 }

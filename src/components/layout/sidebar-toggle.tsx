@@ -17,7 +17,7 @@ export function SidebarToggle() {
         if (hoverTimeoutRef.current) {
           clearTimeout(hoverTimeoutRef.current);
         }
-        
+
         // Set a timeout to open the sidebar after a short delay
         hoverTimeoutRef.current = setTimeout(() => {
           toggleSidebar();
@@ -34,14 +34,14 @@ export function SidebarToggle() {
     };
 
     // Add event listeners to the hover trigger
-    const hoverTrigger = document.getElementById('sidebar-hover-trigger');
+    const hoverTrigger = document.getElementById("sidebar-hover-trigger");
     if (hoverTrigger) {
-      hoverTrigger.addEventListener('mouseenter', handleMouseEnter);
-      hoverTrigger.addEventListener('mouseleave', handleMouseLeave);
-      
+      hoverTrigger.addEventListener("mouseenter", handleMouseEnter);
+      hoverTrigger.addEventListener("mouseleave", handleMouseLeave);
+
       return () => {
-        hoverTrigger.removeEventListener('mouseenter', handleMouseEnter);
-        hoverTrigger.removeEventListener('mouseleave', handleMouseLeave);
+        hoverTrigger.removeEventListener("mouseenter", handleMouseEnter);
+        hoverTrigger.removeEventListener("mouseleave", handleMouseLeave);
         if (hoverTimeoutRef.current) {
           clearTimeout(hoverTimeoutRef.current);
         }
@@ -55,9 +55,9 @@ export function SidebarToggle() {
       <div
         id="sidebar-hover-trigger"
         className="fixed left-0 top-0 z-50 h-screen w-[10px] bg-transparent hover:bg-blue-500/20 transition-colors duration-200"
-        style={{ display: open ? 'none' : 'block' }}
+        style={{ display: open ? "none" : "block" }}
       />
-      
+
       {/* Toggle button */}
       <Button
         variant="ghost"

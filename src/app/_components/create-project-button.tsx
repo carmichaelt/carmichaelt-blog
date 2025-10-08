@@ -1,9 +1,9 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export function CreateProjectButton() {
   const { user, isLoaded } = useUser();

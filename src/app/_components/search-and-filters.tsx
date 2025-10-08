@@ -79,8 +79,12 @@ export function SearchAndFilters() {
             className="h-8 sm:h-7 px-2 sm:px-3 text-xs sm:text-sm"
           >
             <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-            <span className="hidden sm:inline">{showFilters ? "Hide" : "Show"}</span>
-            <span className="sm:hidden">{showFilters ? "Hide Filters" : "Filters"}</span>
+            <span className="hidden sm:inline">
+              {showFilters ? "Hide" : "Show"}
+            </span>
+            <span className="sm:hidden">
+              {showFilters ? "Hide Filters" : "Filters"}
+            </span>
           </Button>
           {hasActiveFilters && (
             <Button
@@ -149,25 +153,28 @@ export function SearchAndFilters() {
                   </div>
                 </div>
               )}
-              {sortField !== "date" && sortField !== "" && sortField !== undefined && sortField !== null && (
-                <div className="flex flex-row">
-                  <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Sort:
-                    </span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      &quot;{sortField}&quot;
-                    </span>
+              {sortField !== "date" &&
+                sortField !== "" &&
+                sortField !== undefined &&
+                sortField !== null && (
+                  <div className="flex flex-row">
+                    <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Sort:
+                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        &quot;{sortField}&quot;
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
+                      onClick={() => setSortField("date")}
+                    >
+                      <X className="h-3 w-3 cursor-pointer text-red-500" />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
-                    onClick={() => setSortField("date")}
-                  >
-                    <X className="h-3 w-3 cursor-pointer text-red-500" />
-                  </div>
-                </div>
-              )}
-              
+                )}
+
               {preview !== null && preview !== "" && preview !== undefined && (
                 <div className="flex flex-row">
                   <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
@@ -186,60 +193,69 @@ export function SearchAndFilters() {
                   </div>
                 </div>
               )}
-              {dateFrom && dateFrom !== "" && dateFrom !== undefined && dateFrom !== null && (
-                <div className="flex flex-row">
-                  <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      From:
-                    </span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      &quot;{dateFrom}&quot;
-                    </span>
+              {dateFrom &&
+                dateFrom !== "" &&
+                dateFrom !== undefined &&
+                dateFrom !== null && (
+                  <div className="flex flex-row">
+                    <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        From:
+                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        &quot;{dateFrom}&quot;
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
+                      onClick={() => setDateFrom("")}
+                    >
+                      <X className="h-3 w-3 cursor-pointer text-red-500" />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
-                    onClick={() => setDateFrom("")}
-                  >
-                    <X className="h-3 w-3 cursor-pointer text-red-500" />
+                )}
+              {dateTo &&
+                dateTo !== "" &&
+                dateTo !== undefined &&
+                dateTo !== null && (
+                  <div className="flex flex-row">
+                    <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        To:
+                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        &quot;{dateTo}&quot;
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
+                      onClick={() => setDateTo("")}
+                    >
+                      <X className="h-3 w-3 cursor-pointer text-red-500" />
+                    </div>
                   </div>
-                </div>
-              )}
-              {dateTo && dateTo !== "" && dateTo !== undefined && dateTo !== null && (
-                <div className="flex flex-row">
-                  <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      To:
-                    </span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      &quot;{dateTo}&quot;
-                    </span>
+                )}
+              {limit !== "10" &&
+                limit !== "" &&
+                limit !== undefined &&
+                limit !== null && (
+                  <div className="flex flex-row">
+                    <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Limit:
+                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        &quot;{limit}&quot;
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
+                      onClick={() => setLimit("10")}
+                    >
+                      <X className="h-3 w-3 cursor-pointer text-red-500" />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
-                    onClick={() => setDateTo("")}
-                  >
-                    <X className="h-3 w-3 cursor-pointer text-red-500" />
-                  </div>
-                </div>
-              )}
-              {limit !== "10" && limit !== "" && limit !== undefined && limit !== null && (
-                <div className="flex flex-row">
-                  <div className="bg-gray-200 rounded-l-md pl-2 pr-1 py-1">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Limit:
-                    </span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      &quot;{limit}&quot;
-                    </span>
-                  </div>
-                  <div
-                    className="flex items-center justify-center cursor-pointer bg-gray-200 rounded-r-md px-2 py-1 hover:bg-gray-300 transition-colors"
-                    onClick={() => setLimit("10")}
-                  >
-                    <X className="h-3 w-3 cursor-pointer text-red-500" />
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         )}
@@ -255,7 +271,9 @@ export function SearchAndFilters() {
                 </Label>
                 <Select
                   value={sortField || ""}
-                  onValueChange={(value: "date" | "title") => setSortField(value)}
+                  onValueChange={(value: "date" | "title") =>
+                    setSortField(value)
+                  }
                 >
                   <SelectTrigger className="h-9 sm:h-8 text-xs sm:text-sm">
                     <SelectValue />

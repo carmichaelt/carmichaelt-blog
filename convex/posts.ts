@@ -35,7 +35,7 @@ export const incrementPostViews = mutation({
     if (!post) {
       throw new Error("Post not found");
     }
-    
+
     const currentViews = post.views || 0;
     return await ctx.db.patch(args.postId, {
       views: currentViews + 1,
@@ -55,19 +55,21 @@ export const getPosts = query({
   args: {
     // Search functionality
     search: v.optional(v.string()),
-    
+
     // Sorting
-    sortField: v.optional(v.union(v.literal("date"), v.literal("title"), v.literal("views"))),
+    sortField: v.optional(
+      v.union(v.literal("date"), v.literal("title"), v.literal("views")),
+    ),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
-    
+
     // Pagination
     paginationOpts: paginationOptsValidator,
-    
+
     // Filtering
     author: v.optional(v.id("users")),
     preview: v.optional(v.boolean()),
     tags: v.optional(v.array(v.string())), // Filter by tags
-    
+
     // Additional filters
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
@@ -87,14 +89,16 @@ export const getPosts = query({
 
     // Start with appropriate index based on filters
     let query;
-    
+
     if (preview !== undefined && sortField === "date") {
       // Use compound index for better performance
-      query = ctx.db.query("posts").withIndex("by_preview", (q) => 
-        q.eq("preview", preview)
-      );
+      query = ctx.db
+        .query("posts")
+        .withIndex("by_preview", (q) => q.eq("preview", preview));
     } else if (author) {
-      query = ctx.db.query("posts").withIndex("by_author", (q) => q.eq("author", author));
+      query = ctx.db
+        .query("posts")
+        .withIndex("by_author", (q) => q.eq("author", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
     } else if (sortField === "views") {
@@ -105,13 +109,13 @@ export const getPosts = query({
 
     // Apply search filter (searches in title, excerpt, and content)
     if (search) {
-      query = query.filter((q) => 
+      query = query.filter((q) =>
         q.or(
           q.eq(q.field("title"), search), // Exact match
           q.eq(q.field("excerpt"), search), // Exact match
           // For partial matches, we'll need to use a different approach
           // Convex doesn't support LIKE queries, so we'll use exact matches for now
-        )
+        ),
       );
     }
 
@@ -119,11 +123,7 @@ export const getPosts = query({
     if (tags && tags.length > 0) {
       query = query.filter((q) => {
         // Check if any of the provided tags exist in the post's tags
-        return q.or(
-          ...tags.map(tag => 
-            q.eq(q.field("tags"), [tag])
-          )
-        );
+        return q.or(...tags.map((tag) => q.eq(q.field("tags"), [tag])));
       });
     }
 
@@ -153,7 +153,9 @@ export const getPosts = query({
 export const getPostsSimple = query({
   args: {
     search: v.optional(v.string()),
-    sortField: v.optional(v.union(v.literal("date"), v.literal("title"), v.literal("views"))),
+    sortField: v.optional(
+      v.union(v.literal("date"), v.literal("title"), v.literal("views")),
+    ),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     limit: v.optional(v.number()),
     author: v.optional(v.id("users")),
@@ -177,13 +179,15 @@ export const getPostsSimple = query({
 
     // Start with appropriate index based on filters
     let query;
-    
+
     if (preview !== undefined && sortField === "date") {
-      query = ctx.db.query("posts").withIndex("by_preview", (q) => 
-        q.eq("preview", preview)
-      );
+      query = ctx.db
+        .query("posts")
+        .withIndex("by_preview", (q) => q.eq("preview", preview));
     } else if (author) {
-      query = ctx.db.query("posts").withIndex("by_author", (q) => q.eq("author", author));
+      query = ctx.db
+        .query("posts")
+        .withIndex("by_author", (q) => q.eq("author", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
     } else if (sortField === "views") {
@@ -194,11 +198,8 @@ export const getPostsSimple = query({
 
     // Apply search filter
     if (search) {
-      query = query.filter((q) => 
-        q.or(
-          q.eq(q.field("title"), search),
-          q.eq(q.field("excerpt"), search),
-        )
+      query = query.filter((q) =>
+        q.or(q.eq(q.field("title"), search), q.eq(q.field("excerpt"), search)),
       );
     }
 
@@ -206,11 +207,7 @@ export const getPostsSimple = query({
     if (tags && tags.length > 0) {
       query = query.filter((q) => {
         // Check if any of the provided tags exist in the post's tags
-        return q.or(
-          ...tags.map(tag => 
-            q.eq(q.field("tags"), [tag])
-          )
-        );
+        return q.or(...tags.map((tag) => q.eq(q.field("tags"), [tag])));
       });
     }
 
@@ -247,11 +244,8 @@ export const getPostsCount = query({
 
     // Apply same filters as main query
     if (search) {
-      query = query.filter((q) => 
-        q.or(
-          q.eq(q.field("title"), search),
-          q.eq(q.field("excerpt"), search),
-        )
+      query = query.filter((q) =>
+        q.or(q.eq(q.field("title"), search), q.eq(q.field("excerpt"), search)),
       );
     }
 
@@ -266,11 +260,7 @@ export const getPostsCount = query({
     if (tags && tags.length > 0) {
       query = query.filter((q) => {
         // Check if any of the provided tags exist in the post's tags
-        return q.or(
-          ...tags.map(tag => 
-            q.eq(q.field("tags"), [tag])
-          )
-        );
+        return q.or(...tags.map((tag) => q.eq(q.field("tags"), [tag])));
       });
     }
 
@@ -295,8 +285,9 @@ export const getPostsByAuthor = query({
   },
   handler: async (ctx, args) => {
     const { authorId, paginationOpts } = args;
-    
-    return await ctx.db.query("posts")
+
+    return await ctx.db
+      .query("posts")
       .withIndex("by_author", (q) => q.eq("author", authorId as Id<"users">))
       .order("desc")
       .paginate(paginationOpts);
@@ -310,8 +301,9 @@ export const getRecentPosts = query({
   },
   handler: async (ctx, args) => {
     const { limit = 5 } = args;
-    
-    return await ctx.db.query("posts")
+
+    return await ctx.db
+      .query("posts")
       .withIndex("by_preview", (q) => q.eq("preview", false))
       .order("desc")
       .take(limit);
@@ -322,12 +314,13 @@ export const getRecentPosts = query({
 export const getAllPostSlugs = query({
   args: {},
   handler: async (ctx) => {
-    const posts = await ctx.db.query("posts")
+    const posts = await ctx.db
+      .query("posts")
       .withIndex("by_preview", (q) => q.eq("preview", false))
       .order("desc")
       .collect();
-    
-    return posts.map(post => ({ slug: post.slug }));
+
+    return posts.map((post) => ({ slug: post.slug }));
   },
 });
 
@@ -338,14 +331,15 @@ export const getPostBySlug = query({
   },
   handler: async (ctx, args) => {
     try {
-      const post = await ctx.db.query("posts")
+      const post = await ctx.db
+        .query("posts")
         .withIndex("by_slug", (q) => q.eq("slug", args.slug))
         .first();
-      
+
       if (!post) {
         throw new Error(`Post with slug "${args.slug}" not found`);
       }
-      
+
       return post;
     } catch (error) {
       console.error("Error fetching post by slug:", error);
@@ -362,15 +356,16 @@ export const searchPosts = query({
   },
   handler: async (ctx, args) => {
     const { query: searchQuery, limit = 20 } = args;
-    
+
     // Get all posts and filter client-side for now
     // In a production app, you might want to use a search service
     const allPosts = await ctx.db.query("posts").collect();
-    
-    const filteredPosts = allPosts.filter(post => 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const filteredPosts = allPosts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     return filteredPosts.slice(0, limit);
@@ -383,13 +378,13 @@ export const getAllTags = query({
   handler: async (ctx) => {
     const posts = await ctx.db.query("posts").collect();
     const allTags = new Set<string>();
-    
-    posts.forEach(post => {
+
+    posts.forEach((post) => {
       if (post.tags) {
-        post.tags.forEach(tag => allTags.add(tag));
+        post.tags.forEach((tag) => allTags.add(tag));
       }
     });
-    
+
     return Array.from(allTags).sort();
   },
 });
@@ -402,16 +397,17 @@ export const getPopularPosts = query({
   },
   handler: async (ctx, args) => {
     const { limit = 10, preview = false } = args;
-    
-    return await ctx.db.query("posts")
+
+    return await ctx.db
+      .query("posts")
       .withIndex("by_preview", (q) => q.eq("preview", preview))
       .order("desc")
       .collect()
-      .then(posts => 
+      .then((posts) =>
         posts
-          .filter(post => (post.views || 0) > 0)
+          .filter((post) => (post.views || 0) > 0)
           .sort((a, b) => (b.views || 0) - (a.views || 0))
-          .slice(0, limit)
+          .slice(0, limit),
       );
   },
 });
@@ -424,8 +420,9 @@ export const getPostsByTag = query({
   },
   handler: async (ctx, args) => {
     const { tag, paginationOpts } = args;
-    
-    return await ctx.db.query("posts")
+
+    return await ctx.db
+      .query("posts")
       .filter((q) => q.eq(q.field("tags"), [tag]))
       .order("desc")
       .paginate(paginationOpts);
@@ -448,32 +445,33 @@ export const updatePost = mutation({
   },
   handler: async (ctx, args) => {
     const { postId, slug, ...updateData } = args;
-    
+
     try {
       // Check if post exists
       const post = await ctx.db.get(postId);
       if (!post) {
         throw new Error("Post not found");
       }
-      
+
       // Check if slug is being changed and if new slug already exists
       if (post.slug !== slug) {
-        const existingPost = await ctx.db.query("posts")
+        const existingPost = await ctx.db
+          .query("posts")
           .withIndex("by_slug", (q) => q.eq("slug", slug))
           .first();
-        
+
         if (existingPost && existingPost._id !== postId) {
           throw new Error("A post with this slug already exists");
         }
       }
-      
+
       // Update the post with timestamp
       const updatedPost = await ctx.db.patch(postId, {
         ...updateData,
         slug,
         updatedAt: new Date().toISOString(),
       });
-      
+
       return updatedPost;
     } catch (error) {
       console.error("Error updating post:", error);

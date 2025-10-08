@@ -15,24 +15,29 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 ## 🛠 Tech Stack
 
 ### Core Framework
+
 - **Next.js 15** - React framework with App Router
 - **React 19** - Latest React features and concurrent rendering
 - **TypeScript** - Type-safe development
 
 ### Database & Backend
+
 - **Convex** - Real-time backend-as-a-service
 - **Clerk** - Authentication and user management
 
 ### UI & Styling
+
 - **Tailwind CSS 4** - Utility-first CSS framework
 - **Radix UI** - Accessible component primitives
 - **Lucide React** - Modern icon library
 - **Shadcn/ui** - Pre-built component library
 
 ### Content Management
+
 - **TipTap** - Extensible rich text editor
 
 ### Development Tools
+
 - **Turbopack** - Next-generation bundler
 - **ESLint** - Code linting and formatting
 - **pnpm** - Fast, disk space efficient package manager
@@ -78,34 +83,40 @@ src/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - pnpm (recommended) or npm
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/carmichaelt-blog.git
 cd carmichaelt-blog
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Configure the following environment variables:
+
 - `NEXT_PUBLIC_CONVEX_DEPLOYMENT` - Your Convex deployment URL
 - `CONVEX_DEPLOY_KEY` - Convex deployment key
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
 - `CLERK_SECRET_KEY` - Clerk secret key
 
 4. Run the development server:
+
 ```bash
 pnpm dev
 ```
@@ -115,12 +126,13 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## 🔧 Configuration
 
 ### Partial Pre-Rendering (PPR)
+
 The application uses Next.js 15's experimental PPR feature configured in `next.config.ts`:
 
 ```typescript
 const nextConfig: NextConfig = {
   experimental: {
-    ppr: 'incremental',
+    ppr: "incremental",
   },
 };
 ```
@@ -128,14 +140,18 @@ const nextConfig: NextConfig = {
 This enables incremental static regeneration with dynamic content, providing the benefits of static generation while maintaining real-time capabilities.
 
 ### Database Schema
+
 The Convex schema defines two main tables:
+
 - **posts** - Blog posts with rich content, metadata, and author relationships
 - **users** - User profiles with authentication and social information
 
 ## 📝 Content Management
 
 ### Rich Text Editor
+
 The blog features a comprehensive TipTap-based editor with:
+
 - Text formatting (bold, italic, headings)
 - Lists and blockquotes
 - Image and link insertion
@@ -143,6 +159,7 @@ The blog features a comprehensive TipTap-based editor with:
 - Real-time preview
 
 ### Post Creation
+
 1. Navigate to `/create-post`
 2. Fill in post metadata (title, excerpt, cover image)
 3. Use the rich text editor for content creation

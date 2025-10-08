@@ -1,9 +1,9 @@
-import { SignInButton } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { fetchQuery } from 'convex/nextjs';
-import { api } from '../../../convex/_generated/api';
-import { Id } from '../../../convex/_generated/dataModel';
-import { CreatePostForm } from './_components/create-post-form';
+import { SignInButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
+import { CreatePostForm } from "./_components/create-post-form";
 
 // Server component for static page structure
 export default async function CreatePostPage() {
@@ -17,11 +17,15 @@ export default async function CreatePostPage() {
     );
   }
 
-  const author = await fetchQuery(api.users.getUserByClerkId, { clerkId: userId });
+  const author = await fetchQuery(api.users.getUserByClerkId, {
+    clerkId: userId,
+  });
   if (!author) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600">The clerk user is not set up as an author in the database.</p>
+        <p className="text-gray-600">
+          The clerk user is not set up as an author in the database.
+        </p>
       </div>
     );
   }

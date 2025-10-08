@@ -5,6 +5,7 @@ This document provides comprehensive examples of how to use the enhanced posts q
 ## Available Queries
 
 ### 1. `getPosts` - Main paginated query
+
 The primary query for fetching posts with full pagination support.
 
 ```typescript
@@ -17,19 +18,19 @@ function PostsList() {
     {
       // Search functionality
       search: "react tutorial",
-      
+
       // Sorting
       sortField: "date", // "date" | "title"
       sortOrder: "desc", // "asc" | "desc"
-      
+
       // Filtering
       author: "author_id_here",
       preview: false, // Only published posts
-      
+
       // Date range filtering
       dateFrom: "2024-01-01",
       dateTo: "2024-12-31",
-      
+
       // Pagination options
       paginationOpts: { numItems: 10 }
     },
@@ -54,6 +55,7 @@ function PostsList() {
 ```
 
 ### 2. `getPostsSimple` - Simple query without pagination
+
 For cases where you need a simple list without pagination.
 
 ```typescript
@@ -83,6 +85,7 @@ function RecentPosts() {
 ```
 
 ### 3. `getPostsCount` - Count query for pagination metadata
+
 Get the total count of posts matching your filters.
 
 ```typescript
@@ -100,6 +103,7 @@ function PostsCount() {
 ```
 
 ### 4. `getPostsByAuthor` - Author-specific posts with pagination
+
 Get posts by a specific author with pagination.
 
 ```typescript
@@ -133,6 +137,7 @@ function AuthorPosts({ authorId }: { authorId: string }) {
 ```
 
 ### 5. `getRecentPosts` - Recent published posts
+
 Get the most recent published posts.
 
 ```typescript
@@ -161,6 +166,7 @@ function RecentPosts() {
 ```
 
 ### 6. `getPostBySlug` - Get single post by slug
+
 Get a specific post by its slug.
 
 ```typescript
@@ -181,6 +187,7 @@ function PostPage({ slug }: { slug: string }) {
 ```
 
 ### 7. `searchPosts` - Full-text search
+
 Search posts with partial text matching.
 
 ```typescript
@@ -230,7 +237,7 @@ const posts = useQuery(api.posts.getPostsSimple, {
   dateTo: "2024-12-31",
   sortField: "date",
   sortOrder: "desc",
-  limit: 20
+  limit: 20,
 });
 ```
 

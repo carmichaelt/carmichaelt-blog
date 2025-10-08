@@ -14,10 +14,11 @@ export default function NotFound() {
             Post Not Found
           </h2>
           <p className="text-slate-600 dark:text-slate-400">
-            The post you&apos;re looking for doesn&apos;t exist or may have been moved.
+            The post you&apos;re looking for doesn&apos;t exist or may have been
+            moved.
           </p>
         </div>
-        
+
         <div className="space-y-4">
           <Button asChild className="w-full">
             <Link href="/">
@@ -25,7 +26,7 @@ export default function NotFound() {
               Go Home
             </Link>
           </Button>
-          
+
           <Button variant="outline" asChild className="w-full">
             <Link href="/posts">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -33,7 +34,7 @@ export default function NotFound() {
             </Link>
           </Button>
         </div>
-        
+
         <div className="mt-8 text-sm text-slate-500 dark:text-slate-500">
           <p>If you believe this is an error, please contact support.</p>
         </div>

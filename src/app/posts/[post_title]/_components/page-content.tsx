@@ -12,18 +12,18 @@ interface PostContentProps {
 }
 
 export function PostContent({ post }: PostContentProps) {
-    if (post === undefined) {
-      // Still loading
-      console.log("Post still loading");
-      return <PostSkeleton />;
-    }
-  
-    if (post === null) {
-      // Post not found
-      console.log("Post not found");
-      notFound();
-    }
-  
+  if (post === undefined) {
+    // Still loading
+    console.log("Post still loading");
+    return <PostSkeleton />;
+  }
+
+  if (post === null) {
+    // Post not found
+    console.log("Post not found");
+    notFound();
+  }
+
   return (
     <>
       <PostHeader
@@ -35,4 +35,4 @@ export function PostContent({ post }: PostContentProps) {
       <PostBody content={post.content} richContent={post.richContent} />
     </>
   );
-  }
+}

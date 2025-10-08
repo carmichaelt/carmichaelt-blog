@@ -77,13 +77,13 @@ export default function RootLayout({
             <NuqsAdapter>
               <div className="font-junicode">
                 <div className="[--header-height:calc(--spacing(14))]">
-                <SidebarProvider className="flex flex-col">
-                  <div className="sticky top-0 z-100">
-                    <Navbar />
-                  </div>
-                  {children}
-                  <div className="bottom-0 z-100">
-                    {/*
+                  <SidebarProvider className="flex flex-col">
+                    <div className="sticky top-0 z-100">
+                      <Navbar />
+                    </div>
+                    {children}
+                    <div className="bottom-0 z-100">
+                      {/*
                     <Footer />
                     */}
                     </div>

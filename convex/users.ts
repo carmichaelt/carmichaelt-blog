@@ -27,7 +27,7 @@ export const store = mutation({
       // If we've seen this identity before but the name has changed, patch the value.
       if (user.name !== identity.name) {
         await ctx.db.patch(user._id, { name: identity.name });
-      }      
+      }
       return user._id;
     }
     // If it's a new identity, create a new `User`.
@@ -56,26 +56,32 @@ export const getUserById = query({
 export const searchUsers = query({
   args: { search: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db.query("users").filter((q) => q.eq(q.field("name"), args.search)).collect();
+    return await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("name"), args.search))
+      .collect();
   },
 });
 
 export const getUserByTokenIdentifier = query({
   args: { tokenIdentifier: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db.query("users").filter((q) => q.eq(q.field("tokenIdentifier"), args.tokenIdentifier)).unique();
+    return await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("tokenIdentifier"), args.tokenIdentifier))
+      .unique();
   },
 });
 
 export const getUserByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db.query("users").filter((q) => q.eq(q.field("tokenIdentifier"), args.clerkId)).unique();
+    return await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("tokenIdentifier"), args.clerkId))
+      .unique();
   },
 });
-
-
-
 
 export const current = query({
   args: {},
@@ -95,11 +101,25 @@ export const upsertFromClerk = internalMutation({
       firstName: data.first_name ?? "",
       lastName: data.last_name ?? "",
       username: data.username ?? "",
-      bio: typeof data.public_metadata.bio === 'string' ? data.public_metadata.bio : "",
-      location: typeof data.public_metadata.location === 'string' ? data.public_metadata.location : "",
-      website: typeof data.public_metadata.website === 'string' ? data.public_metadata.website : "",
-      socialLinks: Array.isArray(data.public_metadata.social_links) ? data.public_metadata.social_links : [],
-      role: typeof data.public_metadata.role === 'string' ? data.public_metadata.role : "",
+      bio:
+        typeof data.public_metadata.bio === "string"
+          ? data.public_metadata.bio
+          : "",
+      location:
+        typeof data.public_metadata.location === "string"
+          ? data.public_metadata.location
+          : "",
+      website:
+        typeof data.public_metadata.website === "string"
+          ? data.public_metadata.website
+          : "",
+      socialLinks: Array.isArray(data.public_metadata.social_links)
+        ? data.public_metadata.social_links
+        : [],
+      role:
+        typeof data.public_metadata.role === "string"
+          ? data.public_metadata.role
+          : "",
       tokenIdentifier: data.id,
     };
 
@@ -119,9 +139,14 @@ export const deleteFromClerk = internalMutation({
 
     if (user !== null) {
       await ctx.db.delete(user._id);
-      console.info("User deleted from Clerk webhook", { clerkUserId, userId: user._id });
-    } else {  
-      console.warn("Can't delete user, there is none for Clerk user ID", { clerkUserId });
+      console.info("User deleted from Clerk webhook", {
+        clerkUserId,
+        userId: user._id,
+      });
+    } else {
+      console.warn("Can't delete user, there is none for Clerk user ID", {
+        clerkUserId,
+      });
     }
   },
 });

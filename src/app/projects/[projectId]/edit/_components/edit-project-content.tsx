@@ -5,7 +5,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { notFound } from "next/navigation";
 import { EditProjectForm } from "./edit-project-form";
-import { useUser } from '@clerk/nextjs';
+import { useUser } from "@clerk/nextjs";
 
 interface EditProjectContentProps {
   projectId: string;
@@ -13,7 +13,9 @@ interface EditProjectContentProps {
 
 export function EditProjectContent({ projectId }: EditProjectContentProps) {
   const { user, isLoaded } = useUser();
-  const project = useQuery(api.projects.getProjectById, { projectId: projectId as Id<"projects"> });
+  const project = useQuery(api.projects.getProjectById, {
+    projectId: projectId as Id<"projects">,
+  });
 
   if (!isLoaded) {
     return (
@@ -57,20 +59,20 @@ export function EditProjectContent({ projectId }: EditProjectContentProps) {
   if (!user) {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">You are not an authorised user</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          You are not an authorised user
+        </h1>
       </div>
-    </div>
+    </div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Edit Project</h1>
-        <p className="text-gray-600 mt-2">
-          Update your project details
-        </p>
+        <p className="text-gray-600 mt-2">Update your project details</p>
       </div>
-      
+
       <EditProjectForm project={project} />
     </div>
   );

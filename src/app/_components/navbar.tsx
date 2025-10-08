@@ -44,4 +44,4 @@ export async function Navbar() {
       </div>
     </header>
   );
-};
+}

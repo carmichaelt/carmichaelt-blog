@@ -53,9 +53,7 @@ export async function AboutHomeContent() {
             href="/posts"
             className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
           >
-            my 
-            {" "}<PostCount preloadedPosts={posts} />{" "}
-            ramblings
+            my <PostCount preloadedPosts={posts} /> ramblings
           </Link>{" "}
           or browse{" "}
           <Link
