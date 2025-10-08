@@ -1,6 +1,6 @@
 import { SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, fetchMutation } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import { CreatePostForm } from "./_components/create-post-form";
 
@@ -16,18 +16,35 @@ export default async function CreatePostPage() {
     );
   }
 
-  const author = await fetchQuery(api.users.getUserByClerkId, {
+  // Check if user exists in database
+  let author = await fetchQuery(api.users.getUserByClerkId, {
     clerkId: userId,
   });
+  
+  // If user doesn't exist, create them automatically
+  if (!author) {
+    try {
+      await fetchMutation(api.users.store);
+      // Fetch the user again after creating
+      author = await fetchQuery(api.users.getUserByClerkId, {
+        clerkId: userId,
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  }
+  
+  // If still no author after attempting to create, show error
   if (!author) {
     return (
       <div className="text-center py-8">
         <p className="text-gray-600">
-          The clerk user is not set up as an author in the database.
+          Unable to set up your account. Please try refreshing the page.
         </p>
       </div>
     );
   }
+  
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
