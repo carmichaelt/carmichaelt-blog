@@ -35,8 +35,8 @@ export function SiteHeader() {
   ];
 
   // Combine all routes
+  
   const allRoutes = [...adminNavItems];
-
   useEffect(() => {
     const currentItem = allRoutes.find((item) => {
       // Handle exact matches and dynamic routes

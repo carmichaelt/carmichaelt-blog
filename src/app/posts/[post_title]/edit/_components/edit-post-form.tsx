@@ -197,28 +197,6 @@ export function EditPostForm({ post }: EditPostFormProps) {
     }
   };
 
-  // Auto-save functionality (optional)
-  const handleAutoSave = useCallback(async () => {
-    if (!richContent || isSubmitting) return;
-
-    try {
-      const currentValues = watchedValues;
-      const postData = {
-        ...currentValues,
-        content: JSON.stringify(richContent),
-        coverImage: currentValues.coverImage || "https://picsum.photos/200/300",
-        ogImage: currentValues.ogImage || "https://picsum.photos/200/300",
-        postId: post._id as Id<"posts">,
-      };
-
-      await updatePost(postData);
-      setLastSaved(new Date());
-      setHasUnsavedChanges(false);
-    } catch (error) {
-      console.error("Auto-save failed:", error);
-    }
-  }, [richContent, watchedValues, isSubmitting, updatePost, post._id]);
-
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
@@ -336,7 +314,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
                 <Alert className="mb-4">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
-                    You have unsaved changes. Don't forget to save your work!
+                    You have unsaved changes. Don&apos;t forget to save your work!
                   </AlertDescription>
                 </Alert>
               )}

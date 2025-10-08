@@ -44,15 +44,10 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
   }
 
   try {
-    const { post_title } = await params;
-    const post = await fetchQuery(api.posts.getPostBySlug, {
-      slug: post_title,
-    });
-
     return (
       <div className="min-h-screen bg-background">
         <Suspense fallback={<EditPostShell />}>
-          <EditPostContent initialPost={post} />
+          <EditPostContent />
         </Suspense>
       </div>
     );

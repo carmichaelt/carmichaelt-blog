@@ -4,14 +4,9 @@ import { notFound } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { EditPostForm } from "./edit-post-form";
-import { Doc } from "../../../../../../convex/_generated/dataModel";
 import { useParams } from "next/navigation";
 
-interface EditPostContentProps {
-  initialPost: Doc<"posts"> | null;
-}
-
-export function EditPostContent({ initialPost }: EditPostContentProps) {
+export function EditPostContent() {
   const params = useParams();
   const postSlug = params?.post_title as string;
 
