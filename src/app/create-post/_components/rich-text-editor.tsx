@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -8,6 +9,23 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { type RichTextDocument } from "@/interfaces/rich-text";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Bold,
   Italic,
@@ -21,8 +39,13 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAction } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { toast } from "sonner";
 
 interface RichTextEditorProps {
   content?: RichTextDocument;
@@ -37,6 +60,14 @@ export function RichTextEditor({
   placeholder = "Start writing your post...",
   className,
 }: RichTextEditorProps) {
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiTone, setAiTone] = useState<"professional" | "casual" | "technical" | "conversational">("professional");
+  const [aiLength, setAiLength] = useState<"short" | "medium" | "long">("medium");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const generateBlogContent = useAction(api.ai.generateBlogContent);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -95,10 +126,138 @@ export function RichTextEditor({
     }
   };
 
+  const handleGenerateContent = async () => {
+    if (!aiPrompt.trim()) {
+      toast.error("Please enter a prompt");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const result = await generateBlogContent({
+        prompt: aiPrompt,
+        tone: aiTone,
+        length: aiLength,
+      });
+
+      if (result.content) {
+        // Insert the AI-generated HTML content into the editor
+        editor.commands.setContent(result.content);
+        toast.success("Content generated successfully!");
+        setIsAIDialogOpen(false);
+        setAiPrompt("");
+      }
+    } catch (error) {
+      console.error("Error generating content:", error);
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : "Failed to generate content. Please check your OpenAI API key."
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className={cn("border rounded-lg", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b bg-gray-50">
+        {/* AI Content Generator */}
+        <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="default"
+              size="sm"
+              className="h-8 gap-1 mr-2"
+              type="button"
+            >
+              <Sparkles className="h-4 w-4" />
+              AI Suggest
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle>AI Content Generator</DialogTitle>
+              <DialogDescription>
+                Enter a short prompt and let AI generate blog content for you.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="ai-prompt">Topic or Prompt</Label>
+                <Input
+                  id="ai-prompt"
+                  placeholder="e.g., The future of web development"
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleGenerateContent();
+                    }
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="ai-tone">Tone</Label>
+                  <Select 
+                    value={aiTone} 
+                    onValueChange={(value) => setAiTone(value as typeof aiTone)}
+                  >
+                    <SelectTrigger id="ai-tone">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="professional">Professional</SelectItem>
+                      <SelectItem value="casual">Casual</SelectItem>
+                      <SelectItem value="technical">Technical</SelectItem>
+                      <SelectItem value="conversational">Conversational</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ai-length">Length</Label>
+                  <Select 
+                    value={aiLength} 
+                    onValueChange={(value) => setAiLength(value as typeof aiLength)}
+                  >
+                    <SelectTrigger id="ai-length">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="short">Short (~300 words)</SelectItem>
+                      <SelectItem value="medium">Medium (~800 words)</SelectItem>
+                      <SelectItem value="long">Long (~1500 words)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <Button
+                onClick={handleGenerateContent}
+                disabled={isGenerating || !aiPrompt.trim()}
+                className="w-full"
+                type="button"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Generate Content
+                  </>
+                )}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Separator orientation="vertical" className="h-6" />
+
         <Button
           variant="ghost"
           size="sm"
