@@ -7,6 +7,7 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 - **Partial Pre-Rendering (PPR)** - Leverages Next.js 15's experimental PPR for optimal performance
 - **Real-time Database** - Powered by Convex for instant data synchronization
 - **Rich Text Editor** - TipTap-based editor with comprehensive formatting options
+- **AI Content Generation** - Generate blog content from prompts using OpenAI via Vercel AI SDK
 - **Authentication** - Secure user management with Clerk
 - **Modern UI** - Built with Radix UI primitives and Tailwind CSS
 - **TypeScript** - Full type safety throughout the application
@@ -24,6 +25,8 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 
 - **Convex** - Real-time backend-as-a-service
 - **Clerk** - Authentication and user management
+- **Vercel AI SDK** - AI-powered content generation
+- **OpenAI** - GPT-4 integration for blog suggestions
 
 ### UI & Styling
 
@@ -110,10 +113,17 @@ cp .env.example .env.local
 
 Configure the following environment variables:
 
-- `NEXT_PUBLIC_CONVEX_DEPLOYMENT` - Your Convex deployment URL
+**Convex:**
+- `NEXT_PUBLIC_CONVEX_URL` - Your Convex deployment URL
 - `CONVEX_DEPLOY_KEY` - Convex deployment key
+
+**Clerk Authentication:**
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
 - `CLERK_SECRET_KEY` - Clerk secret key
+- `CLERK_WEBHOOK_SECRET` - Clerk webhook secret for user sync
+
+**OpenAI (for AI Content Generation):**
+- `OPENAI_API_KEY` - Your OpenAI API key (get one at https://platform.openai.com/api-keys)
 
 4. Run the development server:
 
@@ -157,13 +167,32 @@ The blog features a comprehensive TipTap-based editor with:
 - Image and link insertion
 - Undo/redo functionality
 - Real-time preview
+- **AI Content Generation** - Generate blog content from short prompts
+
+### AI-Powered Content Generation
+
+The editor includes an AI assistant that can:
+
+1. **Generate Full Blog Posts** - Provide a topic or prompt, and the AI will create complete blog content
+2. **Customize Tone** - Choose from professional, casual, technical, or conversational tones
+3. **Adjust Length** - Select short (~300 words), medium (~800 words), or long (~1500 words) posts
+4. **Instant Integration** - Generated content is automatically formatted and inserted into the editor
+
+To use the AI feature:
+1. Click the "AI Suggest" button in the editor toolbar
+2. Enter your topic or prompt
+3. Select tone and length preferences
+4. Click "Generate Content"
+
+The AI uses OpenAI's GPT-4 model via Convex actions for secure, server-side processing.
 
 ### Post Creation
 
 1. Navigate to `/create-post`
-2. Fill in post metadata (title, excerpt, cover image)
-3. Use the rich text editor for content creation
-4. Preview and publish your post
+2. Sign in with Clerk authentication
+3. Fill in post metadata (title, excerpt, cover image)
+4. Use the rich text editor for content creation or click "AI Suggest" to generate content
+5. Preview and publish your post
 
 ## 🚀 Deployment
 
