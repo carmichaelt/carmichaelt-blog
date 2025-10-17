@@ -2,6 +2,7 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
 import { Id } from "./_generated/dataModel";
+import { postDocValidator } from "./fields/posts";
 
 export const createPost = mutation({
   args: {
@@ -45,6 +46,7 @@ export const incrementPostViews = mutation({
 
 export const getAllPosts = query({
   args: {},
+  returns: v.array(postDocValidator),
   handler: async (ctx) => {
     return await ctx.db.query("posts").order("desc").collect();
   },
@@ -164,6 +166,7 @@ export const getPostsSimple = query({
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
   },
+  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const {
       search,
@@ -299,6 +302,7 @@ export const getRecentPosts = query({
   args: {
     limit: v.optional(v.number()),
   },
+  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { limit = 5 } = args;
 
@@ -329,6 +333,7 @@ export const getPostBySlug = query({
   args: {
     slug: v.string(),
   },
+  returns: postDocValidator,
   handler: async (ctx, args) => {
     try {
       const post = await ctx.db
@@ -354,6 +359,7 @@ export const searchPosts = query({
     query: v.string(),
     limit: v.optional(v.number()),
   },
+  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { query: searchQuery, limit = 20 } = args;
 
@@ -395,6 +401,7 @@ export const getPopularPosts = query({
     limit: v.optional(v.number()),
     preview: v.optional(v.boolean()),
   },
+  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { limit = 10, preview = false } = args;
 
