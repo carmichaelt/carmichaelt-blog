@@ -12,17 +12,35 @@ export const store = mutation({
       throw new Error("Called storeUser without authentication present");
     }
 
-    // Check if we've already stored this identity before.
-    // Note: If you don't want to define an index right away, you can use
-    // ctx.db.query("users")
-    //  .filter(q => q.eq(q.field("tokenIdentifier"), identity.tokenIdentifier))
-    //  .unique();
-    const user = await ctx.db
+    // Use identity.subject (Clerk user ID) instead of tokenIdentifier for consistency
+    // with getUserByClerkId and upsertFromClerk
+    const clerkUserId = identity.subject;
+    
+    // Check if we've already stored this identity before (new format: exact match)
+    let user = await ctx.db
       .query("users")
       .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier),
+        q.eq("tokenIdentifier", clerkUserId),
       )
       .unique();
+    
+    // If not found, check for old format (tokenIdentifier ends with clerkId)
+    if (user === null) {
+      const allUsers = await ctx.db.query("users").collect();
+      user = allUsers.find((u) => 
+        u.tokenIdentifier.endsWith(`#${clerkUserId}`) ||
+        u.tokenIdentifier.endsWith(clerkUserId)
+      ) ?? null;
+      
+      // If found with old format, update to new format
+      if (user !== null) {
+        await ctx.db.patch(user._id, { 
+          tokenIdentifier: clerkUserId,
+          name: identity.name ?? user.name,
+        });
+      }
+    }
+    
     if (user !== null) {
       // If we've seen this identity before but the name has changed, patch the value.
       if (user.name !== identity.name) {
@@ -33,7 +51,7 @@ export const store = mutation({
     // If it's a new identity, create a new `User`.
     return await ctx.db.insert("users", {
       name: identity.name ?? "Anonymous",
-      tokenIdentifier: identity.tokenIdentifier,
+      tokenIdentifier: clerkUserId,
       avatarUrl: identity.imageUrl as string,
     });
   },
@@ -76,10 +94,24 @@ export const getUserByTokenIdentifier = query({
 export const getUserByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    // First try exact match (new format: tokenIdentifier = Clerk user ID)
+    const user = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("tokenIdentifier"), args.clerkId))
       .unique();
+    
+    if (user) {
+      return user;
+    }
+    
+    // Fallback: check if tokenIdentifier ends with the clerkId (old format)
+    // This handles cases where tokenIdentifier was stored as full identifier
+    const allUsers = await ctx.db.query("users").collect();
+    return allUsers.find((u) => 
+      u.tokenIdentifier === args.clerkId || 
+      u.tokenIdentifier.endsWith(`#${args.clerkId}`) ||
+      u.tokenIdentifier.endsWith(args.clerkId)
+    ) ?? null;
   },
 });
 
