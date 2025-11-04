@@ -34,47 +34,50 @@ export const store = mutation({
       throw new Error("Called storeUser without authentication present");
     }
 
-    // Use identity.subject (Clerk user ID) instead of tokenIdentifier for consistency
-    // with getUserByClerkId and upsertFromClerk
-    const clerkUserId = identity.subject;
-    
+   
     // Check if we've already stored this identity before (new format: exact match)
-    let user = await ctx.db
+    const user = await ctx.db
       .query("users")
       .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", clerkUserId),
+        q.eq("tokenIdentifier", identity.tokenIdentifier),
       )
       .unique();
-    
-    // If not found, check for old format (tokenIdentifier ends with clerkId)
-    if (user === null) {
-      const allUsers = await ctx.db.query("users").collect();
-      user = allUsers.find((u) => 
-        u.tokenIdentifier.endsWith(`#${clerkUserId}`) ||
-        u.tokenIdentifier.endsWith(clerkUserId)
-      ) ?? null;
-      
+          
       // If found with old format, update to new format
       if (user !== null) {
-        await ctx.db.patch(user._id, { 
-          tokenIdentifier: clerkUserId,
-          name: identity.name ?? user.name,
-        });
+        if (user.name !== identity.name) {
+          await ctx.db.patch(user._id, { name: identity.name });
+        }
+        if (user.avatarUrl !== identity.imageUrl) {
+          await ctx.db.patch(user._id, { avatarUrl: identity.imageUrl as string });
+        }
+        if (user.email !== identity.emailAddresses) {
+          await ctx.db.patch(user._id, { email: identity.emailAddresses as string });
+        }
+        if (user.fullName !== identity.firstName + " " + identity.lastName) {
+          await ctx.db.patch(user._id, { fullName: identity.firstName + " " + identity.lastName });
+        }
+        if (identity.firstName && user.firstName !== identity.firstName) {
+          await ctx.db.patch(user._id, { firstName: identity.firstName.toString() });
+        }
+        if (identity.lastName && user.lastName !== identity.lastName) {
+          await ctx.db.patch(user._id, { lastName: identity.lastName.toString() });
+        }
+        if (identity.username && user.username !== identity.username) {
+          await ctx.db.patch(user._id, { username: identity.username.toString() });
+        }
+        return user._id;
       }
-    }
-    
-    if (user !== null) {
-      // If we've seen this identity before but the name has changed, patch the value.
-      if (user.name !== identity.name) {
-        await ctx.db.patch(user._id, { name: identity.name });
-      }
-      return user._id;
-    }
     // If it's a new identity, create a new `User`.
     return await ctx.db.insert("users", {
-      name: identity.name ?? "Anonymous",
-      tokenIdentifier: clerkUserId,
-      avatarUrl: identity.imageUrl as string,
+      tokenIdentifier: identity.tokenIdentifier,
+      name: identity.name?.toString() ?? "",
+      avatarUrl: identity.imageUrl?.toString() ?? "",
+      email: identity.emailAddresses?.toString() ?? "",
+      fullName: identity.firstName + " " + identity.lastName,
+      firstName: identity.firstName?.toString() ?? "",
+      lastName: identity.lastName?.toString() ?? "",
+      username: identity.username?.toString() ?? "",
     });
   },
 });
