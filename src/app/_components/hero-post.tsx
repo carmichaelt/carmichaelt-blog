@@ -126,7 +126,6 @@ export async function HeroPost({
         <CardContent>
           <PostBody
             content={heroPost.content}
-            richContent={heroPost.richContent}
           />
           <div className="flex items-center gap-2">
             <Avatar
