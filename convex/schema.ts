@@ -12,7 +12,7 @@ import { projectFields } from "./projects";
 export default defineSchema({
   posts: defineTable(postFields)
   .index("by_date", ["date"])
-  .index("by_author", ["author"])
+  .index("by_author", ["authorId"])
   .index("by_slug", ["slug"])
   .index("by_preview", ["preview"])
   .index("by_date_preview", ["date", "preview"])

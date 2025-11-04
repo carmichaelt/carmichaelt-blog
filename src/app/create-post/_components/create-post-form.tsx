@@ -96,10 +96,10 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
         ...data,
         content: JSON.stringify(richContent), // Fallback for backward compatibility
         richContent,
-        author: authorId as Id<"users">,
+        authorId: authorId as Id<"users">,
         date: new Date().toISOString(),
-        ogImage: data.ogImage || "https://picsum.photos/200/300",
-        coverImage: data.coverImage || "https://picsum.photos/200/300",
+        ogImage: data.ogImage || "",
+        coverImage: data.coverImage || "",
       };
 
       await createPost(postData);

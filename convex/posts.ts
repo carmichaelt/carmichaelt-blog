@@ -12,7 +12,7 @@ export const postFields = {
   title: v.string(),
   content: v.string(), // Keep as string for backward compatibility
   richContent: v.optional(v.any()), // Rich text content as JSON
-  author: v.id("users"),
+  authorId: v.id("users"),
   excerpt: v.string(),
   ogImage: v.string(),
   coverImage: v.string(),
@@ -35,7 +35,7 @@ export const createPost = mutation({
     preview: v.optional(v.boolean()),
     content: v.string(),
     richContent: v.optional(v.any()),
-    author: v.id("users"),
+    authorId: v.id("users"),
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
@@ -119,7 +119,7 @@ export const getPosts = query({
     } else if (author) {
       query = ctx.db
         .query("posts")
-        .withIndex("by_author", (q) => q.eq("author", author));
+        .withIndex("by_author", (q) => q.eq("authorId", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
     } else if (sortField === "views") {
@@ -208,7 +208,7 @@ export const getPostsSimple = query({
     } else if (author) {
       query = ctx.db
         .query("posts")
-        .withIndex("by_author", (q) => q.eq("author", author));
+        .withIndex("by_author", (q) => q.eq("authorId", author));
     } else if (sortField === "date") {
       query = ctx.db.query("posts").withIndex("by_date");
     } else if (sortField === "views") {
@@ -271,7 +271,7 @@ export const getPostsCount = query({
     }
 
     if (author) {
-      query = query.filter((q) => q.eq(q.field("author"), author));
+      query = query.filter((q) => q.eq(q.field("authorId"), author));
     }
 
     if (preview !== undefined) {
@@ -309,7 +309,7 @@ export const getPostsByAuthor = query({
 
     return await ctx.db
       .query("posts")
-      .withIndex("by_author", (q) => q.eq("author", authorId as Id<"users">))
+      .withIndex("by_author", (q) => q.eq("authorId", authorId as Id<"users">))
       .order("desc")
       .paginate(paginationOpts);
   },
