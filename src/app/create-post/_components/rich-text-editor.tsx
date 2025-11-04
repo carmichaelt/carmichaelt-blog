@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -54,12 +54,20 @@ interface RichTextEditorProps {
   className?: string;
 }
 
-export function RichTextEditor({
-  content,
-  onChange,
-  placeholder = "Start writing your post...",
-  className,
-}: RichTextEditorProps) {
+export interface RichTextEditorRef {
+  insertContent: (content: string) => void;
+}
+
+export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
+  function RichTextEditor(
+    {
+      content,
+      onChange,
+      placeholder = "Start writing your post...",
+      className,
+    },
+    ref
+  ) {
   const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiTone, setAiTone] = useState<"professional" | "casual" | "technical" | "conversational">("professional");
@@ -107,6 +115,31 @@ export function RichTextEditor({
       },
     },
   });
+
+  useImperativeHandle(ref, () => ({
+    insertContent: (content: string) => {
+      if (!editor) return;
+      // Insert content at the current cursor position
+      // TipTap can handle both HTML and plain text
+      // If content looks like HTML, insert it directly, otherwise wrap in paragraph
+      const trimmedContent = content.trim();
+      if (trimmedContent.startsWith('<') && trimmedContent.endsWith('>')) {
+        // Looks like HTML, insert directly
+        editor.commands.insertContent(trimmedContent);
+      } else {
+        // Plain text, preserve line breaks and wrap in paragraph
+        const htmlContent = trimmedContent
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0)
+          .map((line) => `<p>${line}</p>`)
+          .join('');
+        editor.commands.insertContent(htmlContent || '<p></p>');
+      }
+      // Focus the editor after insertion
+      editor.commands.focus();
+    },
+  }));
 
   if (!editor) {
     return null;
@@ -411,4 +444,4 @@ export function RichTextEditor({
       <EditorContent editor={editor} />
     </div>
   );
-}
+});

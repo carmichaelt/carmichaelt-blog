@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RichTextEditor } from "./rich-text-editor";
+import { RichTextEditor, type RichTextEditorRef } from "./rich-text-editor";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -48,15 +48,26 @@ const createPostSchema = z.object({
 
 type CreatePostFormData = z.infer<typeof createPostSchema>;
 
-interface CreatePostFormProps {
-  authorId: string;
+interface StructuredBlogData {
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  content?: string;
 }
 
-export function CreatePostForm({ authorId }: CreatePostFormProps) {
+interface CreatePostFormProps {
+  authorId: string;
+  editorRef?: React.RefObject<RichTextEditorRef | null>;
+  initialData?: StructuredBlogData | null;
+}
+
+export function CreatePostForm({ authorId, editorRef: externalEditorRef, initialData }: CreatePostFormProps) {
   const [richContent, setRichContent] = useState<RichTextDocument | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const createPost = useMutation(api.posts.createPost);
+  const internalEditorRef = useRef<RichTextEditorRef>(null);
+  const editorRef = externalEditorRef || internalEditorRef;
 
   const {
     register,
@@ -82,6 +93,29 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
       .replace(/-+/g, "-")
       .trim();
   };
+
+  // Populate form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      if (initialData.title) {
+        setValue("title", initialData.title);
+      }
+      if (initialData.slug) {
+        setValue("slug", initialData.slug);
+      } else if (initialData.title) {
+        // Auto-generate slug if not provided
+        setValue("slug", generateSlug(initialData.title));
+      }
+      if (initialData.excerpt) {
+        setValue("excerpt", initialData.excerpt);
+      }
+      if (initialData.content && editorRef.current) {
+        // Insert content into rich text editor
+        editorRef.current.insertContent(initialData.content);
+      }
+      toast.success("Blog post data loaded into form!");
+    }
+  }, [initialData, setValue, editorRef]);
 
   const onSubmit = async (data: CreatePostFormData) => {
     if (!richContent) {
@@ -115,11 +149,11 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full h-full flex flex-col">
       <CardHeader>
         <CardTitle>Create New Post</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-y-auto">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Title */}
           <div className="space-y-2">
@@ -205,6 +239,7 @@ export function CreatePostForm({ authorId }: CreatePostFormProps) {
           <div className="space-y-2">
             <Label>Content *</Label>
             <RichTextEditor
+              ref={editorRef}
               content={richContent || undefined}
               onChange={setRichContent}
               placeholder="Start writing your post content..."

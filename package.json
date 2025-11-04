@@ -12,7 +12,8 @@
     "format": "pnpx prettier --write ."
   },
   "dependencies": {
-    "@ai-sdk/openai": "^2.0.52",
+    "@ai-sdk/openai": "^3.0.0-beta.52",
+    "@ai-sdk/react": "^3.0.0-beta.93",
     "@clerk/backend": "^2.18.3",
     "@clerk/nextjs": "^6.33.7",
     "@hookform/resolvers": "^5.2.2",
@@ -55,7 +56,7 @@
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "ai": "^5.0.76",
+    "ai": "^6.0.0-beta.93",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

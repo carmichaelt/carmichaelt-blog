@@ -37,12 +37,12 @@ export async function MoreStories({
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
       const authorData = await fetchQuery(api.users.getUserById, {
-        id: post.author as Id<"users">,
+        id: post.authorId as Id<"users">,
       });
       return {
         ...post,
         author: {
-          _id: post.author,
+          _id: post.authorId as Id<"users">,
           name: authorData?.name ?? "",
           avatar: authorData?.avatarUrl ?? "",
           picture: authorData?.avatarUrl ?? "",

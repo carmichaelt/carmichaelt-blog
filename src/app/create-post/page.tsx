@@ -1,8 +1,8 @@
 import { SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import { fetchQuery, fetchMutation } from "convex/nextjs";
+import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
-import { CreatePostForm } from "./_components/create-post-form";
+import { CreatePostLayout } from "./_components/create-post-layout";
 
 // Server component for static page structure
 export default async function CreatePostPage() {
@@ -30,14 +30,14 @@ export default async function CreatePostPage() {
   }
   
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Create New Post</h1>
         <p className="text-gray-600 mt-2">
           Write and publish your next blog post
         </p>
       </div>
-      <CreatePostForm authorId={author._id} />
+      <CreatePostLayout authorId={author._id} />
     </div>
   );
 }
