@@ -2,7 +2,27 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
 import { Id } from "./_generated/dataModel";
-import { postDocValidator } from "./fields/posts";
+
+/**
+ * Field definitions for posts table
+ * These can be reused across different parts of the application
+ */
+export const postFields = {
+  slug: v.string(),
+  title: v.string(),
+  content: v.string(), // Keep as string for backward compatibility
+  richContent: v.optional(v.any()), // Rich text content as JSON
+  author: v.id("users"),
+  excerpt: v.string(),
+  ogImage: v.string(),
+  coverImage: v.string(),
+  date: v.string(),
+  updatedAt: v.optional(v.string()), // Last update timestamp
+  preview: v.optional(v.boolean()),
+  tags: v.optional(v.array(v.string())), // Array of tag strings
+  views: v.optional(v.number()), // View count for popularity tracking
+}
+
 
 export const createPost = mutation({
   args: {
@@ -46,7 +66,6 @@ export const incrementPostViews = mutation({
 
 export const getAllPosts = query({
   args: {},
-  returns: v.array(postDocValidator),
   handler: async (ctx) => {
     return await ctx.db.query("posts").order("desc").collect();
   },
@@ -166,7 +185,6 @@ export const getPostsSimple = query({
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
   },
-  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const {
       search,
@@ -302,7 +320,6 @@ export const getRecentPosts = query({
   args: {
     limit: v.optional(v.number()),
   },
-  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { limit = 5 } = args;
 
@@ -333,7 +350,6 @@ export const getPostBySlug = query({
   args: {
     slug: v.string(),
   },
-  returns: postDocValidator,
   handler: async (ctx, args) => {
     try {
       const post = await ctx.db
@@ -359,7 +375,6 @@ export const searchPosts = query({
     query: v.string(),
     limit: v.optional(v.number()),
   },
-  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { query: searchQuery, limit = 20 } = args;
 
@@ -387,7 +402,7 @@ export const getAllTags = query({
 
     posts.forEach((post) => {
       if (post.tags) {
-        post.tags.forEach((tag) => allTags.add(tag));
+        post.tags.forEach((tag: string) => allTags.add(tag));
       }
     });
 
@@ -401,7 +416,6 @@ export const getPopularPosts = query({
     limit: v.optional(v.number()),
     preview: v.optional(v.boolean()),
   },
-  returns: v.array(postDocValidator),
   handler: async (ctx, args) => {
     const { limit = 10, preview = false } = args;
 

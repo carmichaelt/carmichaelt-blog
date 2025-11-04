@@ -3,6 +3,28 @@ import { mutation, query } from "./_generated/server";
 import { internalMutation, QueryCtx } from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 import { Validator } from "convex/values";
+import schema from "./schema";
+
+/**
+ * Field definitions for users table
+ * These can be reused across different parts of the application
+*/
+export const userFields = {
+  name: v.string(),
+  tokenIdentifier: v.string(),
+  avatarUrl: v.optional(v.string()),
+  email: v.optional(v.string()),
+  fullName: v.optional(v.string()),
+  firstName: v.optional(v.string()),
+  lastName: v.optional(v.string()),
+  username: v.optional(v.string()),
+  bio: v.optional(v.string()),
+  location: v.optional(v.string()),
+  website: v.optional(v.string()),
+  socialLinks: v.optional(v.array(v.string())),
+  role: v.optional(v.string()),
+}
+
 
 export const store = mutation({
   args: {},

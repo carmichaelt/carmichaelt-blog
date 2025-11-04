@@ -2,6 +2,24 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
 
+export const projectFields = {
+  name: v.string(),
+  url: v.optional(v.string()),
+  github: v.optional(v.string()),
+  problem: v.string(),
+  status: v.union(
+    v.literal("active"),
+    v.literal("completed"),
+    v.literal("archived"),
+  ),
+  author: v.id("users"),
+  description: v.optional(v.string()),
+  technologies: v.optional(v.array(v.string())),
+  updatedAt: v.string(),
+}
+
+
+
 export const createProject = mutation({
   args: {
     name: v.string(),
