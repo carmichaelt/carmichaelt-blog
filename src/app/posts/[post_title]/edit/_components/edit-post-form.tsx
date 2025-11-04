@@ -13,11 +13,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RichTextEditor } from "@/app/create-post/_components/rich-text-editor";
+import { MarkdownEditor } from "@/app/create-post/_components/markdown-editor";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, Save, AlertTriangle } from "lucide-react";
-import { type RichTextDocument } from "@/interfaces/rich-text";
 import { logger } from "@/lib/logger";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -47,8 +46,7 @@ const editPostSchema = z.object({
     .optional()
     .or(z.literal("")),
   preview: z.boolean(),
-  content: z.string(),
-  richContent: z.any().optional(),
+  content: z.string().min(1, "Content is required"),
   tags: z.array(z.string()).optional(),
 });
 
@@ -59,7 +57,7 @@ interface EditPostFormProps {
 }
 
 export function EditPostForm({ post }: EditPostFormProps) {
-  const [richContent, setRichContent] = useState<RichTextDocument | null>(null);
+  const [markdownContent, setMarkdownContent] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -81,8 +79,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
       ogImage: post.ogImage || "",
       coverImage: post.coverImage || "",
       preview: post.preview || false,
-      content: post.content,
-      richContent: post.richContent,
+      content: post.content || "",
       tags: post.tags || [],
       postId: post._id as Id<"posts">,
     },
@@ -91,42 +88,21 @@ export function EditPostForm({ post }: EditPostFormProps) {
   // Watch for form changes
   const watchedValues = watch();
 
-  // Initialize rich content from existing post
+  // Initialize markdown content from existing post
   useEffect(() => {
-    if (post.richContent) {
-      setRichContent(post.richContent);
-    } else if (post.content) {
-      try {
-        const parsedContent = JSON.parse(post.content);
-        setRichContent(parsedContent);
-      } catch {
-        // If parsing fails, create a basic rich text document
-        setRichContent({
-          type: "doc",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: post.content,
-                },
-              ],
-            },
-          ],
-        });
-      }
+    if (post.content) {
+      // Use content directly as markdown
+      // If content is JSON (legacy richContent), it will be handled on the server
+      setMarkdownContent(post.content);
+      setValue("content", post.content);
     }
-  }, [post.richContent, post.content]);
+  }, [post.content, setValue]);
 
   // Track unsaved changes
   useEffect(() => {
-    const hasChanges =
-      isDirty ||
-      (richContent &&
-        JSON.stringify(richContent) !== JSON.stringify(post.richContent));
+    const hasChanges = isDirty || markdownContent !== (post.content || "");
     setHasUnsavedChanges(!!hasChanges);
-  }, [isDirty, richContent, post.richContent]);
+  }, [isDirty, markdownContent, post.content]);
 
   // Warn user about unsaved changes
   useEffect(() => {
@@ -152,7 +128,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
   };
 
   const onSubmit = async (data: EditPostFormData) => {
-    if (!richContent) {
+    if (!markdownContent || markdownContent.trim().length === 0) {
       toast.error("Please add some content to your post");
       return;
     }
@@ -162,9 +138,9 @@ export function EditPostForm({ post }: EditPostFormProps) {
     try {
       const postData = {
         ...data,
-        content: JSON.stringify(richContent), // Fallback for backward compatibility
-        coverImage: data.coverImage || "https://picsum.photos/200/300",
-        ogImage: data.ogImage || "https://picsum.photos/200/300",
+        content: markdownContent,
+        coverImage: data.coverImage || "",
+        ogImage: data.ogImage || "",
         postId: post._id as Id<"posts">,
       };
 
@@ -297,13 +273,16 @@ export function EditPostForm({ post }: EditPostFormProps) {
             <Label htmlFor="preview">Save as draft (preview)</Label>
           </div>
 
-          {/* Rich Text Editor */}
+          {/* Markdown Editor */}
           <div className="space-y-2">
-            <Label>Content *</Label>
-            <RichTextEditor
-              content={richContent || undefined}
-              onChange={setRichContent}
-              placeholder="Start writing your post content..."
+            <Label htmlFor="content">Content *</Label>
+            <MarkdownEditor
+              content={markdownContent}
+              onChange={(value) => {
+                setMarkdownContent(value);
+                setValue("content", value);
+              }}
+              placeholder="Start writing your post in Markdown..."
             />
           </div>
 
@@ -330,7 +309,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={isSubmitting || !hasUnsavedChanges}
+                disabled={isSubmitting || !hasUnsavedChanges || !markdownContent || markdownContent.trim().length === 0}
               >
                 {isSubmitting ? (
                   <>

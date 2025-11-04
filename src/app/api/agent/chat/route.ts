@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { messages }: { messages: UIMessage[] } = await req.json();
+    const { messages, postId }: { messages: UIMessage[]; postId?: string } = await req.json();
 
     if (!messages || messages.length === 0) {
       return NextResponse.json({ error: 'No messages provided' }, { status: 400 });
@@ -26,9 +26,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Last message must be from user' }, { status: 400 });
     }
 
+    // If postId is provided and this is the first message, prepend context about editing
+    let processedMessages = messages;
+    if (postId && messages.length === 1) {
+      const contextMessage: UIMessage = {
+        id: `context-${Date.now()}`,
+        role: 'user',
+        parts: [
+          {
+            type: 'text',
+            text: `I am editing a blog post with ID: ${postId}. You can use the get_post_by_id tool with postId "${postId}" to retrieve the current post content and understand what I'm working with. This will help you provide relevant suggestions and improvements while maintaining the post's voice and style.`,
+          },
+        ],
+      };
+      processedMessages = [contextMessage, ...messages];
+    }
+
     return createAgentUIStreamResponse({
       agent: blogAgent,
-      messages,
+      messages: processedMessages,
       sendSources: true,
       sendReasoning: true,
       onFinish: async (result) => {

@@ -21,13 +21,17 @@ interface StructuredBlogData {
 interface AIChatPanelProps {
   onCopyToEditor?: (content: string) => void;
   onStructuredData?: (data: StructuredBlogData) => void;
+  postId?: string;
 }
 
-export function AIChatPanel({ onCopyToEditor, onStructuredData }: AIChatPanelProps) {
+export function AIChatPanel({ onCopyToEditor, onStructuredData, postId }: AIChatPanelProps) {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/agent/chat',
+      body: {
+        postId,
+      },
     }),
   });
 

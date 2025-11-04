@@ -32,7 +32,7 @@ export function PostContent({ post }: PostContentProps) {
         date={post.date}
         postSlug={post.slug}
       />
-      <PostBody content={post.content} richContent={post.richContent} />
+      <PostBody content={post.content} />
     </>
   );
 }

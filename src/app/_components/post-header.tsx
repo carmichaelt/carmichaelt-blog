@@ -9,7 +9,7 @@ import { EditPostButton } from "./edit-post-button";
 
 type Props = {
   title: string;
-  coverImage: string;
+  coverImage?: string | null;
   date: string;
   postSlug?: string;
 };
@@ -38,7 +38,7 @@ export function PostHeader({ title, coverImage, date, postSlug }: Props) {
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
         <PostTitle>{title}</PostTitle>
         {/* Cover Image */}
-        {coverImage && (
+        {coverImage && coverImage.trim() !== "" && (
           <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
             <CoverImage title={title} src={coverImage} />
           </div>

@@ -46,7 +46,7 @@ export async function HeroPost({
   const transformedPosts = await Promise.all(
     posts?.map(async (post) => {
       const authorData = await fetchQuery(api.users.getUserById, {
-        id: post.author as Id<"users">,
+        id: post.authorId as Id<"users">,
       });
       return {
         slug: post.slug,
@@ -96,11 +96,13 @@ export async function HeroPost({
       <Card className="overflow-hidden">
         <CardHeader className="space-y-6">
           <div className="flex items-start gap-4">
-            <CoverImage
-              title={heroPost.title}
-              src={heroPost.coverImage}
-              slug={heroPost.slug}
-            />
+            {heroPost.coverImage && (
+              <CoverImage
+                title={heroPost.title}
+                src={heroPost.coverImage}
+                slug={heroPost.slug}
+              />
+            )}
             <div className="flex-1 space-y-3">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-2xl md:text-3xl leading-tight font-bold">

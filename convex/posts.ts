@@ -463,9 +463,12 @@ export const updatePost = mutation({
     content: v.string(),
     richContent: v.optional(v.any()),
     tags: v.optional(v.array(v.string())),
+    views: v.optional(v.number()),
+    updatedAt: v.optional(v.string()),
+    authorId: v.id("users"),
   },
   handler: async (ctx, args) => {
-    const { postId, slug, ...updateData } = args;
+    const { postId, slug, views, updatedAt, authorId, ...updateData } = args;
 
     try {
       // Check if post exists

@@ -3,10 +3,13 @@
 import { useRef, useState } from "react";
 import { CreatePostForm } from "./create-post-form";
 import { AIChatPanel } from "./ai-chat-panel";
-import { type RichTextEditorRef } from "./rich-text-editor";
+import { type MarkdownEditorRef } from "./markdown-editor";
+import { type Doc } from "../../../../convex/_generated/dataModel";
 
 interface CreatePostLayoutProps {
   authorId: string;
+  post?: Doc<"posts"> | null;
+  mode?: "create" | "edit";
 }
 
 interface StructuredBlogData {
@@ -16,8 +19,8 @@ interface StructuredBlogData {
   content?: string;
 }
 
-export function CreatePostLayout({ authorId }: CreatePostLayoutProps) {
-  const editorRef = useRef<RichTextEditorRef>(null);
+export function CreatePostLayout({ authorId, post, mode = "create" }: CreatePostLayoutProps) {
+  const editorRef = useRef<MarkdownEditorRef>(null);
   const [formData, setFormData] = useState<StructuredBlogData | null>(null);
 
   const handleInsertContent = (content: string) => {
@@ -35,6 +38,7 @@ export function CreatePostLayout({ authorId }: CreatePostLayoutProps) {
         <AIChatPanel 
           onCopyToEditor={handleInsertContent}
           onStructuredData={handleStructuredData}
+          postId={post?._id ? String(post._id) : undefined}
         />
       </div>
 
@@ -44,6 +48,8 @@ export function CreatePostLayout({ authorId }: CreatePostLayoutProps) {
           authorId={authorId} 
           editorRef={editorRef}
           initialData={formData}
+          post={post}
+          mode={mode}
         />
       </div>
     </div>

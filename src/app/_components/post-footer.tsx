@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 export function PostFooter({ post_title }: { post_title: string }) {
   const post = useQuery(api.posts.getPostBySlug, { slug: post_title });
   const author = useQuery(api.users.getUserById, {
-    id: post?.author as Id<"users">,
+    id: post?.authorId as Id<"users">,
   });
 
   if (post === undefined) {

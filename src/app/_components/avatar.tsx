@@ -7,7 +7,7 @@ import {
 
 type Props = {
   name: string;
-  picture: string;
+  picture?: string | null;
 };
 
 const Avatar = ({ name, picture }: Props) => {
@@ -16,13 +16,21 @@ const Avatar = ({ name, picture }: Props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="relative">
-            <Image
-              src={picture}
-              className="w-12 h-12 rounded-full object-cover border-2 border-border"
-              alt={name}
-              width={48}
-              height={48}
-            />
+            {picture && typeof picture === "string" && picture.trim() !== "" ? (
+              <Image
+                src={picture}
+                className="w-12 h-12 rounded-full object-cover border-2 border-border"
+                alt={name}
+                width={48}
+                height={48}
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full object-cover border-2 border-border bg-muted flex items-center justify-center">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>{name}</TooltipContent>

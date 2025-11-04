@@ -5,7 +5,7 @@ import DateFormatter from "@/app/_components/date-formatter";
 
 type Props = {
   title: string;
-  coverImage: string;
+  coverImage?: string | null;
   date: string;
   excerpt: string;
   author: {
@@ -27,9 +27,11 @@ export function PostPreview({
     <Link href={`/posts/${slug}`}>
       <div className="border border-gray-100 rounded-lg sm:rounded-none p-4 sm:p-6 lg:p-12 hover:bg-purple-50 hover:border-purple-300 hover:shadow-lg transition-shadow duration-200 hover:text-purple-500">
         <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-12 sm:mb-20">
-          <div className="flex-1">
-            <CoverImage slug={slug} title={title} src={coverImage} />
-          </div>
+          {coverImage && (
+            <div className="flex-1">
+              <CoverImage slug={slug} title={title} src={coverImage} />
+            </div>
+          )}
           <div className="flex justify-end sm:justify-start">
             <DateFormatter dateString={date} />
           </div>
