@@ -142,6 +142,7 @@ export function EditPostForm({ post }: EditPostFormProps) {
         coverImage: data.coverImage || "",
         ogImage: data.ogImage || "",
         postId: post._id as Id<"posts">,
+        authorId: post.authorId as Id<"users">,
       };
 
       // Optimistic update - show success immediately

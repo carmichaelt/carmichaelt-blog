@@ -461,7 +461,6 @@ export const updatePost = mutation({
     coverImage: v.string(),
     preview: v.optional(v.boolean()),
     content: v.string(),
-    richContent: v.optional(v.any()),
     tags: v.optional(v.array(v.string())),
     views: v.optional(v.number()),
     updatedAt: v.optional(v.string()),
