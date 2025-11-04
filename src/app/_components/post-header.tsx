@@ -46,7 +46,7 @@ export function PostHeader({ title, coverImage, date, postSlug }: Props) {
       </div>
 
       {/* Separator */}
-      <div className="border-t border-border mb-8"></div>
+      <div className="border-t border-border"></div>
     </div>
   );
 }
