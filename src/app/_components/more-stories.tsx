@@ -1,36 +1,29 @@
+"use client";
+
 import { PostPreview } from "@/app/_components/post-preview";
 import { api } from "../../../convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
 import { Id } from "../../../convex/_generated/dataModel";
+import { useQueryState } from "nuqs";
 
-type Props = {
-  search?: string;
-  sortField?: "date" | "title";
-  sortOrder?: "asc" | "desc";
-  limit?: number;
-  preview?: boolean;
-  dateFrom?: string;
-  dateTo?: string;
-};
+export async function MoreStories() {
+  
+  const [search, setSearch] = useQueryState("search");
+  const [sortField, setSortField] = useQueryState("sortField");
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder");
+  const [preview, setPreview] = useQueryState("preview");
+  const [dateFrom, setDateFrom] = useQueryState("dateFrom");
+  const [dateTo, setDateTo] = useQueryState("dateTo");
+  const [limit, setLimit] = useQueryState("limit");
 
-export async function MoreStories({
-  search,
-  sortField = "date",
-  sortOrder = "desc",
-  limit = 10,
-  preview = false,
-  dateFrom,
-  dateTo,
-}: Props) {
-  // Use the simple query for server component
   const posts = await fetchQuery(api.posts.getPostsSimple, {
-    search,
-    sortField,
-    sortOrder,
-    limit,
-    preview,
-    dateFrom,
-    dateTo,
+    search: search?.toString() ?? undefined,
+    sortField: sortField as "date" | "title" | "views" | undefined,
+    sortOrder: sortOrder as "asc" | "desc" | undefined,
+    limit: limit ? parseInt(limit) : undefined,
+    preview: preview === "true" ? true : false,
+    dateFrom: dateFrom?.toString() ?? undefined,
+    dateTo: dateTo?.toString() ?? undefined,
   });
 
   // Transform posts to include author data

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-export const CreatePostButton = () => {
+export async function CreatePostButton() {
   return (
     <Link href="/create-post">
       <Button variant="outline" size="sm" className="flex items-center gap-2">

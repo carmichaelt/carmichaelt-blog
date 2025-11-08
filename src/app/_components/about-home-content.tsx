@@ -83,6 +83,17 @@ export async function AboutHomeContent() {
           </Link>
           .
         </p>
+
+        <p>
+          You can also read{" "}
+          <Link
+            href="/things-i-believe"
+            className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
+          >
+            things I believe
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

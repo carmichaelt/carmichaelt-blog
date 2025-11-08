@@ -4,29 +4,11 @@ import { SearchAndFilters } from "../_components/search-and-filters";
 import { CreatePostButton } from "../_components/create-post-btn";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const experimental_ppr = true;
 
-type SearchParams = {
-  search?: string;
-  sortField?: "date" | "title";
-  sortOrder?: "asc" | "desc";
-  preview?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  limit?: string;
-};
-
-type Props = {
-  searchParams: Promise<SearchParams>;
-};
-
-function Filters() {
-  return <SearchAndFilters />;
-}
-
-export default async function Index({ searchParams }: Props) {
-  const params = await searchParams;
+export default async function Index() {
 
   return (
     <>
@@ -41,14 +23,16 @@ export default async function Index({ searchParams }: Props) {
                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                 Back to Home
               </Link>
-              <CreatePostButton />
+                <CreatePostButton />
             </div>
-            <Filters />
+            <Suspense fallback={<div>Loading...</div>}> 
+              <SearchAndFilters /> 
+            </Suspense>
             {/* Static content that renders immediately */}
             {/* <Intro /> */}
 
             {/* Dynamic content that streams in */}
-            <DynamicHomeContent searchParams={params} />
+              <DynamicHomeContent />
           </div>
         </Container>
       </div>

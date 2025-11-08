@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Avatar from "@/app/_components/avatar";
 import CoverImage from "@/app/_components/cover-image";
