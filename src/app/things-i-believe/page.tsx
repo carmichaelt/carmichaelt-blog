@@ -35,82 +35,54 @@ export default async function ThingsIBelieve() {
               <div className="space-y-10 text-sm sm:text-base">
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Shipping fast beats the best strategy
+                    Dont stress people out.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Speed is a superpower</li>
-                    <li>Create a bias toward shipping</li>
-                    <li>Small teams ship faster</li>
+                    <li>Users will shun stressful apps.</li>
+                    <li>Stress hides in noise, complexity and quantity.</li>
+                    <li>Clever is not always better.</li>
                     <li>
-                      AI-native teams will move 10x faster than those not
-                      willing to change
-                    </li>
-                    <li>
-                      Landings &gt; launches (i.e. product adoption &gt;
-                      shipping code)
-                    </li>
-                    <li>
-                      Listen, build, ship, tell the customer, then repeat
-                      forever
+                      AI has potential to reduce cognitive load.
                     </li>
                   </ul>
                 </section>
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    You have no career ceiling
+                    Trust is better than speed.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Grit &gt; talent</li>
-                    <li>There&apos;s no substitute for putting in the hours</li>
-                    <li>Get 1% better every day</li>
+                    <li>Don't trick the user, be transparent.</li>
+                    <li>Speed works before you gain trust. Trust is then maintained by quality.</li>
+                    <li>Use speed and feedback to align with user expectations.</li>
+                    <li>Authenticity builds trust.</li>
+                    <li>Own your mistakes openly.</li>
                   </ul>
                 </section>
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Be ruthlessly truth seeking
+                    Complexity requires permanent focus and attention to detail.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>The truth can be painful</li>
-                    <li>You can just change your mind if wrong</li>
-                    <li>Have strong opinions, loosely held</li>
-                    <li>Maximize your exposure hours</li>
-                    <li>&quot;Anecdata&quot; &gt; data</li>
-                    <li>Seek the collective truth, not just one opinion</li>
+                    <li>Put in the hours, but get something back.</li>
+                    <li>Iteratively focus in and out.</li>
+                    <li>Small teams can focus, big teams can't.</li>
                   </ul>
                 </section>
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Communication is the job
+                    Trust erodes through poor communication.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
                     <li>Clear writing is clear thinking</li>
-                    <li>
-                      Everyone (yes, you) needs to become a better writer
-                    </li>
                     <li>Leaders step up to provide clarity when absent</li>
                     <li>
                       Be the person taking notes, even if it&apos;s just for
                       yourself
                     </li>
                     <li>Mismatched expectations lead to sadness</li>
-                    <li>
-                      Slack pro tip: anticipate objections before hitting send,
-                      then address them
-                    </li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Education is the best form of developer marketing
-                  </h2>
-                  <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Be authentic and own your failures</li>
-                    <li>Never use the word &quot;webinar&quot; ever again</li>
-                    <li>Being helpful compounds</li>
                   </ul>
                 </section>
 
@@ -119,14 +91,11 @@ export default async function ThingsIBelieve() {
                     Leadership means owning outcomes beyond the org chart
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Influence &gt; titles</li>
+                    <li>Influence is more important than titles.</li>
                     <li>
                       Leaders have to do the work themselves and delegate
                     </li>
-                    <li>You can write your own playbook</li>
-                    <li>
-                      Study what worked for others, then take your own path
-                    </li>
+                    <li>Managers &gt;&lt; Leaders.</li>
                   </ul>
                 </section>
 
@@ -155,24 +124,7 @@ export default async function ThingsIBelieve() {
                       You could have built a prototype in v0 during the meeting
                     </li>
                     <li>Only ship things you&apos;re excited about yourself</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Hiring is what separates good leaders from great
-                  </h2>
-                  <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>There are two hiring answers: hell yes or no</li>
-                    <li>Growth potential &gt; current skill</li>
-                    <li>Hire people you can learn from</li>
-                    <li>
-                      Hire people you would someday be happy working for
-                    </li>
-                    <li>
-                      Favorite interview question: what work are you most proud
-                      of?
-                    </li>
+                    <li>A job becomes a passion when you care about the outcome.</li>
                   </ul>
                 </section>
 
@@ -181,7 +133,7 @@ export default async function ThingsIBelieve() {
                     Always try to assume good intent
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Lead with empathy</li>
+                    <li>Lead with empathy and understanding.</li>
                     <li>They might just be having a bad day</li>
                     <li>
                       Criticism is good feedback if you listen unemotionally
