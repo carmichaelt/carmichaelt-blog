@@ -42,7 +42,7 @@ export default async function ThingsIBelieve() {
                     <li>Stress hides in noise, complexity and quantity.</li>
                     <li>Clever is not always better.</li>
                     <li>
-                      AI has potential to reduce cognitive load.
+                      AI has potential to reduce stress factors.
                     </li>
                   </ul>
                 </section>
@@ -52,17 +52,17 @@ export default async function ThingsIBelieve() {
                     Trust is better than speed.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Don't trick the user, be transparent.</li>
                     <li>Speed works before you gain trust. Trust is then maintained by quality.</li>
                     <li>Use speed and feedback to align with user expectations.</li>
                     <li>Authenticity builds trust.</li>
-                    <li>Own your mistakes openly.</li>
+                    <li>Don't trick the audience.</li>
+                    <li>Own mistakes and misunderstandings.</li>
                   </ul>
                 </section>
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Complexity requires permanent focus and attention to detail.
+                    Complexity requires permanent focus and attention.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
                     <li>Put in the hours, but get something back.</li>
@@ -73,16 +73,13 @@ export default async function ThingsIBelieve() {
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Trust erodes through poor communication.
+                    Trust erodes through miscommunication.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>Clear writing is clear thinking</li>
-                    <li>Leaders step up to provide clarity when absent</li>
-                    <li>
-                      Be the person taking notes, even if it&apos;s just for
-                      yourself
-                    </li>
-                    <li>Mismatched expectations lead to sadness</li>
+                    <li>Get to the point, lead with the answer.</li>
+                    <li>Leaders provide clarity and assurance when absent</li>
+                    <li>Listen twice as much as you talk.</li>
+                    <li>Mismatched expectations lead to conflict.</li>
                   </ul>
                 </section>
 
@@ -101,29 +98,12 @@ export default async function ThingsIBelieve() {
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Work can also be your hobby
-                  </h2>
-                  <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
-                    <li>This doesn&apos;t mean you can&apos;t have other hobbies</li>
-                    <li>
-                      Passion + boundaries &gt; mythical &quot;work-life
-                      balance&quot;
-                    </li>
-                    <li>
-                      Your best work comes from following your curiosity
-                    </li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-4">
-                    Demos &gt; memos
+                    Work and hobbies can coexist.
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
                     <li>
-                      You could have built a prototype in v0 during the meeting
+                      Lean into your curiosity
                     </li>
-                    <li>Only ship things you&apos;re excited about yourself</li>
                     <li>A job becomes a passion when you care about the outcome.</li>
                   </ul>
                 </section>
@@ -134,7 +114,7 @@ export default async function ThingsIBelieve() {
                   </h2>
                   <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
                     <li>Lead with empathy and understanding.</li>
-                    <li>They might just be having a bad day</li>
+                    <li>Give people reasonable time and space.</li>
                     <li>
                       Criticism is good feedback if you listen unemotionally
                     </li>
