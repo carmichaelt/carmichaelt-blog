@@ -2,12 +2,12 @@
 
 import { PostPreview } from "@/app/_components/post-preview";
 import { api } from "../../../convex/_generated/api";
-import { fetchQuery } from "convex/nextjs";
+import { useQuery } from "convex/react";
 import { Id } from "../../../convex/_generated/dataModel";
 import { useQueryState } from "nuqs";
 
-export async function MoreStories() {
-  
+export function MoreStories() {
+
   const [search, setSearch] = useQueryState("search");
   const [sortField, setSortField] = useQueryState("sortField");
   const [sortOrder, setSortOrder] = useQueryState("sortOrder");
@@ -16,35 +16,28 @@ export async function MoreStories() {
   const [dateTo, setDateTo] = useQueryState("dateTo");
   const [limit, setLimit] = useQueryState("limit");
 
-  const posts = await fetchQuery(api.posts.getPostsSimple, {
-    search: search?.toString() ?? undefined,
-    sortField: sortField as "date" | "title" | "views" | undefined,
-    sortOrder: sortOrder as "asc" | "desc" | undefined,
-    limit: limit ? parseInt(limit) : undefined,
-    preview: preview === "true" ? true : false,
-    dateFrom: dateFrom?.toString() ?? undefined,
-    dateTo: dateTo?.toString() ?? undefined,
+  const postsResult = useQuery(api.posts.getPosts, {
+    search: search ?? undefined,
+    sortField: (sortField && ["date", "title", "views"].includes(sortField)) 
+      ? (sortField as "date" | "title" | "views") 
+      : undefined,
+    sortOrder: (sortOrder && ["asc", "desc"].includes(sortOrder))
+      ? (sortOrder as "asc" | "desc")
+      : undefined,
+    paginationOpts: {
+      numItems: limit ? parseInt(limit) : 10,
+      cursor: null,
+    },
+    preview: preview === "true" ? true : preview === "false" ? false : undefined,
+    dateFrom: dateFrom ?? undefined,
+    dateTo: dateTo ?? undefined,
   });
 
-  // Transform posts to include author data
-  const transformedPosts = await Promise.all(
-    posts?.map(async (post) => {
-      const authorData = await fetchQuery(api.users.getUserById, {
-        id: post.authorId as Id<"users">,
-      });
-      return {
-        ...post,
-        author: {
-          _id: post.authorId as Id<"users">,
-          name: authorData?.name ?? "",
-          avatar: authorData?.avatarUrl ?? "",
-          picture: authorData?.avatarUrl ?? "",
-        },
-      };
-    }) ?? [],
-  );
+  const posts = postsResult?.page ?? [];
 
-  if (!transformedPosts || transformedPosts.length === 0) {
+
+
+  if (!posts || posts.length === 0) {
     return (
       <section>
         <h2 className="mb-8 text-5xl md:text-7xl font-bold tracking-tighter leading-tight">
@@ -62,17 +55,12 @@ export async function MoreStories() {
   return (
     <section>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-16 sm:mb-24 lg:mb-32">
-        {transformedPosts.map((post) => (
+        {posts?.map((post) => (
           <PostPreview
-            key={post.slug}
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            author={post.author}
-            slug={post.slug}
-            excerpt={post.excerpt}
+            key={post?.slug}
+            slug={post?.slug as string}
           />
-        ))}
+        )) ?? null}
       </div>
     </section>
   );

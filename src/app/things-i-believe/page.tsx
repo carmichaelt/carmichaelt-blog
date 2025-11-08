@@ -24,7 +24,7 @@ export default async function ThingsIBelieve() {
             {/* Content */}
             <div className="space-y-8">
               <div>
-                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2 text-purple-600">
                   Things I Believe
                 </h1>
                 <p className="text-sm sm:text-base text-muted-foreground">
