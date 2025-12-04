@@ -2,13 +2,12 @@ import { generateText, tool } from "ai";
 import z from "zod";
 
 export const generateBlogContentTool = tool({
-    name: 'generate_blog_content',
     description: 'Generate a complete blog post with title, slug, excerpt, and content based on the provided context and user input.',
     inputSchema: z.object({
         context: z.string().describe('The context to generate a blog post for'),
         userInput: z.string().describe('The user input to generate a blog post for'),
     }),
-    execute: async ({ context, userInput }) => {
+    execute: async (args) => {
       const result = await generateText({
         model: 'openai/gpt-4o',
         system: `You are a blog writing expert and creative content generator. Your goal is to generate a comprehensive, well-structured blog post based on the provided context and user input.
@@ -30,8 +29,8 @@ Guidelines:
 6. The slug should be URL-friendly (lowercase, hyphens, no special characters)
 7. The excerpt should be compelling and summarize the key points
 8. Return ONLY valid JSON, no additional text before or after`,
-        prompt: `Context: ${context}
-User Input: ${userInput}
+        prompt: `Context: ${args.context}
+User Input: ${args.userInput}
 
 Generate a complete blog post with title, slug, excerpt, and content. Return ONLY a valid JSON object matching the required structure.`,
         temperature: 0.7,
