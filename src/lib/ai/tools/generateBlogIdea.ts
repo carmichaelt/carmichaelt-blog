@@ -2,7 +2,6 @@ import { generateText, tool } from "ai";
 import { z } from "zod";
 
 export const generateBlogIdeaTool = tool({
-    name: 'content_suggestion',
     description: 'Suggest personalized, practical, and creative content suggestions based on the provided context and user input.',
     inputSchema: z.object({
         context: z.string().describe('The context to generate a blog post idea for'),

@@ -4,7 +4,6 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 
 export const getPostByIdTool = tool({
-  name: 'get_post_by_id',
   description: 'Get a blog post by its ID. Use this when you need to access the current post being edited to understand its context, content, and structure.',
   inputSchema: z.object({
     postId: z.string().describe('The ID of the post to retrieve'),
