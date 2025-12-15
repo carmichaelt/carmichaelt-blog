@@ -70,6 +70,16 @@ export default async function ThingsIBelieve() {
                     <li>Small teams can focus, big teams can't.</li>
                   </ul>
                 </section>
+                
+                <section>
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-4">
+                    Clarity beats cleverness.
+                  </h2>
+                  <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-2">
+                    <li>KISS - Keep it simple stupid.</li>
+                    <li>Simple to communicate.</li>
+                  </ul>
+                </section>
 
                 <section>
                   <h2 className="text-xl sm:text-2xl font-semibold mb-4">
