@@ -1,7 +1,6 @@
 import { streamContentSuggestion } from '@/lib/ai/functions/stream-content-suggestion';
 import { createTextStreamResponse } from 'ai';
 import { UIMessage } from 'ai';
-import z from 'zod';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
