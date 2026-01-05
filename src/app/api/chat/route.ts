@@ -1,5 +1,5 @@
 import { streamContentSuggestion } from '@/lib/ai/functions/stream-content-suggestion';
-import { streamObject } from 'ai';
+import { createTextStreamResponse } from 'ai';
 import { UIMessage } from 'ai';
 import z from 'zod';
 
@@ -13,5 +13,5 @@ export async function POST(req: Request) {
   const result = await streamContentSuggestion(messages);
   console.log("result", result);
 
-  return result.toJsonResponse();
+  return createTextStreamResponse(result);
 }

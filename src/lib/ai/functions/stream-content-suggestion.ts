@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { streamText, UIMessage, convertToModelMessages, generateObject, streamObject } from "ai";
+import { UIMessage, convertToModelMessages, streamText, Output } from "ai";
 import z from "zod";
 
 
@@ -35,11 +35,13 @@ export async function streamContentSuggestion(messages: UIMessage[]) {
         6. Ensure the content suggestion is helpful and explains the topic`;
 
 
-    const textStream = await generateObject({
+    const textStream = await streamText({
         model: 'openai/gpt-4o',
         system: systemPrompt,
-        schema: objectSchema,
-        messages: convertToModelMessages(messages),
+        output: Output.object({
+            schema: objectSchema,
+          }),
+        messages: await convertToModelMessages(messages),
         temperature: 0.7,
     });
 

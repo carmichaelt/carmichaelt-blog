@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import {
-  createAgentUIStreamResponse,
+  streamText,
   UIMessage,
+  convertToModelMessages,
 } from 'ai';
-import { blogAgent } from '@/lib/ai/blog-agent';
+import { blogAgent, BLOG_AGENT_INSTRUCTIONS } from '@/lib/ai/blog-agent';
+import { openai } from '@ai-sdk/openai';
 
 export const maxDuration = 30;
 
@@ -42,16 +44,19 @@ export async function POST(req: Request) {
       processedMessages = [contextMessage, ...messages];
     }
 
-    return createAgentUIStreamResponse({
-      agent: blogAgent,
-      messages: processedMessages,
-      sendSources: true,
-      sendReasoning: true,
+    const modelMessages = await convertToModelMessages(processedMessages);
+
+    const result = await streamText({
+      model: openai('gpt-4o'),
+      messages: modelMessages,
+      system: BLOG_AGENT_INSTRUCTIONS,
+      tools: blogAgent.tools,
       onFinish: async (result) => {
-        console.log('Agent finished:', result.messages);
-        console.log('Agent parts:', result.messages.map(msg => msg.parts));
+        console.log('Agent finished:', result.response.messages);
       },
     });
+
+    return result.toTextStreamResponse();
 
   } catch (error) {
     console.error('API route error:', error);
