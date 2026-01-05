@@ -14,7 +14,7 @@ export async function AboutHomeContent() {
       </h1>
       <div className="text-sm sm:text-base lg:text-lg text-gray-600 space-y-4 sm:space-y-6">
         <p>
-          I&apos;m a developer and technologist who currently works at{" "}
+          I&apos;m a developer, founder, and technologist who builds products, I currently work at{" "}
           <Link
             href="https://www.paconsulting.com/"
             className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
@@ -32,12 +32,19 @@ export async function AboutHomeContent() {
         </p>
 
         <p>
-          I also spend my own time building{" "}
+          In December 2025 I founded{" "}
+          <Link
+            href="https://skydunes.dev"
+            className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
+          >
+            SkyDunes
+          </Link>
+          , a software development company building AI native applications. You can check out 
           <Link
             href="/projects"
             className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
           >
-            my{" "}
+            {" "}our{" "}
             <span className="font-bold text-purple-500 hover:text-purple-600 transition-colors">
               <ProjectCount preloadedProjects={projects} />
             </span>{" "}
