@@ -7,7 +7,7 @@ export function Footer() {
       <Container>
         <div className="py-8 flex flex-col lg:flex-row items-center">
           <h3 className="text-xl lg:text-[1.5rem] font-bold tracking-tighter leading-tight text-center lg:text-left mb-10 lg:mb-0 lg:pr-4 lg:w-1/2">
-            Partially Pre-rendered with Next.js.
+            Partially Pre-rendered with Next.js 16.
           </h3>
           <div className="flex flex-col lg:flex-row justify-center items-center lg:pl-4 lg:w-1/2">
             <Link

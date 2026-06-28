@@ -26,7 +26,7 @@ const techStack: TechItem[] = [
     size: "small",
   },
   {
-    name: "Next.js",
+    name: "Next.js 16",
     icon: "▲",
     url: "https://nextjs.org",
     category: "frontend",

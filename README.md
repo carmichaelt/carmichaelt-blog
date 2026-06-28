@@ -1,6 +1,6 @@
 # Carmichaelt Blog
 
-A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 15, featuring real-time content management and a rich text editing experience.
+A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 16, featuring real-time content management and a rich text editing experience.
 
 ## 🚀 Key Features
 
@@ -17,7 +17,7 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 
 ### Core Framework
 
-- **Next.js 15** - React framework with App Router
+- **Next.js 16** - React framework with App Router and Turbopack
 - **React 19** - Latest React features and concurrent rendering
 - **TypeScript** - Type-safe development
 
@@ -41,9 +41,9 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 
 ### Development Tools
 
-- **Turbopack** - Next-generation bundler
+- **Turbopack** - Default bundler in Next.js 16 (used in dev and build scripts)
 - **ESLint** - Code linting and formatting
-- **pnpm** - Fast, disk space efficient package manager
+- **Bun** - Fast JavaScript runtime and package manager
 
 ## 📁 Project Structure
 
@@ -80,15 +80,15 @@ src/
 │   ├── constants.ts           # App constants
 │   ├── markdownToHtml.ts     # Markdown processing
 │   └── utils.ts              # General utilities
-└── middleware.ts              # Next.js middleware
+└── proxy.ts                   # Next.js proxy (network boundary)
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
+- Node.js 18+ or Bun
+- Bun (recommended) or pnpm/npm
 
 ### Installation
 
@@ -102,7 +102,7 @@ cd carmichaelt-blog
 2. Install dependencies:
 
 ```bash
-pnpm install
+bun install
 ```
 
 3. Set up environment variables:
@@ -128,7 +128,7 @@ Configure the following environment variables:
 4. Run the development server:
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
@@ -137,17 +137,13 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Partial Pre-Rendering (PPR)
 
-The application uses Next.js 15's experimental PPR feature configured in `next.config.ts`:
+The application enables PPR on individual routes by exporting `experimental_ppr` from page files:
 
 ```typescript
-const nextConfig: NextConfig = {
-  experimental: {
-    ppr: "incremental",
-  },
-};
+export const experimental_ppr = true;
 ```
 
-This enables incremental static regeneration with dynamic content, providing the benefits of static generation while maintaining real-time capabilities.
+This pre-renders a static shell for each route while streaming dynamic content through Suspense boundaries, combining fast initial loads with real-time Convex data.
 
 ### Database Schema
 

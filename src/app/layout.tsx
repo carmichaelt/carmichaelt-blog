@@ -23,7 +23,7 @@ const junicode = localFont({
 
 export const metadata: Metadata = {
   title: `Carmichaelt. Blog`,
-  description: `A Partially Pre-rendered blog using Next.js and Convex.`,
+  description: `A Partially Pre-rendered blog using Next.js 16 and Convex.`,
   openGraph: {
     images: [HOME_OG_IMAGE_URL],
   },

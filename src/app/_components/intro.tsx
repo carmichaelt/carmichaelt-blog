@@ -10,7 +10,7 @@ export function Intro() {
           href="https://nextjs.org/"
           className="underline hover:text-blue-600 duration-200 transition-colors"
         >
-          Next.js
+          Next.js 16
         </Link>{" "}
         and {CMS_NAME}.
       </h4>
