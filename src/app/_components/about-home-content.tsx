@@ -16,19 +16,16 @@ export async function AboutHomeContent() {
         <p>
           I&apos;m a developer, founder, and technologist who builds products, I currently work at{" "}
           <Link
-            href="https://www.paconsulting.com/"
+            href="https://www.askvinny.com/"
             className="font-bold text-purple-500 hover:text-purple-600 transition-colors"
           >
-            PA Consulting
+            Vinny
           </Link>{" "}
-          advising enterprises how to leverage Web Development, AI, Cloud
-          Architecture, and Engineering.
+          building an AI Property management Teammate.
         </p>
 
         <p>
-          As well as consulting clients, I lead the development of an AI-powered
-          Conversational Training Platform called Kaiwa, built using Next.js and
-          Vercel.
+          I specialize in building AI agents, workflows, tools and evals.
         </p>
 
         <p>

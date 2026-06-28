@@ -4,7 +4,7 @@ A modern personal blog built with **Partial Pre-Rendering (PPR)** using Next.js 
 
 ## 🚀 Key Features
 
-- **Partial Pre-Rendering (PPR)** - Leverages Next.js 15's experimental PPR for optimal performance
+- **Partial Pre-Rendering (PPR)** - Leverages Next.js 16's PPR for optimal performance
 - **Real-time Database** - Powered by Convex for instant data synchronization
 - **Rich Text Editor** - TipTap-based editor with comprehensive formatting options
 - **AI Content Generation** - Generate blog content from prompts using OpenAI via Vercel AI SDK
