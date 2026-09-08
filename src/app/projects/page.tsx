@@ -4,17 +4,21 @@ import Link from "next/link";
 import { BackLink } from "@/components/site/back-link";
 import { Container } from "@/components/site/container";
 import { Markdown } from "@/components/site/markdown";
-import { getAllProjects } from "@/lib/content";
+import { getAllProjects, type ProjectStatus } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Projects",
   description: "A collection of projects built with technologies and ideas that interest me.",
 };
 
-function statusLabel(status: "active" | "completed" | "archived") {
+function statusLabel(status: ProjectStatus) {
   switch (status) {
     case "active":
       return "Active";
+    case "in-development":
+      return "In development";
+    case "scaling-back":
+      return "Scaling back";
     case "completed":
       return "Completed";
     case "archived":
@@ -38,7 +42,11 @@ export default function ProjectsPage() {
       </p>
       <ul className="space-y-12">
         {projects.map((project) => (
-          <li key={project.slug} className="border-t border-white/10 pt-8">
+          <li
+            key={project.slug}
+            id={project.slug}
+            className="scroll-mt-20 border-t border-white/10 pt-8"
+          >
             <div className="flex flex-wrap items-baseline justify-between gap-3">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-100">
                 {project.name}

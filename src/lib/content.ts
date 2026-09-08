@@ -16,7 +16,7 @@ export type Post = {
   content: string;
 };
 
-export type ProjectStatus = "active" | "completed" | "archived";
+export type ProjectStatus = "active" | "in-development" | "scaling-back" | "completed" | "archived";
 
 export type Project = {
   slug: string;
@@ -56,8 +56,22 @@ function isPostKind(value: unknown): value is PostKind {
 }
 
 function isProjectStatus(value: unknown): value is ProjectStatus {
-  return value === "active" || value === "completed" || value === "archived";
+  return (
+    value === "active" ||
+    value === "in-development" ||
+    value === "scaling-back" ||
+    value === "completed" ||
+    value === "archived"
+  );
 }
+
+const projectStatusOrder: Record<ProjectStatus, number> = {
+  active: 0,
+  "in-development": 1,
+  "scaling-back": 2,
+  completed: 3,
+  archived: 4,
+};
 
 export function getAllPosts(): Post[] {
   return readMarkdownFiles("posts")
@@ -90,7 +104,11 @@ export function getAllProjects(): Project[] {
         : [],
       content,
     }))
-    .sort((left, right) => left.name.localeCompare(right.name));
+    .sort((left, right) => {
+      const byStatus = projectStatusOrder[left.status] - projectStatusOrder[right.status];
+      if (byStatus !== 0) return byStatus;
+      return left.name.localeCompare(right.name);
+    });
 }
 
 export function getPage(slug: string): MarkdownPage | undefined {

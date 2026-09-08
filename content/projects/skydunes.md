@@ -5,7 +5,6 @@ status: active
 problem: Building AI-native applications without the usual glue and ceremony.
 technologies:
   - Next.js
-  - TypeScript
   - AI SDK
 ---
 
