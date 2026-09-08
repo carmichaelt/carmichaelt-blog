@@ -1,28 +1,27 @@
-import Container from "@/app/_components/container";
-import { TechStackContent } from "./_components/tech-stack-content";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export const experimental_ppr = true;
+import { BackLink } from "@/components/site/back-link";
+import { Container } from "@/components/site/container";
+import { Markdown } from "@/components/site/markdown";
+import { getPage } from "@/lib/content";
 
-export default async function TechStack() {
+const page = getPage("tech-stack");
+
+export const metadata: Metadata = {
+  title: page?.title ?? "Tech Stack",
+  description: page?.description,
+};
+
+export default function TechStackPage() {
+  if (!page) notFound();
+
   return (
-    <>
-      <div className="flex flex-1 mt-16 mb-16">
-        <Container>
-          <div className="flex w-full max-w-7xl mx-auto">
-            <div className="space-y-8 w-full">
-              <div className="text-center">
-                <h1 className="text-3xl font-bold tracking-tight">
-                  Tech Stack
-                </h1>
-                <p className="text-gray-600 mt-2">
-                  Technologies and tools I use to build modern web applications
-                </p>
-              </div>
-              <TechStackContent />
-            </div>
-          </div>
-        </Container>
-      </div>
-    </>
+    <Container className="py-16">
+      <BackLink />
+      <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">{page.title}</h1>
+      {page.description ? <p className="mb-10 text-zinc-400">{page.description}</p> : null}
+      <Markdown content={page.content} />
+    </Container>
   );
 }

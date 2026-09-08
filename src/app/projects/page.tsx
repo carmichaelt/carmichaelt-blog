@@ -1,55 +1,74 @@
-import Container from "@/app/_components/container";
-import { ProjectsTable } from "@/app/_components/projects-table";
-import { CreateProjectButton } from "@/app/_components/create-project-button";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { api } from "../../../convex/_generated/api";
-import { preloadQuery } from "convex/nextjs";
 
-export const experimental_ppr = true;
+import { BackLink } from "@/components/site/back-link";
+import { Container } from "@/components/site/container";
+import { Markdown } from "@/components/site/markdown";
+import { getAllProjects } from "@/lib/content";
 
-export async function generateMetadata() {
-  return {
-    title: "Projects",
-    description:
-      "A collection of projects I've built using technologies and concepts that interest me.",
-  };
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "A collection of projects built with technologies and ideas that interest me.",
+};
+
+function statusLabel(status: "active" | "completed" | "archived") {
+  switch (status) {
+    case "active":
+      return "Active";
+    case "completed":
+      return "Completed";
+    case "archived":
+      return "Archived";
+    default: {
+      const exhaustive: never = status;
+      return exhaustive;
+    }
+  }
 }
 
-export default async function Projects() {
-  const projects = await preloadQuery(api.projects.getAllProjects);
+export default function ProjectsPage() {
+  const projects = getAllProjects();
+
   return (
-    <>
-      <div className="flex flex-1 mt-16">
-        <Container>
-          <div className="flex w-full max-w-6xl mx-auto flex-col">
-            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
-              <Link
-                href="/"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                Back to Home
-              </Link>
+    <Container className="py-16">
+      <BackLink />
+      <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Projects</h1>
+      <p className="mb-12 max-w-2xl text-zinc-400">
+        Things I have built to solve a problem or to learn something I could not leave alone.
+      </p>
+      <ul className="space-y-12">
+        {projects.map((project) => (
+          <li key={project.slug} className="border-t border-white/10 pt-8">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-zinc-100">
+                {project.name}
+              </h2>
+              <span className="text-xs tracking-[0.16em] text-emerald-400 uppercase">
+                {statusLabel(project.status)}
+              </span>
             </div>
-            <div className="space-y-8 w-full">
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold tracking-tight">
-                  My Projects
-                </h1>
-                <CreateProjectButton />
-              </div>
-              <p className="text-gray-600">
-                A collection of projects I&apos;ve built using technologies and
-                concepts that interest me. Each project solves a specific
-                problem or explores new ideas in web development, AI, and
-                technology.
-              </p>
-              <ProjectsTable preloadedProjects={projects} />
+            {project.problem ? <p className="mt-3 text-zinc-400">{project.problem}</p> : null}
+            <div className="mt-4">
+              <Markdown content={project.content} />
             </div>
-          </div>
-        </Container>
-      </div>
-    </>
+            {project.technologies.length > 0 ? (
+              <p className="mt-2 text-sm text-zinc-500">{project.technologies.join(" · ")}</p>
+            ) : null}
+            <div className="mt-4 flex gap-5 text-sm">
+              {project.url ? (
+                <Link href={project.url} className="text-emerald-400 hover:text-emerald-300">
+                  Site
+                </Link>
+              ) : null}
+              {project.github ? (
+                <Link href={project.github} className="text-emerald-400 hover:text-emerald-300">
+                  GitHub
+                </Link>
+              ) : null}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Container>
   );
 }

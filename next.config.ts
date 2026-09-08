@@ -1,14 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
+  turbopack: {
+    rules: {
+      "*.wgsl": {
+        loaders: ["@vgpu/wgsl/loader-webpack"],
+        as: "*.js",
       },
-    ],
+    },
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.wgsl$/,
+      use: "@vgpu/wgsl/loader-webpack",
+    });
+    return config;
   },
 };
 

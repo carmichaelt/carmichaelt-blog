@@ -1,14 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "eslint",
-    "typescript",
-    "react",
-    "nextjs",
-    "jsx-a11y",
-    "unicorn",
-    "oxc"
-  ],
+  "plugins": ["eslint", "typescript", "react", "nextjs", "jsx-a11y", "unicorn", "oxc"],
   "env": {
     "browser": true,
     "node": true
@@ -19,8 +11,7 @@
     "out/**",
     "build/**",
     "dist/**",
-    "next-env.d.ts",
-    "convex/_generated/**"
+    "next-env.d.ts"
   ],
   "options": {
     "typeAware": true
