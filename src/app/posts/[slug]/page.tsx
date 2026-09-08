@@ -5,6 +5,7 @@ import { BackLink } from "@/components/site/back-link";
 import { Container } from "@/components/site/container";
 import { DateFormatter } from "@/components/site/date-formatter";
 import { Markdown } from "@/components/site/markdown";
+import { PostReactions } from "@/components/site/post-reactions";
 import { getAllPosts, getPostBySlug } from "@/lib/content";
 
 type PostPageProps = {
@@ -63,6 +64,7 @@ export default async function PostPage({ params }: PostPageProps) {
         ) : (
           <Markdown content={post.content} />
         )}
+        <PostReactions slug={post.slug} />
       </article>
     </Container>
   );

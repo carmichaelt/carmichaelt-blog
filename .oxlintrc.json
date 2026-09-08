@@ -11,7 +11,8 @@
     "out/**",
     "build/**",
     "dist/**",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "convex/_generated/**"
   ],
   "options": {
     "typeAware": true

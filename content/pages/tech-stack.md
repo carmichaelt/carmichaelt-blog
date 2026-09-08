@@ -13,7 +13,7 @@ Most of the work is the same shape: a Next.js app, live data, auth, an AI surfac
 - **AI** — [Vercel AI SDK](https://ai-sdk.dev) over OpenAI
 - **Ship** — [Bun](https://bun.sh), [Vercel](https://vercel.com), [Git](https://git-scm.com), [Cursor](https://cursor.com)
 
-Trip Timelines, What To Get Me, ScratchLists, and SkyDunes all sit on that pattern. This site is the exception that proves it: markdown in git, no backend.
+Trip Timelines, What To Get Me, ScratchLists, and SkyDunes all sit on that pattern. This site keeps the writing in git and uses Convex only for live bits — reactions now, files later if a post needs them.
 
 ## Where it changes
 

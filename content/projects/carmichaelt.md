@@ -7,8 +7,9 @@ problem: A personal site that stays out of the way of the writing.
 technologies:
   - Next.js
   - Markdown
+  - Convex
   - WebGPU
   - vgpu
 ---
 
-This site. A markdown blog with a WebGPU T on the homepage, content in the repo, and as little machinery as I can get away with.
+This site. A markdown blog with a WebGPU T on the homepage, content in the repo, and Convex for live reactions.

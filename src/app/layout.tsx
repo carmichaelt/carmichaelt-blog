@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Footer } from "@/components/site/footer";
 import { Navbar } from "@/components/site/navbar";
+import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/constants";
 
 import "./globals.css";
@@ -67,11 +68,13 @@ export default function RootLayout({
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       </head>
       <body className={`${junicode.className} min-h-dvh bg-black text-zinc-200 antialiased`}>
-        <div className="flex min-h-dvh flex-col">
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <ConvexClientProvider>
+          <div className="flex min-h-dvh flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </ConvexClientProvider>
         <Analytics />
         <SpeedInsights />
       </body>
