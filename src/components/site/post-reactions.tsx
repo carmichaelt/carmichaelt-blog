@@ -19,6 +19,33 @@ const reactions: {
 
 type ReactionKind = (typeof reactions)[number]["kind"];
 
+function ReactionCount({ value }: { value: number }) {
+  const digits = String(value).length;
+  const width = Math.max(8, digits * 7);
+
+  return (
+    <svg
+      aria-hidden
+      className="h-4 shrink-0 text-zinc-500"
+      width={width}
+      height={16}
+      viewBox={`0 0 ${width} 16`}
+    >
+      <text
+        x={width / 2}
+        y={12.5}
+        textAnchor="middle"
+        dominantBaseline="alphabetic"
+        fontSize="12"
+        fontFamily="ui-sans-serif, system-ui, sans-serif"
+        fill="currentColor"
+      >
+        {value}
+      </text>
+    </svg>
+  );
+}
+
 export function PostReactions({ slug }: { slug: string }) {
   if (!process.env.NEXT_PUBLIC_CONVEX_URL) return null;
   return <PostReactionsButtons slug={slug} />;
@@ -61,9 +88,7 @@ function PostReactionsButtons({ slug }: { slug: string }) {
               )}
             >
               <Icon className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />
-              <span className="[font-family:ui-sans-serif,system-ui,sans-serif] text-[13px] leading-none text-zinc-500 tabular-nums">
-                {count}
-              </span>
+              <ReactionCount value={count} />
             </button>
           );
         })}
