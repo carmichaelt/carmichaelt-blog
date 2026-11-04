@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ci": {
+    "bootstrapping": {
+      "installCommand": "bun install --frozen-lockfile",
+      "installEnv": {}
+    },
+    "tasks": [
+      {
+        "name": "build",
+        "env": {
+          "NEXT_PUBLIC_CONVEX_URL": {
+            "constant": {
+              "value": "https://ci-placeholder.convex.cloud"
+            }
+          },
+          "NEXT_TELEMETRY_DISABLED": {
+            "constant": {
+              "value": "1"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
