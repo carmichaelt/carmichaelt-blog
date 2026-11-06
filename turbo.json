@@ -1,18 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "lint": {
-      "tags": ["ci"]
-    },
+    "lint": {},
     "typecheck": {
-      "tags": ["ci"],
       "outputs": []
     },
-    "format:check": {
-      "tags": ["ci"]
-    },
+    "format:check": {},
     "build": {
-      "tags": ["ci", "ci:cpus:4"],
       "env": ["NEXT_PUBLIC_CONVEX_URL", "NEXT_TELEMETRY_DISABLED"],
       "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"]
     }

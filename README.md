@@ -52,22 +52,18 @@ linter and can recurse through a script named `lint`, even with that flag.
 The `.oxlintrc.json` and `.oxfmtrc.json` files still configure Bun, including
 type-aware linting and the existing generated-file exclusions.
 
-`turbo.json` tags lint, both TypeScript project checks, formatting, and the
-non-deploying Next.js build for Vercel CI. There are no test scripts or GitHub
-Actions workflows in this repo. All tasks use Turbo's default repository inputs,
+GitHub Actions runs `.github/workflows/ci.yml` on pull requests and pushes to
+`main`. It installs the exact Bun version from `package.json`, builds Next.js,
+then runs lint, both TypeScript project checks, and formatting through Turbo.
+There are no test scripts in this repository.
+
+The workflow caches Bun downloads and Turbo task results and cancels superseded
+runs on the same PR or branch. All tasks use Turbo's default repository inputs,
 so source, content, public assets, generated Convex bindings, and configuration
-changes invalidate their caches. Build output is cached separately from the
-Next.js incremental cache. The build gets 4 CPUs / 8 GB; other checks use the
-2 CPU / 4 GB defaults.
+changes invalidate their caches. Build runs before typecheck to generate Next.js
+route types. The synthetic Convex URL is only a build fixture; CI does not run a
+Convex deployment. Real deployment values remain in Vercel project settings.
 
-The root `vercel.json` configures CI installation and a synthetic Convex URL for
-the build check. It does not run a Convex deployment. The build also works without
-a Convex URL, in which case reactions are disabled. Real deployment environment
-values remain in Vercel project settings.
-
-Vercel accepted `vercel ci enable --remote origin --non-interactive --json` on
-November 4, 2026, but this GitHub repository is public. The current
-[Vercel CI limitations](https://vercel.com/docs/ci#limitations) exclude public
-repositories. Enabling CI alone therefore does not establish that checks run;
-confirm an actual Vercel CI run before requiring its status check. Repository
-visibility and billing must remain unchanged.
+Vercel CI is disabled to avoid consuming its CPU allowance. Keep it disabled;
+GitHub Actions owns repository checks. The `Quality checks` job can be selected
+as a required check wherever branch protection is available.

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Synthetic build fixtures only; no live service credentials are required.
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_CONVEX_URL: "https://ci-placeholder.convex.cloud"
+      EXPO_NO_DOTENV: "1"
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      # Bootstrap with a stable release; install the exact canary from the lockfile below.
+      - name: Set up bootstrap Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Restore dependency and task caches
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.bun/install/cache
+            .turbo
+          key: ${{ runner.os }}-${{ runner.arch }}-ci-${{ hashFiles('bun.lock', 'package.json', 'turbo.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-ci-${{ hashFiles('bun.lock', 'package.json', 'turbo.json') }}-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Use the repository's pinned Bun
+        run: |
+          echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
+          node_modules/.bin/bun --revision
+
+      # Build first so Next.js generates .next/types before typechecking.
+      - name: Production build
+        run: bunx turbo run build
+
+      - name: Lint, typecheck and formatting
+        run: bunx turbo run lint typecheck format:check
